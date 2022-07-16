@@ -91,7 +91,7 @@ a {
 
   .author {
     display: flex;
-    span:g-child(1) {
+    span:nth-child(1) {
       flex: 2;
     }
     span:nth-child(2) {
