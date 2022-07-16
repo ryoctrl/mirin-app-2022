@@ -23,9 +23,8 @@ const Opus: NextPage = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>{`${opus.title} | ${opus.artist}`}</title>
+        <title>{`${opus.title} | ${opus.artist.name}`}</title>
         <meta name="description" content={opus.description} />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>

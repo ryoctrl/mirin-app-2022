@@ -12,7 +12,6 @@ const Home: NextPage = () => {
       <Head>
         <title>KUMD海賊版パネル展示会</title>
         <meta name="description" content="KUMD海賊版パネル展示会" />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
