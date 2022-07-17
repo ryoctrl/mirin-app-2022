@@ -1,28 +1,28 @@
 import Image from "next/image";
 import { useState } from "react";
 
-import { opuses } from "@constants/sample-opus";
+import { useOpus } from "hooks/opus/useOpus";
 
 type Props = {
+  index: number;
   opus: Opus;
 };
 
 export const OpusLayout: React.FC<Props> = (props) => {
-  const { opus } = props;
+  const { opus, index } = props;
+  const { addComment } = useOpus();
 
   const [name, setName] = useState("");
   const [text, setText] = useState("");
 
   const registerComment = () => {
-    const o = opuses.find((o) => o.id === opus.id);
-    if (!o) return;
     if (!name || !text) return;
-    const newId = opus.comments.length + 1;
-    o.comments.push({
-      id: newId,
+
+    addComment(index, {
       name,
       text,
     });
+
     setName("");
     setText("");
     const { activeElement } = document;
@@ -89,14 +89,16 @@ export const OpusLayout: React.FC<Props> = (props) => {
       </div>
 
       <div>
-        {opus.comments
-          .sort((a, b) => b.id - a.id)
-          .map((comment) => (
-            <div key={comment.id} className="comment">
-              <div>{comment.name}</div>
-              <div>{comment.text}</div>
-            </div>
-          ))}
+        {!opus.comments && <span>コメントはまだ無いよ ノシ</span>}
+        {opus.comments &&
+          Object.values(opus.comments)
+            .reverse()
+            .map((comment, idx) => (
+              <div key={idx} className="comment">
+                <div>{comment.name}</div>
+                <div>{comment.text}</div>
+              </div>
+            ))}
       </div>
     </div>
   );

@@ -2,7 +2,6 @@ import { comments } from "@constants/sample-comments";
 
 export const opuses: Opus[] = [
   {
-    id: 1,
     title: "トップページ",
     artist: {
       name: "村上ぺこ",
@@ -14,10 +13,9 @@ export const opuses: Opus[] = [
     description: `何処かの漫画同好会の非公式パネル展示会です。
     7月1日から31日までの間に
     募った作品を展示しています。`,
-    comments: [...comments],
+    comments: {},
   },
   {
-    id: 2,
     title: "日登",
     artist: {
       name: "赤ぴょん",
@@ -27,10 +25,9 @@ export const opuses: Opus[] = [
     thumb: "/samples/2.png",
     image: "/samples/4_large.png",
     description: "ああああああああああああああああああああああああああ",
-    comments: [...comments],
+    comments: {},
   },
   {
-    id: 3,
     title: "gekkou.",
     artist: {
       name: "みりん",
@@ -40,10 +37,9 @@ export const opuses: Opus[] = [
     thumb: "/samples/3.png",
     image: "/samples/4_large.png",
     description: "ああああああああああああああああああああああああああ",
-    comments: [...comments],
+    comments: {},
   },
   {
-    id: 4,
     title: "大型チェーンソ",
     artist: {
       name: "はるいろすーぴ",
@@ -52,10 +48,9 @@ export const opuses: Opus[] = [
     thumb: "/samples/4.png",
     image: "/samples/4_large.png",
     description: "ああああああああああああああああああああああああああ",
-    comments: [...comments],
+    comments: {},
   },
   {
-    id: 5,
     title: "武装",
     artist: {
       name: "ななた",
@@ -64,10 +59,9 @@ export const opuses: Opus[] = [
     thumb: "/samples/5.png",
     image: "/samples/4_large.png",
     description: "ああああああああああああああああああああああああああ",
-    comments: [...comments],
+    comments: {},
   },
   {
-    id: 6,
     title: "灰色アンダー",
     artist: {
       name: "ゴマ同歩",
@@ -76,6 +70,6 @@ export const opuses: Opus[] = [
     thumb: "/samples/2.png",
     image: "/samples/4_large.png",
     description: "ああああああああああああああああああああああああああ",
-    comments: [...comments],
+    comments: {},
   },
 ];

@@ -1,12 +1,15 @@
 import Head from "next/head";
+import { useEffect } from "react";
 
 import type { NextPage } from "next";
 
 import styles from "@styles/Home.module.scss";
 import { HomeHeader } from "@components/molecules";
 import { HomeLayout } from "@components/organisms";
+import { useOpus } from "hooks/opus/useOpus";
 
 const Home: NextPage = () => {
+  const { opusState } = useOpus();
   return (
     <div className={styles.container}>
       <Head>
@@ -16,7 +19,7 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <HomeHeader />
-        <HomeLayout />
+        <HomeLayout opusState={opusState} />
       </main>
     </div>
   );

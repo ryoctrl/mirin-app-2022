@@ -3,9 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { SectionTitle } from "@components/molecules";
-import { opuses } from "@constants/sample-opus";
+import { OpusState } from "hooks/opus/state";
 
-export const HomeLayout: React.FC = () => {
+type Props = {
+  opusState: OpusState;
+};
+
+export const HomeLayout: React.FC<Props> = ({ opusState }) => {
   return (
     <div className="layout">
       <h1>KUMD</h1>
@@ -45,20 +49,11 @@ export const HomeLayout: React.FC = () => {
           <div className="artists-table">
             <div>Artists</div>
             <div className="artists">
-              {Array.from(new Set(opuses.map((opus) => opus.artist))).map(
-                (artist, idx) => (
-                  <span key={idx}>{artist.name}</span>
-                )
-              )}
-              <span>cacao</span>
-              <span>つんぱ。</span>
-              <span>ななた</span>
-              <span>ほったん</span>
-              <span>七竈</span>
-              <span>シキアサギ</span>
-              <span>cacao</span>
-              <span>cacao</span>
-              <span>cacao</span>
+              {Array.from(
+                new Set(opusState.opuses.map((opus) => opus.artist))
+              ).map((artist, idx) => (
+                <span key={idx}>{artist.name}</span>
+              ))}
             </div>
           </div>
         </div>
@@ -67,9 +62,10 @@ export const HomeLayout: React.FC = () => {
         <SectionTitle>作品一覧</SectionTitle>
 
         <div>
-          {opuses.map((opus) => {
+          {opusState.isLoading && <span>Now Loading...</span>}
+          {opusState.opuses.map((opus, idx) => {
             return (
-              <Link key={opus.id} href={`/opus/${opus.id}`}>
+              <Link key={idx + 1} href={`/opus/${idx + 1}`}>
                 <div className="opus">
                   <div className="thumb-wrapper">
                     <Image

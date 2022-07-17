@@ -5,18 +5,16 @@ type Artist = {
 };
 
 type OpusComment = {
-  id: number;
   name: string;
   text: string;
   postAt?: Date;
 };
 
 type Opus = {
-  id: number;
   title: string;
   artist: Artist;
   thumb: string;
   image: strin;
   description: string;
-  comments: OpusComment[];
+  comments: { [key in string]: OpusComment };
 };
