@@ -202,12 +202,16 @@ a {
     flex: 1;
     border: 1px solid black;
     border-right: initial;
+    border-radius: initial;
+    margin: 0;
   }
 
   .text-input {
     flex: 3;
     border: 1px solid black;
     border-left: initial;
+    border-radius: initial;
+    margin: 0;
   }
 }
 
