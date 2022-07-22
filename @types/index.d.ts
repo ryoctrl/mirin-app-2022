@@ -1,20 +1,25 @@
 type Artist = {
   name: string;
-  workedAt?: number;
   graduatedAt?: number;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
-type OpusComment = {
-  name: string;
-  text: string;
-  postAt?: Date;
-};
-
-type Opus = {
+type Work = {
   title: string;
   artist: Artist;
+  workedAt: number;
   thumb: string;
-  image: strin;
+  image: string;
   description: string;
-  comments: { [key in string]: OpusComment };
+  comments: WorksComment[];
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+type WorksComment = {
+  name: string;
+  text: string;
+  createdAt: Date;
+  updatedAt: Date;
 };

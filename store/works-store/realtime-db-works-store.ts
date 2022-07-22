@@ -1,22 +1,22 @@
 import {
   child,
   DatabaseReference,
-  get,
   onValue,
   push,
   ref,
   set,
 } from "firebase/database";
 
-import { database } from "libs/firebase/firebase";
-import { IOpusStore } from "store/opus.interface";
+import { WorksStore } from "./works-store.interface";
 
-export class OpusStore implements IOpusStore {
+import { database } from "libs/firebase/firebase";
+
+export class RealtimeDBWorksStore implements WorksStore {
   private ref: DatabaseReference;
   constructor() {
     this.ref = ref(database);
   }
-  async fetchOpuses(setOpuses: (opuses: Opus[]) => void) {
+  async fetchWorks(setWorks: (works: Work[]) => void) {
     onValue(child(this.ref, "opuses"), (snapshot) => {
       if (!snapshot) {
         console.log("snap shot is null");
@@ -27,12 +27,14 @@ export class OpusStore implements IOpusStore {
         console.error("No data available");
         return [];
       }
-      setOpuses(snapshot.val());
+      setWorks(snapshot.val());
     });
   }
 
-  addComment(opusIndex: number, comment: OpusComment) {
-    const newCommentRef = push(child(this.ref, `opuses/${opusIndex}/comments`));
+  addComment(worksIndex: number, comment: WorksComment) {
+    const newCommentRef = push(
+      child(this.ref, `opuses/${worksIndex}/comments`)
+    );
     set(newCommentRef, comment);
     return;
   }

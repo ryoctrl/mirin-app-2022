@@ -3,13 +3,13 @@ import { useRouter } from "next/router";
 
 import type { NextPage } from "next";
 
+import { WorksLayout } from "@components/organisms/works-layout";
 import styles from "@styles/Home.module.scss";
-import { OpusLayout } from "@components/organisms/opus-layout";
-import { useOpus } from "hooks/opus/useOpus";
+import { useWorks } from "hooks/works/useWorks";
 
-const Opus: NextPage = () => {
+const Works: NextPage = () => {
   const router = useRouter();
-  const { opusState } = useOpus();
+  const { worksState } = useWorks();
 
   const { id } = router.query;
   if (!id || Array.isArray(id) || isNaN(Number(id))) {
@@ -18,23 +18,23 @@ const Opus: NextPage = () => {
 
   const idx = Number(id) - 1;
 
-  const opus = opusState.opuses[idx];
-  if (!opus) {
+  const work = worksState.works[idx];
+  if (!work) {
     return <div></div>;
   }
 
   return (
     <div className={styles.container}>
       <Head>
-        <title>{`${opus.title} | ${opus.artist.name}`}</title>
-        <meta name="description" content={opus.description} />
+        <title>{`${work.title} | ${work.artist.name}`}</title>
+        <meta name="description" content={work.description} />
       </Head>
 
       <main className={styles.main}>
-        <OpusLayout opus={opus} index={idx} />
+        <WorksLayout work={work} index={idx} />
       </main>
     </div>
   );
 };
 
-export default Opus;
+export default Works;
