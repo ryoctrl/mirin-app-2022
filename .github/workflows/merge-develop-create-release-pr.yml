@@ -1,0 +1,28 @@
+name: create-release-pr
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  create-release-pr:
+    name: Create release PR
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1
+
+      - name: Install git-pr-release
+        run: gem install -N git-pr-release
+
+      - name: Run git-pr-release
+        env:
+          GIT_PR_RELEASE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: git-pr-release --no-fetch
+        continue-on-error: true
