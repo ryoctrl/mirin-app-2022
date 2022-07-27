@@ -6,7 +6,7 @@ import type { NextPage } from "next";
 import styles from "@styles/Home.module.scss";
 import { HomeHeader } from "@components/molecules";
 import { HomeLayout } from "@components/organisms";
-import { useWorks } from "hooks/works/useOpus";
+import { useWorks } from "hooks/works/useWorks";
 
 const Home: NextPage = () => {
   const { worksState } = useWorks();
