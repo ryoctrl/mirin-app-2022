@@ -1,0 +1,232 @@
+name: CD
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    types: [closed]
+    paths:
+      - 'src/**'
+      - 'manifests/**'
+
+env:
+  ## Helm settings / configures
+  CHART_PATH: manifests/charts
+  RELEASE_NAME: iwagaki
+
+  ## Azure settings / configures
+  AZURE_CONTAINER_REGISTRY: botchaneng
+  RESOURCE_GROUP: botchan-engagement
+  CLUSTER_NAME: botchan-engagement-prod
+  IMAGE_NAME: eng/iwagaki
+  DEPLOY_NAMESPACE: bi
+
+  NOTIFICATION_EMOJI: ':oyster:'
+  NOTIFICATION_COMPONENT_NAME: Iwagaki
+  NOTIFICATION_STAGE: production
+
+jobs:
+  versioning:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.set_version.outputs.new_version }}
+    env:
+      YARN_OPTION: --patch
+      BASE_BRANCH: develop
+      TARGET_BRANCH: main
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set yarn option
+        if: |
+          contains(github.event.pull_request.labels.*.name, 'enhancement')
+        run: |
+          env 'YARN_OPTION=--minor' >> $GITHUB_ENV
+
+      - name: Bump version
+        uses: borales/actions-yarn@v3.0.0
+        with:
+          cmd: version --no-git-tag-version ${{ env.YARN_OPTION }}
+
+      - name: Set new version environment
+        id: set_version
+        run: |
+          version=$(jq -r '.version' package.json)
+          echo "::set-output name=new_version::${version}"
+
+      - name: Push new version
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          message='[skip ci] Application update to ${{ steps.set_version.outputs.new_version }}'
+
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git fetch
+          git checkout ${{ env.BASE_BRANCH }}
+          git add .
+          git commit -m "${message}"
+          git push origin ${{ env.BASE_BRANCH }}
+          PR_URL=$(gh pr create -t "${message}" -B ${{ env.TARGET_BRANCH }} --fill)
+          gh pr merge ${PR_URL} -m
+
+      - name: Create a Github release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.set_version.outputs.new_version }}
+          name: Release ${{ steps.set_version.outputs.new_version }}
+          body: ${{ github.event.pull_request.body }}
+
+  build:
+    runs-on: ubuntu-latest
+    needs:
+      - versioning
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Setup docker buildx
+        uses: docker/setup-buildx-action@v1
+        id: buildx
+
+      - name: Cache or restore docker build layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ github.ref }}-${{ github.sha }}
+          restore-keys: |
+            ${{ github.ref }}-${{ github.sha }}
+            ${{ github.ref }}
+            refs/head/main
+
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: manifests/Dockerfile
+          builder: ${{ steps.buildx.outputs.name }}
+          push: true
+          tags: ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ needs.versioning.outputs.new_version }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+      - versioning
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Gets K8s context
+        uses: azure/aks-set-context@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          resource-group: ${{ env.RESOURCE_GROUP }}
+          cluster-name: ${{ env.CLUSTER_NAME }}
+        id: login
+
+      - name: Configure deployment
+        uses: azure/k8s-bake@v1
+        with:
+          renderEngine: 'helm'
+          helmChart: ${{ env.CHART_PATH }}
+          releaseName: ${{ env.RELEASE_NAME }}
+          helm-version: 'latest'
+        id: bake
+
+      - name: Deploys application
+        uses: Azure/k8s-deploy@v3.1
+        with:
+          manifests: ${{ steps.bake.outputs.manifestsBundle }}
+          images: ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ needs.versioning.outputs.new_version }}
+          imagepullsecrets: ${{ env.IMAGE_NAME }}
+          namespace: ${{ env.DEPLOY_NAMESPACE }}
+          strategy: none
+
+  notify-deploy-succeeded:
+    name: Notify to Slack
+    runs-on: ubuntu-latest
+    needs:
+      - deploy
+      - versioning
+    env:
+      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+    steps:
+      - uses: slackapi/slack-github-action@v1.18
+        with:
+          channel-id: ${{ secrets.SLACK_CHANNEL }}
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "${{ env.NOTIFICATION_EMOJI }} Release Result ${{ env.NOTIFICATION_EMOJI }}",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Component*: ${{ env.NOTIFICATION_COMPONENT_NAME }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Version*: ${{ needs.versioning.outputs.new_version }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Release stage*: ${{ env.NOTIFICATION_STAGE }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "Release Note"
+                      },
+                      "url": "https://github.com/${{ github.repository }}/releases/tag/${{ needs.versioning.outputs.new_version }}"
+                    },
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "Release PR"
+                      },
+                      "url": "${{ github.event.pull_request.html_url }}"
+                    },
+                  ]
+                }
+              ]
+            }

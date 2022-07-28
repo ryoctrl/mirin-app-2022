@@ -1,13 +1,16 @@
 import type { AppProps } from "next/app";
 
 import "@styles/globals.scss";
-import { OpusContextProvider } from "hooks/opus/context";
+import { WorksContextProvider } from "hooks/works/context";
+import { ArtistsContextProvider } from "hooks/artists/context";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <OpusContextProvider>
-      <Component {...pageProps} />
-    </OpusContextProvider>
+    <WorksContextProvider>
+      <ArtistsContextProvider>
+        <Component {...pageProps} />
+      </ArtistsContextProvider>
+    </WorksContextProvider>
   );
 }
 

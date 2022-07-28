@@ -1,16 +1,16 @@
 import Image from "next/image";
 import { useState } from "react";
 
-import { useOpus } from "hooks/opus/useOpus";
+import { useWorks } from "hooks/works/useWorks";
 
 type Props = {
   index: number;
-  opus: Opus;
+  work: Work;
 };
 
-export const OpusLayout: React.FC<Props> = (props) => {
-  const { opus, index } = props;
-  const { addComment } = useOpus();
+export const WorksLayout: React.FC<Props> = (props) => {
+  const { work, index } = props;
+  const { addComment } = useWorks();
 
   const [name, setName] = useState("");
   const [text, setText] = useState("");
@@ -21,6 +21,8 @@ export const OpusLayout: React.FC<Props> = (props) => {
     addComment(index, {
       name,
       text,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
 
     setName("");
@@ -35,29 +37,29 @@ export const OpusLayout: React.FC<Props> = (props) => {
       <div className="opus-container">
         <div className="image-wrapper">
           <Image
-            src={opus.image}
+            src={work.image}
             layout="fill"
-            alt={opus.title}
+            alt={work.title}
             className="image"
           />
         </div>
         <div className="text-container">
           <div className="text-title">
-            <span>{opus.title}</span>
+            <span>{work.title}</span>
           </div>
           <div className="text-artist-info">
             <div>
-              <span>{opus.artist.name}</span>
+              <span>{work.artist.name}</span>
             </div>
             <div>
-              {opus.artist.graduatedAt && (
-                <span>卒業年: {opus.artist.graduatedAt}</span>
+              {work.artist.graduatedAt && (
+                <span>卒業年: {work.artist.graduatedAt}</span>
               )}
-              <span>制作年: {opus.artist.workedAt}</span>
+              <span>制作年: {work.workedAt}</span>
             </div>
           </div>
           <div className="text-description">
-            {opus.description.split("\n").map((p, idx) => (
+            {work.description.split("\n").map((p, idx) => (
               <p key={idx}>{p}</p>
             ))}
           </div>
@@ -89,9 +91,9 @@ export const OpusLayout: React.FC<Props> = (props) => {
       </div>
 
       <div>
-        {!opus.comments && <span>コメントはまだ無いよ ノシ</span>}
-        {opus.comments &&
-          Object.values(opus.comments)
+        {!work.comments && <span>コメントはまだ無いよ ノシ</span>}
+        {work.comments &&
+          Object.values(work.comments)
             .reverse()
             .map((comment, idx) => (
               <div key={idx} className="comment">
