@@ -12,13 +12,11 @@ const Works: NextPage = () => {
   const { worksState } = useWorks();
 
   const { id } = router.query;
-  if (!id || Array.isArray(id) || isNaN(Number(id))) {
+  if (!id || Array.isArray(id)) {
     return <div></div>;
   }
 
-  const idx = Number(id) - 1;
-
-  const work = worksState.works[idx];
+  const work = worksState.works.find((work) => work.id === id);
   if (!work) {
     return <div></div>;
   }
@@ -31,7 +29,7 @@ const Works: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <WorksLayout work={work} index={idx} />
+        <WorksLayout work={work} />
       </main>
     </div>
   );

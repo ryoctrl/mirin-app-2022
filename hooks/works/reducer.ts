@@ -5,6 +5,7 @@ import { WorksState } from "./state";
 export enum WorksActions {
   LISTEN_WORKS = "LISTEN_WORKS",
   WORKS_UPDATED = "WORKS_UPDATED",
+  WORK_UPDATED = "WORK_UPDATED",
 }
 
 export type WorksAction =
@@ -13,6 +14,12 @@ export type WorksAction =
       type: typeof WorksActions.WORKS_UPDATED;
       payload: {
         works: Work[];
+      };
+    }
+  | {
+      type: typeof WorksActions.WORK_UPDATED;
+      payload: {
+        work: Work;
       };
     };
 
@@ -30,6 +37,14 @@ export const worksReducer: Reducer<WorksState, WorksAction> = (
       return {
         ...state,
         works: action.payload.works,
+        isLoading: false,
+      };
+    case WorksActions.WORK_UPDATED:
+      return {
+        ...state,
+        works: state.works.map((w) =>
+          w.id === action.payload.work.id ? action.payload.work : w
+        ),
         isLoading: false,
       };
   }

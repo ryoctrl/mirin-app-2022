@@ -11,7 +11,7 @@ const worksStore: WorksStore = new FirestoreWorksStore();
 interface WorksContextValue {
   worksState: WorksState;
   createWork: (work: Work) => void;
-  addComment: (worksIndex: number, comment: WorksComment) => void;
+  addComment: (workId: string, comment: WorksComment) => void;
 }
 
 export const WorksContext = createContext<WorksContextValue>({
@@ -23,25 +23,29 @@ export const WorksContext = createContext<WorksContextValue>({
 export const WorksContextProvider = ({ children }: { children: ReactNode }) => {
   const [worksState, dispatch] = useReducer(worksReducer, initialWorksState);
 
-  const fetchWorks = async () => {
-    dispatch({ type: WorksActions.LISTEN_WORKS });
-
-    const works = await worksStore.findAll();
-    dispatch({ type: WorksActions.WORKS_UPDATED, payload: { works } });
+  const listenWorks = async () => {
+    worksStore.listen((works) => {
+      dispatch({ type: WorksActions.WORKS_UPDATED, payload: { works } });
+    });
   };
 
   // TODO: add support for dispatching reducer methods
   const createWork = async (work: Work) => {
     await worksStore.create(work);
-    await fetchWorks();
   };
 
   useEffect(() => {
-    fetchWorks();
+    listenWorks();
   }, []);
 
-  const addComment = (worksIndex: number, comment: WorksComment) => {
-    // worksStore.addComment(worksIndex, comment);
+  const addComment = async (workId: string, comment: WorksComment) => {
+    await worksStore.addComment(workId, comment);
+    const work = await worksStore.find(workId);
+    if (!work) return;
+    dispatch({
+      type: WorksActions.WORK_UPDATED,
+      payload: { work },
+    });
   };
 
   return (

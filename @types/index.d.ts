@@ -21,8 +21,9 @@ type Work = {
 };
 
 type WorksComment = {
+  id?: string;
   name: string;
   text: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
