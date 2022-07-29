@@ -1,25 +1,23 @@
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 import type { NextPage } from "next";
 
 import styles from "@styles/Home.module.scss";
 import { useWorks } from "hooks/works/useWorks";
 import { useArtists } from "hooks/artists/use-artists";
+import { useUser } from "hooks/users/useUser";
 
 const Admin: NextPage = () => {
   const { artistsState, createArtist } = useArtists();
   const { worksState, createWork } = useWorks();
 
+  const { isLoggedIn } = useUser();
+  const router = useRouter();
+
   const [name, setName] = useState("");
   const [graduate, setGraduate] = useState("");
-
-  const onClickExecute = () => {
-    createArtist({
-      name,
-      graduatedAt: isNaN(Number(graduate)) ? undefined : Number(graduate),
-    });
-  };
 
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState<Artist | null>(null);
@@ -27,6 +25,18 @@ const Admin: NextPage = () => {
   const [thumb, setThumb] = useState("");
   const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
+
+  useEffect(() => {
+    if (isLoggedIn()) return;
+    router.replace("/admin/login");
+  }, []);
+
+  const onClickExecute = () => {
+    createArtist({
+      name,
+      graduatedAt: isNaN(Number(graduate)) ? undefined : Number(graduate),
+    });
+  };
 
   const registerWork = () => {
     if (!artist) return;

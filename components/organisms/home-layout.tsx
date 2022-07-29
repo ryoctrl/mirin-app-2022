@@ -65,7 +65,7 @@ export const HomeLayout: React.FC<Props> = ({ worksState }) => {
           {worksState.isLoading && <span>Now Loading...</span>}
           {worksState.works.map((work, idx) => {
             return (
-              <Link key={idx + 1} href={`/works/${idx + 1}`}>
+              <Link key={idx + 1} href={`/works/${work.id}`}>
                 <div className="opus">
                   <div className="thumb-wrapper">
                     <Image

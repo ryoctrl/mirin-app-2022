@@ -4,12 +4,11 @@ import { useState } from "react";
 import { useWorks } from "hooks/works/useWorks";
 
 type Props = {
-  index: number;
   work: Work;
 };
 
 export const WorksLayout: React.FC<Props> = (props) => {
-  const { work, index } = props;
+  const { work } = props;
   const { addComment } = useWorks();
 
   const [name, setName] = useState("");
@@ -17,12 +16,11 @@ export const WorksLayout: React.FC<Props> = (props) => {
 
   const registerComment = () => {
     if (!name || !text) return;
+    if (!work.id) return;
 
-    addComment(index, {
+    addComment(work.id, {
       name,
       text,
-      createdAt: new Date(),
-      updatedAt: new Date(),
     });
 
     setName("");
@@ -31,6 +29,8 @@ export const WorksLayout: React.FC<Props> = (props) => {
     if (!activeElement) return;
     (activeElement as HTMLElement).blur();
   };
+
+  const hasComments = !!work.comments.length;
 
   return (
     <div className="layout">
@@ -91,8 +91,8 @@ export const WorksLayout: React.FC<Props> = (props) => {
       </div>
 
       <div>
-        {!work.comments && <span>コメントはまだ無いよ ノシ</span>}
-        {work.comments &&
+        {!hasComments && <span>コメントはまだ無いよ ノシ</span>}
+        {hasComments &&
           Object.values(work.comments)
             .reverse()
             .map((comment, idx) => (
