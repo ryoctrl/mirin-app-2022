@@ -1,0 +1,28 @@
+<% sorted_pr = pull_requests.sort_by {|pr| pr.pr.merged_at} -%>
+Release <%= Time.now.strftime("%Y-%m-%d") %>
+<% feature_prs = sorted_pr.select {|pr| pr.pr.labels.find{|l| l.name == "enhancement"}} -%>
+<% bug_prs = sorted_pr.select {|pr| pr.pr.labels.find{|l| l.name == "bug"}} -%>
+<% other_prs = sorted_pr.select {|pr| !feature_prs.include?(pr) && !bug_prs.include?(pr)} -%>
+
+
+# Features
+
+<% feature_prs.each do |pr| -%>
+  <%= "- #{pr.pr.title} @#{pr.pr.user.login} in ##{pr.pr.number}" %>
+<% end -%>
+<% if feature_prs.length > 0 -%>
+  <% client.add_labels_to_an_issue(repository, release_pr.number, ["enhancement"]) -%>
+<% end -%>
+
+
+# Bug Fixes
+
+<% bug_prs.each do |pr| -%>
+  <%= "- #{pr.pr.title} @#{pr.pr.user.login} in ##{pr.pr.number}" %>
+<% end -%>
+
+# Others
+
+<% other_prs.each do |pr| -%>
+  <%= "- #{pr.pr.title} @#{pr.pr.user.login} in ##{pr.pr.number}" %>
+<% end -%>
