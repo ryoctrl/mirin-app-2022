@@ -1,11 +1,9 @@
 import { Html, Head, Main, NextScript } from "next/document";
-import Script from "next/script";
 
 export default function CustomDocument() {
   return (
     <Html lang="ja">
       <Head>
-        <title>KUMD海賊版パネル展示会</title>
         <meta name="description" content="KUMD海賊版パネル展示会" />
         <link
           rel="apple-touch-icon"

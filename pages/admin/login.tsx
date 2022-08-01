@@ -7,12 +7,11 @@ import { AuthError } from "firebase/auth";
 
 import type { NextPage } from "next";
 
-import styles from "@styles/Home.module.scss";
 import { auth } from "libs/firebase/firebase";
 import { useUser } from "hooks/users/useUser";
+import { Messages } from "libs/messages";
 
 import "@styles/admin.module.scss";
-import { Messages } from "libs/messages";
 
 const AdminLogin: NextPage = () => {
   const [email, setEmail] = useState("");
@@ -60,6 +59,9 @@ const AdminLogin: NextPage = () => {
 
   return (
     <>
+      <Head>
+        <title>KUMD海賊版パネル展示会 | Login</title>
+      </Head>
       <main className="h-screen w-screen flex justify-center items-center bg-gray-100">
         <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-1/4">
           <div className="mb-4">

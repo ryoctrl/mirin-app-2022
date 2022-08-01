@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import Head from "next/head";
 
 import type { NextPage } from "next";
 
@@ -28,6 +29,9 @@ const Admin: NextPage = () => {
 
   return (
     <>
+      <Head>
+        <title>KUMD海賊版パネル展示会 | Admin</title>
+      </Head>
       <AdminLayout>
         <main className="main h-screen flex flex-col flex-grow -ml-64 md:ml-0 transition-all duration-150 ease-in">
           <div className="m-4 py-8 h-full bg-white flex overflow-hidden">
