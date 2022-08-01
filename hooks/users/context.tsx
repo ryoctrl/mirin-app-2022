@@ -1,5 +1,11 @@
 import { onAuthStateChanged } from "firebase/auth";
-import React, { createContext, ReactNode, useEffect, useReducer } from "react";
+import React, {
+  createContext,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useReducer,
+} from "react";
 
 import { UserActions, userReducer } from "./reducer";
 import { initialUserState, UserState } from "./state";
@@ -23,6 +29,8 @@ export const UserContextProvider = ({ children }: { children: ReactNode }) => {
     const unSubscribeAuthStateChanged = onAuthStateChanged(
       auth,
       async (user) => {
+        console.log("auth changed!!");
+        console.log(user);
         dispatch({
           type: UserActions.UPDATE_AUTH_STATE,
           payload: { user },
@@ -35,9 +43,10 @@ export const UserContextProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
-  const isLoggedIn = () => {
+  const isLoggedIn = useCallback(() => {
+    console.log("Checking isLoggedin!!");
     return !!userState.user;
-  };
+  }, [userState]);
 
   return (
     <UserContext.Provider value={{ userState, isLoggedIn }}>

@@ -11,11 +11,13 @@ const artistsStore: ArtistsStore = new FirestoreArtistStore();
 interface ArtistsContextValue {
   artistsState: ArtistsState;
   createArtist: (artist: Artist) => void;
+  deleteArtist: (artistId: string) => void;
 }
 
 export const ArtistContext = createContext<ArtistsContextValue>({
   artistsState: initialArtistsState,
   createArtist: () => {},
+  deleteArtist: () => {},
 });
 
 export const ArtistsContextProvider = ({
@@ -54,6 +56,11 @@ export const ArtistsContextProvider = ({
     await fetchArtists();
   };
 
+  const deleteArtist = async (artistId: string) => {
+    await artistsStore.delete(artistId);
+    await fetchArtists();
+  };
+
   useEffect(() => {
     fetchArtists();
   }, []);
@@ -63,6 +70,7 @@ export const ArtistsContextProvider = ({
       value={{
         artistsState,
         createArtist,
+        deleteArtist,
       }}
     >
       {children}
