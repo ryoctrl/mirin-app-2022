@@ -1,4 +1,4 @@
-import { User } from "firebase/auth";
+import { IdTokenResult, User } from "firebase/auth";
 import { Reducer } from "react";
 
 import { UserState } from "./state";
@@ -11,6 +11,7 @@ export type UserAction = {
   type: UserActions.UPDATE_AUTH_STATE;
   payload: {
     user: User | null;
+    idTokenResult?: IdTokenResult;
   };
 };
 
@@ -19,6 +20,12 @@ export const userReducer: Reducer<UserState, UserAction> = (state, action) => {
     case UserActions.UPDATE_AUTH_STATE:
       return {
         user: action.payload.user,
+        userInfo: {
+          roles: {
+            admin: (action.payload.idTokenResult?.claims.admin ??
+              false) as boolean,
+          },
+        },
       };
   }
 };

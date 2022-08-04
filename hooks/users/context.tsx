@@ -29,11 +29,11 @@ export const UserContextProvider = ({ children }: { children: ReactNode }) => {
     const unSubscribeAuthStateChanged = onAuthStateChanged(
       auth,
       async (user) => {
-        console.log("auth changed!!");
-        console.log(user);
+        const idTokenResult = await user?.getIdTokenResult(true);
+
         dispatch({
           type: UserActions.UPDATE_AUTH_STATE,
-          payload: { user },
+          payload: { user, idTokenResult },
         });
       }
     );
@@ -44,7 +44,6 @@ export const UserContextProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const isLoggedIn = useCallback(() => {
-    console.log("Checking isLoggedin!!");
     return !!userState.user;
   }, [userState]);
 

@@ -7,6 +7,7 @@ import { auth } from "libs/firebase/firebase";
 import { Messages } from "libs/messages";
 import { routes } from "libs/routes";
 import { ArtistsIcon, IllustsIcon, PublicIcon } from "@components/atoms/icons";
+import { useUser } from "hooks/users/useUser";
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -14,6 +15,7 @@ interface AdminLayoutProps {
 
 export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const router = useRouter();
+  const { userState } = useUser();
   const menuList = [
     {
       icon: (
@@ -32,6 +34,16 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       onClick: async () => {
         router.push(routes.ADMIN_ARTISTS);
       },
+    },
+    {
+      icon: (
+        <ArtistsIcon className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+      ),
+      text: "ユーザー一覧",
+      onClick: async () => {
+        router.push(routes.ADMIN_ARTISTS);
+      },
+      isAdminOnly: true,
     },
     {
       icon: (
@@ -61,16 +73,22 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       <aside className="sidebar w-64 md:shadow transform -translate-x-full md:translate-x-0 transition-transform duration-150 ease-in bg-gray-500">
         <div className="overflow-y-auto py-4 px-3 bg-gray-50 rounded dark:bg-gray-500">
           <ul className="space-y-2">
-            {menuList.map((menu, idx) => {
-              return (
-                <li className="cursor-pointer" key={idx} onClick={menu.onClick}>
-                  <div className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-                    {menu.icon}
-                    <span className="ml-3">{menu.text}</span>
-                  </div>
-                </li>
-              );
-            })}
+            {menuList
+              .filter((m) => !m.isAdminOnly || userState.userInfo?.roles.admin)
+              .map((menu, idx) => {
+                return (
+                  <li
+                    className="cursor-pointer"
+                    key={idx}
+                    onClick={menu.onClick}
+                  >
+                    <div className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                      {menu.icon}
+                      <span className="ml-3">{menu.text}</span>
+                    </div>
+                  </li>
+                );
+              })}
           </ul>
         </div>
       </aside>

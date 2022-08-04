@@ -1,3 +1,10 @@
+type User = {
+  id?: string;
+  admin?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
+
 type Artist = {
   id?: string;
   name: string;
