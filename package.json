@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "blueimp-load-image": "^5.16.0",
+    "dayjs": "^1.11.4",
     "firebase": "^9.9.0",
     "flowbite": "^1.5.1",
     "next": "12.2.2",
