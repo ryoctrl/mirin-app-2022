@@ -4,6 +4,7 @@ export default function CustomDocument() {
   return (
     <Html lang="ja">
       <Head>
+        <meta name="description" content="KUMD海賊版パネル展示会" />
         <link
           rel="apple-touch-icon"
           sizes="180x180"

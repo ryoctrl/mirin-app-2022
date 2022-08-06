@@ -1,0 +1,61 @@
+name: CD
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    types: [closed]
+
+jobs:
+  versioning:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.set_version.outputs.new_version }}
+    env:
+      YARN_OPTION: --patch
+      BASE_BRANCH: develop
+      TARGET_BRANCH: main
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set yarn option
+        if: |
+          contains(github.event.pull_request.labels.*.name, 'enhancement')
+        run: |
+          env 'YARN_OPTION=--minor' >> $GITHUB_ENV
+
+      - name: Bump version
+        uses: borales/actions-yarn@v3.0.0
+        with:
+          cmd: version --no-git-tag-version ${{ env.YARN_OPTION }}
+
+      - name: Set new version environment
+        id: set_version
+        run: |
+          version=$(jq -r '.version' package.json)
+          echo "::set-output name=new_version::${version}"
+
+      - name: Push new version
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          message='[skip ci] Application update to ${{ steps.set_version.outputs.new_version }}'
+
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git fetch
+          git checkout ${{ env.BASE_BRANCH }}
+          git add .
+          git commit -m "${message}"
+          git push origin ${{ env.BASE_BRANCH }}
+          PR_URL=$(gh pr create -t "${message}" -B ${{ env.TARGET_BRANCH }} --fill)
+          gh pr merge ${PR_URL} -m
+
+      - name: Create a Github release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.set_version.outputs.new_version }}
+          name: Release ${{ steps.set_version.outputs.new_version }}
+          body: ${{ github.event.pull_request.body }}

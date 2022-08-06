@@ -3,16 +3,16 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { SectionTitle } from "@components/molecules";
-import { OpusState } from "hooks/opus/state";
+import { WorksState } from "hooks/works/state";
 
 type Props = {
-  opusState: OpusState;
+  worksState: WorksState;
 };
 
-export const HomeLayout: React.FC<Props> = ({ opusState }) => {
+export const HomeLayout: React.FC<Props> = ({ worksState }) => {
   return (
     <div className="layout">
-      <h1>KUMD</h1>
+      <h1 className="logo-font">KUMD</h1>
       <div className="section-about">
         <SectionTitle>はじめに</SectionTitle>
 
@@ -50,7 +50,7 @@ export const HomeLayout: React.FC<Props> = ({ opusState }) => {
             <div>Artists</div>
             <div className="artists">
               {Array.from(
-                new Set(opusState.opuses.map((opus) => opus.artist))
+                new Set(worksState.works.map((work) => work.artist))
               ).map((artist, idx) => (
                 <span key={idx}>{artist.name}</span>
               ))}
@@ -62,26 +62,26 @@ export const HomeLayout: React.FC<Props> = ({ opusState }) => {
         <SectionTitle>作品一覧</SectionTitle>
 
         <div>
-          {opusState.isLoading && <span>Now Loading...</span>}
-          {opusState.opuses.map((opus, idx) => {
+          {worksState.isLoading && <span>Now Loading...</span>}
+          {worksState.works.map((work, idx) => {
             return (
-              <Link key={idx + 1} href={`/opus/${idx + 1}`}>
+              <Link key={idx + 1} href={`/works/${work.id}`}>
                 <div className="opus">
                   <div className="thumb-wrapper">
                     <Image
                       className="thumb"
-                      src={opus.thumb}
-                      alt={opus.title}
+                      src={work.thumb}
+                      alt={work.title}
                       width="100%"
                       height="100%"
                       layout="responsive"
                     />
                   </div>
                   <div className="text-wrapper">
-                    <p className="text-title">{opus.title}</p>
-                    <p className="text-artist">{opus.artist.name}</p>
+                    <p className="text-title">{work.title}</p>
+                    <p className="text-artist">{work.artist.name}</p>
 
-                    <p className="text-description">{opus.description}</p>
+                    <p className="text-description">{work.description}</p>
                   </div>
                 </div>
               </Link>
