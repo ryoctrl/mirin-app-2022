@@ -19,6 +19,8 @@ const handleUser = async (user: UserRecord, context: EventContext) => {
     email: user.email,
     name: user.displayName,
     admin: false,
+    createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
   });
 };
 
@@ -27,7 +29,7 @@ const handleSnapshot = async (
   context: EventContext
 ) => {
   if (context.eventType === "google.firestore.document.delete") {
-    await setCustomClaim(snapshot.id, null);
+    await deleteUser(snapshot.id);
     return;
   }
   const user = snapshot.data();
@@ -39,6 +41,10 @@ const handleSnapshot = async (
 
 const setCustomClaim = async (userId: string, customClaims: object | null) => {
   await admin.auth().setCustomUserClaims(userId, customClaims);
+};
+
+const deleteUser = async (userId: string) => {
+  await admin.auth().deleteUser(userId);
 };
 
 /**
