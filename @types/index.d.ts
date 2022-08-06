@@ -1,3 +1,11 @@
+type User = {
+  id?: string;
+  admin: boolean;
+  email: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
+
 type Artist = {
   id?: string;
   name: string;

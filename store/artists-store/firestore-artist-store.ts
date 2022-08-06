@@ -2,6 +2,7 @@ import {
   addDoc,
   collection,
   CollectionReference,
+  deleteDoc,
   doc,
   DocumentData,
   DocumentReference,
@@ -38,5 +39,10 @@ export class FirestoreArtistStore implements ArtistsStore {
 
   async create(artist: Artist): Promise<void> {
     await addDoc(this.usersCollection, artist);
+  }
+
+  async delete(id: string): Promise<boolean> {
+    await deleteDoc(doc(this.usersCollection, id));
+    return true;
   }
 }
