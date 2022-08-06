@@ -21,7 +21,7 @@ const Admin: NextPage = () => {
   useEffect(() => {
     if (isLoggedIn()) return;
     router.replace(routes.ADMIN_LOGIN);
-  }, [isLoggedIn]);
+  }, [isLoggedIn, router]);
 
   if (!isLoggedIn) {
     return <div></div>;
@@ -33,7 +33,7 @@ const Admin: NextPage = () => {
         <title>KUMD海賊版パネル展示会 | Admin</title>
       </Head>
       <AdminLayout>
-        <main className="main h-screen flex flex-col flex-grow -ml-64 md:ml-0 transition-all duration-150 ease-in">
+        <main className="main h-screen flex flex-col flex-grow ml-0 -ml-64 md:ml-0 transition-all duration-150 ease-in">
           <div className="m-4 py-8 h-full bg-white flex overflow-hidden">
             <div className="mx-8 w-full overflow-hidden">
               <div className="flex justify-between items-center mb-4">

@@ -3,4 +3,5 @@ export interface UsersStore {
   find: (id: string) => Promise<User | null>;
   create: (user: User) => Promise<void>;
   delete: (id: string) => Promise<boolean>;
+  update: (user: User) => Promise<boolean>;
 }

@@ -1,10 +1,27 @@
 import dayjs from "dayjs";
 
-interface WorksListProps {
-  works: Work[];
+import { useUser } from "hooks/users/useUser";
+
+interface UserListProps {
+  users: User[];
+  updateUsers: User[];
+  modifyUpdateUser: (user: User) => void;
 }
 
-export const WorksList: React.FC<WorksListProps> = ({ works }) => {
+export const UserList: React.FC<UserListProps> = ({
+  users,
+  updateUsers,
+  modifyUpdateUser,
+}) => {
+  const {
+    userState: { user: currentUser },
+  } = useUser();
+
+  const finalyUsers = users.map((user) => {
+    const updateUser = updateUsers.find((u) => u.id === user.id);
+    return updateUser ? updateUser : user;
+  });
+
   return (
     <div className="overflow-hidden">
       <table className="min-w-full">
@@ -14,19 +31,13 @@ export const WorksList: React.FC<WorksListProps> = ({ works }) => {
               scope="col"
               className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
             >
-              ID
+              メールアドレス
             </th>
             <th
               scope="col"
               className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
             >
-              タイトル
-            </th>
-            <th
-              scope="col"
-              className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-            >
-              作者
+              管理者
             </th>
             <th
               scope="col"
@@ -43,26 +54,36 @@ export const WorksList: React.FC<WorksListProps> = ({ works }) => {
           </tr>
         </thead>
         <tbody>
-          {works.map((work) => {
+          {finalyUsers.map((user) => {
             return (
-              <tr key={work.id}>
+              <tr key={user.id}>
                 <td
                   scope="col"
                   className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
                 >
-                  {work.id}
+                  {user.email}
+                </td>
+                <td
+                  scope="col"
+                  className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                >
+                  <input
+                    type="checkbox"
+                    checked={user.admin}
+                    disabled={currentUser?.uid === user.id}
+                    onChange={(e) =>
+                      modifyUpdateUser({
+                        ...user,
+                        admin: e.target.checked,
+                      })
+                    }
+                  />
                 </td>
                 <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {work.title}
+                  {dayjs(user.createdAt).format("YYYY-MM-DD HH:mm:ss")}
                 </td>
                 <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {work.artist.name}
-                </td>
-                <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {dayjs(work.createdAt).format("YYYY-MM-DD HH:mm:ss")}
-                </td>
-                <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {dayjs(work.updatedAt).format("YYYY-MM-DD HH:mm:ss")}
+                  {dayjs(user.updatedAt).format("YYYY-MM-DD HH:mm:ss")}
                 </td>
               </tr>
             );

@@ -1,6 +1,7 @@
 type User = {
   id?: string;
-  admin?: boolean;
+  admin: boolean;
+  email: string;
   createdAt?: Date;
   updatedAt?: Date;
 };

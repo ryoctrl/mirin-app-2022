@@ -11,6 +11,7 @@ export const UserConverter: FirestoreDataConverter<User> = {
   toFirestore: function (user: WithFieldValue<User>): DocumentData {
     return {
       admin: user.admin,
+      email: user.email,
       createdAt: user.createdAt ?? serverTimestamp(),
       updatedAt: serverTimestamp(),
     };
@@ -25,6 +26,7 @@ export const UserConverter: FirestoreDataConverter<User> = {
     });
     return {
       id: snapshot.id,
+      email: data.email,
       admin: data.admin || false,
       createdAt: data.createdAt?.toDate(),
       updatedAt: data.updatedAt?.toDate(),

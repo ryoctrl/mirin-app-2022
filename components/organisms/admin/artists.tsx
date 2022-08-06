@@ -1,4 +1,5 @@
 import { useState } from "react";
+import dayjs from "dayjs";
 
 import { DeleteIcon } from "@components/atoms/icons/delete-icon";
 import { Modal } from "@components/atoms/modal/modal";
@@ -105,10 +106,10 @@ export const ArtistList: React.FC<ArtistListProps> = ({
                   {artist.graduatedAt}
                 </td>
                 <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {artist.createdAt?.toLocaleDateString()}
+                  {dayjs(artist.createdAt).format("YYYY-MM-DD HH:mm:ss")}
                 </td>
                 <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {artist.updatedAt?.toLocaleDateString()}
+                  {dayjs(artist.updatedAt).format("YYYY-MM-DD HH:mm:ss")}
                 </td>
               </tr>
             );

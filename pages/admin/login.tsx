@@ -63,7 +63,7 @@ const AdminLogin: NextPage = () => {
         <title>KUMD海賊版パネル展示会 | Login</title>
       </Head>
       <main className="h-screen w-screen flex justify-center items-center bg-gray-100">
-        <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-1/4">
+        <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 lg:w-1/4 w-4/5">
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"

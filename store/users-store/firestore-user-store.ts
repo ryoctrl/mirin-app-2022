@@ -8,6 +8,7 @@ import {
   DocumentReference,
   getDoc,
   getDocs,
+  updateDoc,
 } from "firebase/firestore";
 
 import { UsersStore } from "./user-store.interface";
@@ -16,7 +17,7 @@ import { firestore } from "libs/firebase/firebase";
 import { CollectionKeys } from "libs/firebase/store-config";
 import { UserConverter } from "store/users-store/user-converter";
 
-export class FirestoreArtistStore implements UsersStore {
+export class FirestoreUsersStore implements UsersStore {
   private appRef: DocumentReference<DocumentData>;
   private usersCollection: CollectionReference<User>;
   constructor() {
@@ -44,5 +45,13 @@ export class FirestoreArtistStore implements UsersStore {
   async delete(id: string): Promise<boolean> {
     await deleteDoc(doc(this.usersCollection, id));
     return true;
+  }
+
+  async update(user: User): Promise<boolean> {
+    if (!user.id) {
+      throw new Error("The user id does not specified");
+    }
+    await updateDoc(doc(this.usersCollection, user.id), user);
+    return Promise.resolve(true);
   }
 }
