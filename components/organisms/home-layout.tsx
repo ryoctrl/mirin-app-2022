@@ -12,7 +12,7 @@ type Props = {
 export const HomeLayout: React.FC<Props> = ({ worksState }) => {
   return (
     <div className="layout">
-      <h1>KUMD</h1>
+      <h1 className="logo-font">KUMD</h1>
       <div className="section-about">
         <SectionTitle>はじめに</SectionTitle>
 
