@@ -51,11 +51,21 @@ export const WorksDetail: React.FC<WorksDetailProps> = ({ work }) => {
         <div className="flex h-1/2">
           <div className="relative w-full h-full flex justify-center">
             <div>イラスト</div>
-            <Image src={work.image} layout="fill" objectFit="contain" />
+            <Image
+              alt={`${work.title} - イラスト`}
+              src={work.image}
+              layout="fill"
+              objectFit="contain"
+            />
           </div>
           <div className="relative w-full h-full flex justify-center">
             <div>サムネイル</div>
-            <Image src={work.thumb} layout="fill" objectFit="contain" />
+            <Image
+              alt={`${work.title} - サムネイル`}
+              src={work.thumb}
+              layout="fill"
+              objectFit="contain"
+            />
           </div>
         </div>
 
