@@ -97,7 +97,6 @@ const calcPreviewSize = (
   image: ImageInfo
 ): { width: number; height: number } => {
   const useHeight = image.height > image.width;
-  console.log(image);
 
   let height = image.height;
   let width = image.width;

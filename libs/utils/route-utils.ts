@@ -10,9 +10,7 @@ export const generatePath = (
 ) => {
   let result: string = path;
   Object.entries(params).forEach(([k, v]) => {
-    console.log(k, v);
     result = result.replaceAll(new RegExp(`\\[${k}\\]`, "g"), v);
-    console.log(result);
   });
   return result;
 };
