@@ -16,7 +16,7 @@ export const AddIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => {
     >
       <line
         fill="none"
-        stroke="#F45389"
+        // stroke="#F45389"
         strokeLinecap="round"
         strokeLinejoin="round"
         x1="35.253"
@@ -26,7 +26,8 @@ export const AddIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => {
       />
       <circle
         fill="none"
-        stroke="#000000"
+        width=""
+        // stroke="#000000"
         strokeLinejoin="round"
         cx="25"
         cy="25"
@@ -34,7 +35,7 @@ export const AddIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => {
       />
       <line
         fill="none"
-        stroke="#F45389"
+        // stroke="#F45389"
         strokeLinecap="round"
         strokeLinejoin="round"
         x1="35.253"

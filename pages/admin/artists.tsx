@@ -8,17 +8,24 @@ import { useArtists } from "hooks/artists/use-artists";
 import { useUser } from "hooks/users/useUser";
 import { ArtistList } from "@components/organisms/admin/artists";
 import { AdminLayout } from "@components/templates/admin-layout";
+import { LoadPanel } from "@components/organisms/admin/load-panel";
+import { routes } from "libs/routes";
 
 const Admin: NextPage = () => {
-  const { artistsState, deleteArtist } = useArtists();
+  const { artistsState, deleteArtist, createArtist } = useArtists();
 
-  const { isLoggedIn } = useUser();
+  const { isLoggedIn, userState } = useUser();
   const router = useRouter();
 
   useEffect(() => {
+    if (!userState.userInitialized) return;
     if (isLoggedIn()) return;
-    router.replace("/admin/login");
-  }, [isLoggedIn]);
+    router.replace(routes.ADMIN_LOGIN);
+  }, [userState.userInitialized, isLoggedIn, router]);
+
+  if (!userState.userInitialized || !isLoggedIn()) {
+    return <LoadPanel />;
+  }
 
   return (
     <>
@@ -35,6 +42,7 @@ const Admin: NextPage = () => {
               <ArtistList
                 artists={artistsState.artists}
                 deleteArtist={deleteArtist}
+                createArtist={createArtist}
               />
             </div>
           </div>

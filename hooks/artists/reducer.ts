@@ -7,6 +7,7 @@ export enum ArtistsActions {
   FETCH_ARTISTS_SUCCEEDED = "ArtistsActions:FETCH_ARTISTS_SUCCEEDED",
   FETCH_ARTISTS_FAILED = "ArtistsActions:FETCH_ARTISTS_FAILED",
 
+  SET_NEW_ARTIST = "ArtistsActions:SET_NEW_ARTIST",
   CREATE_ARTIST = "ArtistsActions:CREATE_ARTIST",
   CREATE_ARTIST_SUCCEEDED = "ArtistsActions:CREATE_ARTIST_SUCCEEDED",
   CREATE_ARTIST_FAILED = "ArtistsActions:CREATE_ARTIST_FAILED",
@@ -23,6 +24,12 @@ export type ArtistsAction =
       type: typeof ArtistsActions.FETCH_ARTISTS_FAILED;
       payload: {
         error: string;
+      };
+    }
+  | {
+      type: typeof ArtistsActions.SET_NEW_ARTIST;
+      payload: {
+        artist: Partial<Artist>;
       };
     }
   | {
@@ -66,17 +73,42 @@ export const artistsReducer: Reducer<ArtistsState, ArtistsAction> = (
         error: action.payload.error,
         isLoading: false,
       };
+    case ArtistsActions.SET_NEW_ARTIST:
+      return {
+        ...state,
+        create: {
+          ...state.create,
+          artist: {
+            ...state.create.artist,
+            ...action.payload.artist,
+          },
+        },
+      };
     case ArtistsActions.CREATE_ARTIST:
       return {
         ...state,
+        create: {
+          ...state.create,
+          isCreating: true,
+        },
       };
     case ArtistsActions.CREATE_ARTIST_SUCCEEDED:
       return {
         ...state,
+        create: {
+          ...state.create,
+          artist: {},
+          isCreating: false,
+        },
       };
     case ArtistsActions.CREATE_ARTIST_FAILED:
       return {
         ...state,
+        create: {
+          ...state.create,
+          isCreating: false,
+          error: action.payload.error,
+        },
       };
   }
 };

@@ -20,6 +20,7 @@ export const userReducer: Reducer<UserState, UserAction> = (state, action) => {
     case UserActions.UPDATE_AUTH_STATE:
       return {
         user: action.payload.user,
+        userInitialized: true,
         userInfo: {
           roles: {
             admin: (action.payload.idTokenResult?.claims.admin ??

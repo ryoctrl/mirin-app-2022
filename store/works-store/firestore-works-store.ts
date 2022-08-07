@@ -2,6 +2,7 @@ import {
   addDoc,
   collection,
   CollectionReference,
+  deleteDoc,
   doc,
   DocumentData,
   DocumentReference,
@@ -66,6 +67,7 @@ export class FirestoreWorksStore implements WorksStore {
       setWorks(works);
     });
   }
+
   async find(id: string) {
     const workRef = doc(this.worksCollection, id);
     const snapshot = await getDoc(workRef);
@@ -91,11 +93,29 @@ export class FirestoreWorksStore implements WorksStore {
     await addDoc(this.worksCollection, work);
   }
 
+  async update(work: Work) {
+    await updateDoc(doc(this.worksCollection, work.id), work);
+  }
+
   async addComment(workId: string, comment: WorksComment) {
     const document = collection(
       this.worksCollection,
       `${workId}/comments`
     ).withConverter(CommentsConverter);
     addDoc(document, comment);
+  }
+
+  async deleteComment(workId: string, comment: WorksComment) {
+    const commentsCollection = collection(
+      this.worksCollection,
+      `${workId}/comments`
+    ).withConverter(CommentsConverter);
+
+    await deleteDoc(doc(commentsCollection, comment.id));
+  }
+
+  async delete(id: string): Promise<boolean> {
+    await deleteDoc(doc(this.worksCollection, id));
+    return true;
   }
 }
