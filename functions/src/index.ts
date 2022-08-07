@@ -56,3 +56,4 @@ export const onUpdateAdminRecord = usersDocs.onUpdate((change, c) =>
 export const onDeleteAdminRecord = usersDocs.onDelete(handleSnapshot);
 export const onCreateUser = users.onCreate(handleUser);
 export const onDeleteUser = users.onDelete(handleUser);
+export * from "./user";
