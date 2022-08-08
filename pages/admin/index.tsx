@@ -37,7 +37,7 @@ const Admin: NextPage = () => {
       <AdminLayout>
         <main className="main h-screen flex flex-col flex-grow ml-0 -ml-64 md:ml-0 transition-all duration-150 ease-in">
           <div className="m-4 py-8 h-full bg-white flex overflow-hidden">
-            <div className="mx-8 w-full overflow-hidden">
+            <div className="mx-8 w-full h-full flex flex-col">
               <div className="flex justify-between items-center mb-4">
                 <h1>登録済みイラスト: {worksState.works.length} 枚</h1>
                 <Link href={routes.ADMIN_NEW_ILLUST}>
