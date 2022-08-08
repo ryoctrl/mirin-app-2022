@@ -22,6 +22,7 @@ import { ImageIcon } from "@components/atoms/icons/image-icon";
 import { RegisterArtist } from "@components/organisms/admin/register-artist";
 import { Messages } from "libs/messages";
 import { uploadToStorage } from "libs/firebase/upload-to-storage";
+import { LoadPanel } from "@components/organisms/admin/load-panel";
 
 type FormErrors = {
   title: string;
@@ -96,7 +97,6 @@ const calcPreviewSize = (
   image: ImageInfo
 ): { width: number; height: number } => {
   const useHeight = image.height > image.width;
-  console.log(image);
 
   let height = image.height;
   let width = image.width;
@@ -122,7 +122,7 @@ const NewIllust: NextPage = () => {
   const { artistsState, createArtist } = useArtists();
   const { createWork } = useWorks();
 
-  const { isLoggedIn } = useUser();
+  const { isLoggedIn, userState } = useUser();
   const router = useRouter();
 
   const [illustPreview, setIllustPreview] = useState<ImageInfo>({
@@ -146,18 +146,21 @@ const NewIllust: NextPage = () => {
   const [artistName, setArtistName] = useState("");
   const [isGraduated, setIsGraduated] = useState(false);
   const [graduate, setGraduate] = useState(2020);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
+    if (!userState.userInitialized) return;
     if (isLoggedIn()) return;
     router.replace(routes.ADMIN_LOGIN);
-  }, [isLoggedIn]);
+  }, [userState.userInitialized, isLoggedIn, router]);
 
-  if (!isLoggedIn) {
-    return <div></div>;
+  if (!userState.userInitialized || !isLoggedIn()) {
+    return <LoadPanel />;
   }
 
   const registerWork: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
+    setUploading(true);
     const artist = artistsState.artists.find((a) => a.id === artistId) ?? null;
     const errors = validate(
       title,
@@ -206,15 +209,22 @@ const NewIllust: NextPage = () => {
       return;
     }
 
-    createWork({
-      title,
-      artist,
-      workedAt: Number(workedAt),
-      thumb: thumbUrl,
-      image: illustUrl,
-      description,
-      comments: [],
-    });
+    setUploading(false);
+
+    createWork(
+      {
+        title,
+        artist,
+        workedAt: Number(workedAt),
+        thumb: thumbUrl,
+        image: illustUrl,
+        description,
+        comments: [],
+      },
+      {
+        path: routes.ADMIN_ILLUSTS,
+      }
+    );
   };
 
   const onFileChange = (
@@ -406,9 +416,10 @@ const NewIllust: NextPage = () => {
               <button
                 type="submit"
                 className="shadow appearance-none border rounded w-full bg-sky-500 hover:bg-sky-700 py-2 px-3 text-white mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                disabled={uploading}
                 onClick={registerWork}
               >
-                登録
+                {uploading ? "アップロード中..." : "登録"}
               </button>
             </form>
           </div>

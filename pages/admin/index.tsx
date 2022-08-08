@@ -11,20 +11,22 @@ import { AdminLayout } from "@components/templates/admin-layout";
 import { WorksList } from "@components/organisms/admin/works";
 import { routes } from "libs/routes";
 import { AddIcon } from "@components/atoms/icons/add-icon";
+import { LoadPanel } from "@components/organisms/admin/load-panel";
 
 const Admin: NextPage = () => {
-  const { worksState } = useWorks();
+  const { worksState, deleteWork } = useWorks();
 
-  const { isLoggedIn } = useUser();
+  const { isLoggedIn, userState } = useUser();
   const router = useRouter();
 
   useEffect(() => {
+    if (!userState.userInitialized) return;
     if (isLoggedIn()) return;
     router.replace(routes.ADMIN_LOGIN);
-  }, [isLoggedIn, router]);
+  }, [isLoggedIn, router, userState.userInitialized]);
 
-  if (!isLoggedIn) {
-    return <div></div>;
+  if (!userState.userInitialized || !isLoggedIn()) {
+    return <LoadPanel />;
   }
 
   return (
@@ -40,14 +42,17 @@ const Admin: NextPage = () => {
                 <h1>登録済みイラスト: {worksState.works.length} 枚</h1>
                 <Link href={routes.ADMIN_NEW_ILLUST}>
                   <button className="flex border border-sky-500 appearance-none rounded py-2 px-3 text-gray-700 leading-tight bg-sky-500 hover:bg-sky-700">
-                    <AddIcon className="flex-shrink-0 w-6 h-6 text-white-500 transition duration-75 dark:text-white group-hover:text-gray-900 dark:group-hover:text-white" />
+                    <AddIcon
+                      className="flex-shrink-0 w-6 h-6 text-white transition rotate-45 dark:text-white group-hover:text-gray-900 dark:group-hover:text-white"
+                      stroke="#fff"
+                    />
                     <span className="mx-2 text-white font-bold">
                       イラストを追加する
                     </span>
                   </button>
                 </Link>
               </div>
-              <WorksList works={worksState.works} />
+              <WorksList works={worksState.works} deleteWork={deleteWork} />
             </div>
           </div>
         </main>

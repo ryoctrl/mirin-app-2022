@@ -1,4 +1,4 @@
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 import type { AppProps } from "next/app";
 
@@ -17,7 +17,10 @@ function MyApp({ Component, pageProps }: AppProps) {
         <ArtistsContextProvider>
           <AdminContextProvider>
             <Component {...pageProps} />
-            <ToastContainer />
+            <ToastContainer
+              position={toast.POSITION.TOP_CENTER}
+              theme="colored"
+            />
           </AdminContextProvider>
         </ArtistsContextProvider>
       </WorksContextProvider>

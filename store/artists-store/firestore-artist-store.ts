@@ -37,8 +37,13 @@ export class FirestoreArtistStore implements ArtistsStore {
     return snapshot.data() || null;
   }
 
-  async create(artist: Artist): Promise<void> {
-    await addDoc(this.usersCollection, artist);
+  async create(artist: Artist): Promise<Artist> {
+    const newArtistRef = await addDoc(this.usersCollection, artist);
+    const newArtist = await getDoc(newArtistRef).then((ss) => ss.data());
+    if (!newArtist) {
+      throw new Error("failed to create artist");
+    }
+    return newArtist;
   }
 
   async delete(id: string): Promise<boolean> {
