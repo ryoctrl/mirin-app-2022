@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { useRouter } from "next/router";
 
 import type { NextPage } from "next";
 
@@ -11,6 +12,7 @@ import OGP from "@components/organisms/ogp";
 
 const Home: NextPage = () => {
   const { worksState } = useWorks();
+  const router = useRouter();
   const {
     exhibitionsState: { currentExhibition },
   } = useExhibitions();
@@ -24,8 +26,8 @@ const Home: NextPage = () => {
         />
       </Head>
       <OGP
-        pageTitle={`${currentExhibition?.title} ?? "KUMD海賊版パネル展示会"`}
-        pagePath={`https://mirin-app-2022.mosin.jp`}
+        pageTitle={`${currentExhibition?.title ?? "KUMD海賊版パネル展示会"}`}
+        pagePath={`https://mirin-app-2022.mosin.jp${router.asPath}`}
         pageDescription={currentExhibition?.title ?? "KUMD海賊版パネル展示会"}
         pageImg={currentExhibition?.heroImage?.pc}
       />
