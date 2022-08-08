@@ -9,6 +9,7 @@ import { HomeLayout } from "@components/organisms";
 import { useWorks } from "hooks/works/useWorks";
 import { useExhibitions } from "hooks/exhibitions/use-exhibitions";
 import OGP from "@components/organisms/ogp";
+import { firestoreExhibitionStore } from "store/exhibitions-store";
 
 const Home: NextPage = () => {
   const { worksState } = useWorks();
@@ -38,6 +39,16 @@ const Home: NextPage = () => {
       </main>
     </div>
   );
+};
+
+Home.getInitialProps = async (context) => {
+  const currentExhibition =
+    await firestoreExhibitionStore.findCurrentExhibition();
+  return {
+    exhibitionsState: {
+      currentExhibition,
+    },
+  };
 };
 
 export default Home;

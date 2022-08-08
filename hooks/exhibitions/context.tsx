@@ -23,13 +23,15 @@ export const ExhibitionContext = createContext<ExhibitionsContextValue>({
 
 export const ExhibitionsContextProvider = ({
   children,
+  initialState,
 }: {
   children: ReactNode;
+  initialState: ExhibitionsState;
 }) => {
-  const [exhibitionsState, dispatch] = useReducer(
-    exhibitionsReducer,
-    initialExhibitionsState
-  );
+  const [exhibitionsState, dispatch] = useReducer(exhibitionsReducer, {
+    ...initialExhibitionsState,
+    ...initialState,
+  });
 
   const { userState } = useUser();
 

@@ -7,16 +7,29 @@ import { ArtistsContextProvider } from "hooks/artists/context";
 import { UserContextProvider } from "hooks/users/context";
 import { AdminContextProvider } from "hooks/admin/context";
 import { ExhibitionsContextProvider } from "hooks/exhibitions/context";
+import { initialExhibitionsState } from "hooks/exhibitions/state";
 
 import "@styles/globals.scss";
 import "react-toastify/dist/ReactToastify.css";
+import { initialWorksState } from "hooks/works/state";
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const { exhibitionsState, worksState } = pageProps;
   return (
     <UserContextProvider>
-      <WorksContextProvider>
+      <WorksContextProvider
+        initialState={{
+          ...initialWorksState,
+          ...worksState,
+        }}
+      >
         <ArtistsContextProvider>
-          <ExhibitionsContextProvider>
+          <ExhibitionsContextProvider
+            initialState={{
+              ...initialExhibitionsState,
+              ...exhibitionsState,
+            }}
+          >
             <AdminContextProvider>
               <Component {...pageProps} />
               <ToastContainer

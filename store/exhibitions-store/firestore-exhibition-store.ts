@@ -71,3 +71,5 @@ export class FirestoreExhibitionStore implements ExhibitionsStore {
     return true;
   }
 }
+
+export const firestoreExhibitionStore = new FirestoreExhibitionStore();

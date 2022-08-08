@@ -8,6 +8,8 @@ import styles from "@styles/Home.module.scss";
 import { useWorks } from "hooks/works/useWorks";
 import OGP from "@components/organisms/ogp";
 import { useExhibitions } from "hooks/exhibitions/use-exhibitions";
+import { firestoreExhibitionStore } from "store/exhibitions-store";
+import { firestoreWorksStore } from "store/works-store/firestore-works-store";
 
 const Works: NextPage = () => {
   const router = useRouter();
@@ -45,4 +47,17 @@ const Works: NextPage = () => {
   );
 };
 
+Works.getInitialProps = async (context) => {
+  const currentExhibition =
+    await firestoreExhibitionStore.findCurrentExhibition();
+  const works = await firestoreWorksStore.findAll();
+  return {
+    worksState: {
+      works,
+    },
+    exhibitionsState: {
+      currentExhibition,
+    },
+  };
+};
 export default Works;

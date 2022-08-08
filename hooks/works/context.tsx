@@ -30,8 +30,17 @@ export const WorksContext = createContext<WorksContextValue>({
   deleteWork: () => {},
 });
 
-export const WorksContextProvider = ({ children }: { children: ReactNode }) => {
-  const [worksState, dispatch] = useReducer(worksReducer, initialWorksState);
+export const WorksContextProvider = ({
+  children,
+  initialState,
+}: {
+  children: ReactNode;
+  initialState: WorksState;
+}) => {
+  const [worksState, dispatch] = useReducer(worksReducer, {
+    ...initialWorksState,
+    ...initialState,
+  });
   const router = useRouter();
 
   const listenWorks = async () => {

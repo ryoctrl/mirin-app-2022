@@ -119,3 +119,5 @@ export class FirestoreWorksStore implements WorksStore {
     return true;
   }
 }
+
+export const firestoreWorksStore = new FirestoreWorksStore();
