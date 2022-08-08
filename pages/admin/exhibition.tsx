@@ -145,7 +145,7 @@ const ExhibitionSettings: NextPage = () => {
                     altText="スマートフォン向けヒーローイメージ"
                   />
                   <p className="text-xs italic">
-                    ※ 長辺が最大 1920px を基準にリサイズされます。
+                    ※ 長辺が最大 1284px を基準にリサイズされます。
                   </p>
                 </div>
               </div>
