@@ -1,12 +1,5 @@
-import {
-  ChangeEvent,
-  ChangeEventHandler,
-  MouseEventHandler,
-  useEffect,
-  useState,
-} from "react";
+import { MouseEventHandler, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import NextImage from "next/image";
 import loadImage from "blueimp-load-image";
 import { toast } from "react-toastify";
 import Head from "next/head";
@@ -18,11 +11,11 @@ import { useArtists } from "hooks/artists/use-artists";
 import { useUser } from "hooks/users/useUser";
 import { AdminLayout } from "@components/templates/admin-layout";
 import { routes } from "libs/routes";
-import { ImageIcon } from "@components/atoms/icons/image-icon";
-import { RegisterArtist } from "@components/organisms/admin/register-artist";
 import { Messages } from "libs/messages";
-import { uploadToStorage } from "libs/firebase/upload-to-storage";
+import { uploadImage } from "libs/firebase/upload-to-storage";
 import { LoadPanel } from "@components/organisms/admin/load-panel";
+import { ImagePicker } from "@components/molecules/image-picker";
+import { initialImageInfo } from "libs/utils/image-utils";
 
 type FormErrors = {
   title: string;
@@ -71,53 +64,6 @@ const isEmptyErrors = (errors: FormErrors): boolean => {
   return Object.values(errors).every((e) => !e);
 };
 
-type ImageInfo = {
-  file?: File;
-  url: string;
-  height: number;
-  width: number;
-};
-
-const uploadImage = async (file: File, options: loadImage.LoadImageOptions) => {
-  const img = await loadImage(file, options);
-
-  const blob = await new Promise<Blob | null>((r) => {
-    (img.image as HTMLCanvasElement).toBlob((b) => {
-      r(b);
-    });
-  });
-
-  if (!blob) {
-    throw new Error("画像の圧縮に失敗しました。");
-  }
-  return await uploadToStorage(blob);
-};
-
-const calcPreviewSize = (
-  image: ImageInfo
-): { width: number; height: number } => {
-  const useHeight = image.height > image.width;
-
-  let height = image.height;
-  let width = image.width;
-
-  if (useHeight) {
-    height = image.height > 600 ? 600 : image.height;
-    if (height === 600) {
-      width *= 600 / image.height;
-    }
-  } else {
-    width = image.width > 600 ? 600 : image.width;
-    if (width === 600) {
-      height *= 600 / image.width;
-    }
-  }
-  return {
-    height,
-    width,
-  };
-};
-
 const NewIllust: NextPage = () => {
   const { artistsState, createArtist } = useArtists();
   const { createWork } = useWorks();
@@ -126,15 +72,11 @@ const NewIllust: NextPage = () => {
   const router = useRouter();
 
   const [illustPreview, setIllustPreview] = useState<ImageInfo>({
-    url: "",
-    height: -1,
-    width: -1,
+    ...initialImageInfo,
   });
 
   const [thumbPreview, setThumbPreview] = useState<ImageInfo>({
-    url: "",
-    height: -1,
-    width: -1,
+    ...initialImageInfo,
   });
 
   const [title, setTitle] = useState("");
@@ -227,33 +169,6 @@ const NewIllust: NextPage = () => {
     );
   };
 
-  const onFileChange = (
-    e: ChangeEvent<HTMLInputElement>,
-    setImage: (image: ImageInfo) => void
-  ) => {
-    const { files } = e.target;
-    const file = files?.[0];
-    if (!file) {
-      return;
-    }
-
-    const img = new Image();
-    const url = window.URL.createObjectURL(file);
-    img.onload = () => {
-      setImage({
-        file,
-        url,
-        width: img.width,
-        height: img.height,
-      });
-    };
-
-    img.src = url;
-  };
-
-  const illustPreviewSize = calcPreviewSize(illustPreview);
-  const thumbPreviewSize = calcPreviewSize(thumbPreview);
-
   return (
     <>
       <Head>
@@ -261,39 +176,19 @@ const NewIllust: NextPage = () => {
       </Head>
       <AdminLayout>
         <main className="main flex flex-col flex-grow -ml-64 md:ml-0 transition-all duration-150 ease-in">
-          <div className="m-4 py-8  bg-white  ">
-            <form className="px-8">
+          <div className="m-4 py-8  bg-white h-full">
+            <form className="px-8 h-full">
               <div className="w-full flex justify-center mb-4">
                 <h1 className="text-xl">イラスト登録</h1>
               </div>
               <div className="mb-4">
-                <div className="flex items-center justify-center w-full">
-                  <label className="flex flex-col items-center w-full border hover:bg-gray-100 hover:border-gray-300 relative">
-                    {!illustPreview.url && (
-                      <div className="flex flex-col items-center justify-center pt-7">
-                        <ImageIcon />
-                        <p className="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
-                          イラストを選ぶ
-                        </p>
-                      </div>
-                    )}
-
-                    {illustPreview.url && (
-                      <NextImage
-                        src={illustPreview.url}
-                        alt={title}
-                        width={illustPreviewSize.width.toString()}
-                        height={illustPreviewSize.height.toString()}
-                        layout="fixed"
-                      />
-                    )}
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="opacity-0 h-0"
-                      onChange={(e) => onFileChange(e, setIllustPreview)}
-                    />
-                  </label>
+                <div className="flex items-center justify-center w-full h-128">
+                  <ImagePicker
+                    image={illustPreview}
+                    setImage={setIllustPreview}
+                    chooseText="イラストを選ぶ"
+                    altText={title}
+                  />
                 </div>
                 <p className="text-xs italic">
                   ※ 長辺が最大 1920px を基準にリサイズされます。
@@ -301,33 +196,13 @@ const NewIllust: NextPage = () => {
               </div>
 
               <div className="mb-4">
-                <div className="flex items-center justify-center w-full">
-                  <label className="flex flex-col items-center w-full border hover:bg-gray-100 hover:border-gray-300 relative">
-                    {!thumbPreview.url && (
-                      <div className="flex flex-col items-center justify-center pt-7">
-                        <ImageIcon />
-                        <p className="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
-                          サムネイル画像を選ぶ
-                        </p>
-                      </div>
-                    )}
-
-                    {thumbPreview.url && (
-                      <NextImage
-                        src={thumbPreview.url}
-                        alt={title}
-                        layout="fixed"
-                        width={thumbPreviewSize.width}
-                        height={thumbPreviewSize.height}
-                      />
-                    )}
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="opacity-0 h-0"
-                      onChange={(e) => onFileChange(e, setThumbPreview)}
-                    />
-                  </label>
+                <div className="flex items-center justify-center w-full h-64">
+                  <ImagePicker
+                    image={thumbPreview}
+                    setImage={setThumbPreview}
+                    chooseText="サムネイル画像を選ぶ"
+                    altText={title}
+                  />
                 </div>
                 <p className="text-xs italic">
                   ※ サムネイル画像は 480px 四方の正方形にリサイズされます。
@@ -362,8 +237,8 @@ const NewIllust: NextPage = () => {
                     id="title-input"
                     placeholder="作者名"
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    value={artistName}
+                    onChange={(e) => setArtistName(e.target.value)}
                   />
 
                   <div className="my-2">

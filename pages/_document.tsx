@@ -2,7 +2,7 @@ import { Html, Head, Main, NextScript } from "next/document";
 
 export default function CustomDocument() {
   return (
-    <Html lang="ja">
+    <Html lang="ja" prefix="og:http://ogp.me/ns#">
       <Head>
         <meta name="description" content="KUMD海賊版パネル展示会" />
         <link

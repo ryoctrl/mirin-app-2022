@@ -35,3 +35,22 @@ type WorksComment = {
   createdAt?: Date;
   updatedAt?: Date;
 };
+
+type ImageInfo = {
+  file?: File;
+  url: string;
+  height: number;
+  width: number;
+};
+
+type Exhibition = {
+  id?: string;
+  title: string;
+  isActive: boolean;
+  heroImage: {
+    pc: string;
+    sp: string;
+  };
+  createdAt?: Date;
+  updatedAt?: Date;
+};

@@ -10,6 +10,7 @@ import { routes } from "libs/routes";
 import { ArtistsIcon, IllustsIcon, PublicIcon } from "@components/atoms/icons";
 import { useUser } from "hooks/users/useUser";
 import { UsersIcon } from "@components/atoms/icons/users-icon";
+import { SettingsIcon } from "@components/atoms/icons/settings-icon";
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -59,6 +60,14 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       ),
       text: "ユーザー一覧",
       path: routes.ADMIN_USERS,
+      isAdminOnly: true,
+    },
+    {
+      icon: (
+        <SettingsIcon className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+      ),
+      text: "展示会設定",
+      path: routes.ADMIN_EXHIBITION_SETTINGS,
       isAdminOnly: true,
     },
     {

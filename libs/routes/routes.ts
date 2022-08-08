@@ -6,5 +6,6 @@ export const routes = {
   ADMIN_USERS: "/admin/users",
   ADMIN_TOP: "/admin",
   ADMIN_LOGIN: "/admin/login",
+  ADMIN_EXHIBITION_SETTINGS: "/admin/exhibition",
   PUBLIC_TOP: "/",
 } as const;
