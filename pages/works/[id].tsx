@@ -48,9 +48,10 @@ const Works: NextPage = () => {
 };
 
 Works.getInitialProps = async (context) => {
-  const currentExhibition =
-    await firestoreExhibitionStore.findCurrentExhibition();
-  const works = await firestoreWorksStore.findAll();
+  const [currentExhibition, works] = await Promise.all([
+    firestoreExhibitionStore.findCurrentExhibition(),
+    firestoreWorksStore.findAll(),
+  ]);
   return {
     worksState: {
       works,
