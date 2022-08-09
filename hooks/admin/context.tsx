@@ -8,6 +8,7 @@ import { FirestoreUsersStore, UsersStore } from "store/users-store";
 import { useUser } from "hooks/users/useUser";
 import { auth } from "libs/firebase/firebase";
 import { registerNewUser } from "libs/firebase/functions";
+import { SystemMessages } from "libs/messages/system";
 
 const usersStore: UsersStore = new FirestoreUsersStore();
 
@@ -75,17 +76,30 @@ export const AdminContextProvider = ({ children }: { children: ReactNode }) => {
   const { userState } = useUser();
 
   const registerUser = async (user: User) => {
+    dispatch({ type: AdminActions.CREATE_USER });
     if (!userState.userInfo?.roles.admin) {
       toast.error("ユーザを登録するための権限がありません。");
+      dispatch({ type: AdminActions.CREATE_USER_FAILED });
       return;
     }
 
-    const result = await registerNewUser(user);
+    const result = await registerNewUser(user).catch((err) => err);
+
+    if (result instanceof Error) {
+      toast.error(
+        SystemMessages[result.message as keyof typeof SystemMessages] ??
+          result.message
+      );
+      dispatch({ type: AdminActions.CREATE_USER_FAILED });
+      return;
+    }
+
     if (result.data.user) {
       toast.success("ユーザ登録が完了しました。");
+      dispatch({ type: AdminActions.CREATE_USER_SUCCEEDED });
     } else {
-      console.log(result.data);
       toast.error("ユーザ登録に失敗しました。");
+      dispatch({ type: AdminActions.CREATE_USER_FAILED });
     }
   };
 

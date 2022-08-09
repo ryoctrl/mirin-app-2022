@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { useArtists } from "hooks/artists/use-artists";
+
 interface ArtistRegisterRowProps {
   artist: Partial<Artist>;
   updateNewArtist: (artist: Partial<Artist>) => void;
@@ -12,6 +14,7 @@ export const ArtistRegisterRow: React.FC<ArtistRegisterRowProps> = ({
   createArtist,
 }) => {
   const [isGraduated, setIsGraduated] = useState(false);
+  const { artistsState } = useArtists();
 
   const onClickRegister = () => {
     if (!artist.name) return;
@@ -23,6 +26,8 @@ export const ArtistRegisterRow: React.FC<ArtistRegisterRowProps> = ({
     }
     createArtist(newArtist);
   };
+
+  const isCreateActive = artist.name && !artistsState.create.isCreating;
   return (
     <tr>
       <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"></td>
@@ -73,11 +78,14 @@ export const ArtistRegisterRow: React.FC<ArtistRegisterRowProps> = ({
       <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"></td>
       <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
         <button
-          className="bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-sky-200"
           type="button"
+          disabled={!isCreateActive}
           onClick={onClickRegister}
         >
-          新しいアーティストを登録
+          {artistsState.create.isCreating
+            ? "アーティストを登録中..."
+            : "新しいアーティストを登録"}
         </button>
       </td>
     </tr>

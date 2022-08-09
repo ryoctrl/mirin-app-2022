@@ -17,7 +17,7 @@ export const WorksList: React.FC<WorksListProps> = ({ works, deleteWork }) => {
   const [deleteTargetWork, setDeleteWork] = useState<Work | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   return (
-    <div className="overflow-hidden">
+    <div className="overflow-hidden flex flex-1">
       <Modal id="test-modal" title="Confirm" isOpen={modalOpen}>
         <div className="p-6 space-y-6 text-white">
           {deleteTargetWork?.title} を削除しますか?
@@ -48,107 +48,113 @@ export const WorksList: React.FC<WorksListProps> = ({ works, deleteWork }) => {
           </button>
         </div>
       </Modal>
-      <table className="min-w-full">
-        <thead className="border-b">
-          <tr>
-            <th>削除</th>
-            <th
-              scope="col"
-              className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-            >
-              ID
-            </th>
-            <th
-              scope="col"
-              className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-            >
-              サムネイル
-            </th>
-            <th
-              scope="col"
-              className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-            >
-              タイトル
-            </th>
-            <th
-              scope="col"
-              className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-            >
-              作者
-            </th>
-            <th
-              scope="col"
-              className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-            >
-              登録日時
-            </th>
-            <th
-              scope="col"
-              className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-            >
-              更新日時
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {works.map((work) => {
-            return (
-              <Link
-                href={generatePath(routes.ADMIN_ILLUST_DETAIL, {
-                  id: work.id || "",
-                })}
-                key={work.id}
+      <div className="overflow-y-auto w-full h-full">
+        <table className="min-w-full">
+          <thead className="border-b">
+            <tr>
+              <th>削除</th>
+              <th
+                scope="col"
+                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
               >
-                <tr className="cursor-pointer">
-                  <td
-                    scope="col"
-                    className="text-sm font-medium text-gray-900 px-6 py-4 text-center"
-                  >
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setDeleteWork(work);
-                        setModalOpen(true);
-                      }}
-                      type="button"
-                      data-modal-toggle="test-modal"
+                ID
+              </th>
+              <th
+                scope="col"
+                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+              >
+                サムネイル
+              </th>
+              <th
+                scope="col"
+                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+              >
+                タイトル
+              </th>
+              <th
+                scope="col"
+                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+              >
+                作者
+              </th>
+              <th
+                scope="col"
+                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+              >
+                登録日時
+              </th>
+              <th
+                scope="col"
+                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+              >
+                更新日時
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {works.map((work) => {
+              return (
+                <Link
+                  href={generatePath(routes.ADMIN_ILLUST_DETAIL, {
+                    id: work.id || "",
+                  })}
+                  key={work.id}
+                >
+                  <tr className="cursor-pointer">
+                    <td
+                      scope="col"
+                      className="text-sm font-medium text-gray-900 px-6 py-4 text-center"
                     >
-                      <DeleteIcon className="rotate-45 flex-shrink-0 w-6 h-6 text-red-500 transition duration-75 dark:text-red group-hover:text-gray-900 dark:group-hover:text-white" />
-                    </button>
-                  </td>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setDeleteWork(work);
+                          setModalOpen(true);
+                        }}
+                        type="button"
+                        data-modal-toggle="test-modal"
+                      >
+                        <DeleteIcon className="rotate-45 flex-shrink-0 w-6 h-6 text-red-500 transition duration-75 dark:text-red group-hover:text-gray-900 dark:group-hover:text-white" />
+                      </button>
+                    </td>
 
-                  <td
-                    scope="col"
-                    className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-                  >
-                    {work.id}
-                  </td>
-                  <td
-                    scope="col"
-                    className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-                  >
-                    <div className="relative w-16 h-16">
-                      <Image alt={work.title} src={work.thumb} layout="fill" />
-                    </div>
-                  </td>
-                  <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                    {work.title}
-                  </td>
-                  <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                    {work.artist.name}
-                  </td>
-                  <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                    {dayjs(work.createdAt).format("YYYY-MM-DD HH:mm:ss")}
-                  </td>
-                  <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                    {dayjs(work.updatedAt).format("YYYY-MM-DD HH:mm:ss")}
-                  </td>
-                </tr>
-              </Link>
-            );
-          })}
-        </tbody>
-      </table>
+                    <td
+                      scope="col"
+                      className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                    >
+                      {work.id}
+                    </td>
+                    <td
+                      scope="col"
+                      className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                    >
+                      <div className="relative w-16 h-16">
+                        <Image
+                          alt={work.title}
+                          src={work.thumb}
+                          layout="fill"
+                        />
+                      </div>
+                    </td>
+                    <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                      {work.title}
+                    </td>
+                    <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                      {work.artist.name}
+                    </td>
+                    <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                      {dayjs(work.createdAt).format("YYYY-MM-DD HH:mm:ss")}
+                    </td>
+                    <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                      {dayjs(work.updatedAt).format("YYYY-MM-DD HH:mm:ss")}
+                    </td>
+                  </tr>
+                </Link>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

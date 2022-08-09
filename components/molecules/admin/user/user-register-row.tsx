@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 
+import { useAdmin } from "hooks/admin/useAdmin";
+
 interface UserRegisterRowProps {
   registerNewUser: (user: User) => void;
 }
@@ -10,6 +12,8 @@ export const UserRegisterRow: React.FC<UserRegisterRowProps> = ({
 }) => {
   const [email, setEmail] = useState("");
   const [admin, setAdmin] = useState(false);
+
+  const { adminState } = useAdmin();
 
   const onClickRegister = () => {
     if (!email) {
@@ -21,6 +25,8 @@ export const UserRegisterRow: React.FC<UserRegisterRowProps> = ({
       admin,
     });
   };
+
+  const isCreateActive = email && !adminState.isCreating;
   return (
     <tr>
       <td
@@ -49,12 +55,12 @@ export const UserRegisterRow: React.FC<UserRegisterRowProps> = ({
       <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"></td>
       <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
         <button
-          className="bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className={`bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-sky-200`}
           type="button"
-          disabled={!email}
+          disabled={!isCreateActive}
           onClick={onClickRegister}
         >
-          新しいユーザを登録
+          {adminState.isCreating ? "ユーザ登録中..." : "新しいユーザを登録"}
         </button>
       </td>
     </tr>

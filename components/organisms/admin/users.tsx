@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import { UserListRow } from "@components/molecules/admin/user/user-list-row";
 import { useUser } from "hooks/users/useUser";
 import { UserRegisterRow } from "@components/molecules/admin/user/user-register-row";
+import { useAdmin } from "hooks/admin/useAdmin";
 
 interface UserListProps {
   users: User[];
@@ -20,6 +21,8 @@ export const UserList: React.FC<UserListProps> = ({
   const {
     userState: { user: currentUser },
   } = useUser();
+
+  const { adminState } = useAdmin();
 
   const finalyUsers = users.map((user) => {
     const updateUser = updateUsers.find((u) => u.id === user.id);
