@@ -1,3 +1,12 @@
+declare namespace NodeJS {
+  interface ProcessEnv {
+    /**
+     * google analytics id
+     */
+    readonly NEXT_PUBLIC_GA_ID: string;
+  }
+}
+
 type User = {
   id?: string;
   admin: boolean;
