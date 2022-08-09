@@ -169,6 +169,17 @@ const NewIllust: NextPage = () => {
     );
   };
 
+  const isNotNewArtist = artistId && artistId !== "-1";
+  const newArtistSet = artistId === "-1" && !!artistName;
+  const isArtistSelected = isNotNewArtist || newArtistSet;
+
+  const isRegisterActive =
+    !uploading &&
+    title &&
+    isArtistSelected &&
+    illustPreview.file &&
+    thumbPreview.file;
+
   return (
     <>
       <Head>
@@ -290,8 +301,8 @@ const NewIllust: NextPage = () => {
               />
               <button
                 type="submit"
-                className="shadow appearance-none border rounded w-full bg-sky-500 hover:bg-sky-700 py-2 px-3 text-white mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                disabled={uploading}
+                className="shadow appearance-none border rounded w-full bg-sky-500 hover:bg-sky-700 py-2 px-3 text-white mb-3 leading-tight focus:outline-none focus:shadow-outline disabled:bg-sky-200"
+                disabled={!isRegisterActive}
                 onClick={registerWork}
               >
                 {uploading ? "アップロード中..." : "登録"}

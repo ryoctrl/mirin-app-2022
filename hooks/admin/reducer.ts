@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { AdminState } from "./state";
 
 import { generateModifiedUserList } from "libs/utils/user-utils";
+import { UserActions } from "hooks/users/reducer";
 
 export enum AdminActions {
   FETCH_USERS = "AdminActions:FETCH_USERS",
@@ -14,6 +15,10 @@ export enum AdminActions {
   SAVE_UPDATE_USER = "AdminActions:SAVE_UPDATE_USER",
   SAVE_UPDATE_USER_SUCCEEDED = "AdminActions:SAVE_UPDATE_USER_SUCCEEDED",
   SAVE_UPDATE_USER_FAILED = "AdminActions:SAVE_UPDATE_USER_FAILED",
+
+  CREATE_USER = "AdminActions:CREATE_USER",
+  CREATE_USER_SUCCEEDED = "AdminActions:CREATE_USER_SUCCEEDED",
+  CREATE_USER_FAILED = "AdminActions:CREATE_USER_FAILED",
 }
 
 export type AdminAction =
@@ -49,6 +54,15 @@ export type AdminAction =
       payload: {
         message: string;
       };
+    }
+  | {
+      type: typeof AdminActions.CREATE_USER;
+    }
+  | {
+      type: typeof AdminActions.CREATE_USER_SUCCEEDED;
+    }
+  | {
+      type: typeof AdminActions.CREATE_USER_FAILED;
     };
 
 export const adminReducer: Reducer<AdminState, AdminAction> = (
@@ -117,6 +131,18 @@ export const adminReducer: Reducer<AdminState, AdminAction> = (
           message: action.payload.message,
         },
       };
+    case AdminActions.CREATE_USER:
+      return {
+        ...state,
+        isCreating: true,
+      };
+    case AdminActions.CREATE_USER_SUCCEEDED:
+    case AdminActions.CREATE_USER_FAILED:
+      return {
+        ...state,
+        isCreating: false,
+      };
+
     default:
       return {
         ...state,
