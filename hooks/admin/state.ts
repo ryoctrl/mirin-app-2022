@@ -1,6 +1,7 @@
 export interface AdminState {
   users: User[];
   isLoading: boolean;
+  isCreating: boolean;
   message?: string;
   update: {
     users: User[];
@@ -12,6 +13,7 @@ export interface AdminState {
 export const initialAdminState: AdminState = {
   users: [],
   isLoading: false,
+  isCreating: false,
   update: {
     users: [],
     isLoading: false,

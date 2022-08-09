@@ -1,4 +1,5 @@
 import React, { createContext, ReactNode, useEffect, useReducer } from "react";
+import { toast } from "react-toastify";
 
 import { ArtistsActions, artistsReducer } from "./reducer";
 import { ArtistsState, initialArtistsState } from "./state";
@@ -12,12 +13,14 @@ interface ArtistsContextValue {
   artistsState: ArtistsState;
   createArtist: (artist: Artist) => void;
   deleteArtist: (artistId: string) => void;
+  setNewArtist: (artist: Partial<Artist>) => void;
 }
 
 export const ArtistContext = createContext<ArtistsContextValue>({
   artistsState: initialArtistsState,
   createArtist: () => {},
   deleteArtist: () => {},
+  setNewArtist: () => {},
 });
 
 export const ArtistsContextProvider = ({
@@ -49,11 +52,41 @@ export const ArtistsContextProvider = ({
     });
   };
 
-  // TODO: add support for dispatching reducer methods
   const createArtist = async (artist: Artist) => {
-    await artistsStore.create(artist);
+    dispatch({ type: ArtistsActions.CREATE_ARTIST, payload: { artist } });
+    const newArtist = await artistsStore.create(artist).catch((err) => {
+      return err.message;
+    });
 
+    if (typeof newArtist === "string") {
+      dispatch({
+        type: ArtistsActions.CREATE_ARTIST_FAILED,
+        payload: {
+          error: newArtist,
+        },
+      });
+      toast.error("アーティストの作成に失敗しました。");
+      return;
+    }
+
+    toast.success("アーティストを作成しました。");
+
+    dispatch({
+      type: ArtistsActions.CREATE_ARTIST_SUCCEEDED,
+      payload: {
+        artist: newArtist,
+      },
+    });
     await fetchArtists();
+  };
+
+  const setNewArtist = (artist: Partial<Artist>) => {
+    dispatch({
+      type: ArtistsActions.SET_NEW_ARTIST,
+      payload: {
+        artist,
+      },
+    });
   };
 
   const deleteArtist = async (artistId: string) => {
@@ -71,6 +104,7 @@ export const ArtistsContextProvider = ({
         artistsState,
         createArtist,
         deleteArtist,
+        setNewArtist,
       }}
     >
       {children}

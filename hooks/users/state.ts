@@ -8,9 +8,11 @@ export type UserInfo = {
 
 export interface UserState {
   user: User | null;
+  userInitialized: boolean;
   userInfo?: UserInfo;
 }
 
 export const initialUserState: UserState = {
   user: null,
+  userInitialized: false,
 };

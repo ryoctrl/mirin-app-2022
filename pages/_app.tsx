@@ -1,4 +1,4 @@
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 import type { AppProps } from "next/app";
 
@@ -6,19 +6,38 @@ import { WorksContextProvider } from "hooks/works/context";
 import { ArtistsContextProvider } from "hooks/artists/context";
 import { UserContextProvider } from "hooks/users/context";
 import { AdminContextProvider } from "hooks/admin/context";
+import { ExhibitionsContextProvider } from "hooks/exhibitions/context";
+import { initialExhibitionsState } from "hooks/exhibitions/state";
 
 import "@styles/globals.scss";
 import "react-toastify/dist/ReactToastify.css";
+import { initialWorksState } from "hooks/works/state";
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const { exhibitionsState, worksState } = pageProps;
   return (
     <UserContextProvider>
-      <WorksContextProvider>
+      <WorksContextProvider
+        initialState={{
+          ...initialWorksState,
+          ...worksState,
+        }}
+      >
         <ArtistsContextProvider>
-          <AdminContextProvider>
-            <Component {...pageProps} />
-            <ToastContainer />
-          </AdminContextProvider>
+          <ExhibitionsContextProvider
+            initialState={{
+              ...initialExhibitionsState,
+              ...exhibitionsState,
+            }}
+          >
+            <AdminContextProvider>
+              <Component {...pageProps} />
+              <ToastContainer
+                position={toast.POSITION.TOP_CENTER}
+                theme="colored"
+              />
+            </AdminContextProvider>
+          </ExhibitionsContextProvider>
         </ArtistsContextProvider>
       </WorksContextProvider>
     </UserContextProvider>

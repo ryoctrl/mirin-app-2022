@@ -10,18 +10,26 @@ import { useAdmin } from "hooks/admin/useAdmin";
 import { UserList } from "@components/organisms/admin/users";
 import { routes } from "libs/routes";
 import { SaveIcon } from "@components/atoms/icons/save-icon";
+import { LoadPanel } from "@components/organisms/admin/load-panel";
 
 const AdminUsers: NextPage = () => {
-  const { isLoggedIn } = useUser();
-  const { adminState, modifyUser, saveModifiedUsers } = useAdmin();
+  const { isLoggedIn, userState } = useUser();
+  const { adminState, modifyUser, saveModifiedUsers, registerUser } =
+    useAdmin();
   const router = useRouter();
 
   const [updateUsers, setUpdateUsers] = useState<User[]>([]);
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
+    if (!userState.userInitialized) return;
     if (isLoggedIn()) return;
     router.replace(routes.ADMIN_LOGIN);
-  }, [isLoggedIn, router]);
+  }, [isLoggedIn, router, userState.userInitialized]);
+
+  if (!userState.userInitialized || !isLoggedIn()) {
+    return <LoadPanel />;
+  }
 
   return (
     <>
@@ -51,6 +59,7 @@ const AdminUsers: NextPage = () => {
                 users={adminState.users}
                 updateUsers={adminState.update.users}
                 modifyUpdateUser={modifyUser}
+                registerNewUser={registerUser}
               />
             </div>
           </div>

@@ -1,3 +1,12 @@
+declare namespace NodeJS {
+  interface ProcessEnv {
+    /**
+     * google analytics id
+     */
+    readonly NEXT_PUBLIC_GA_ID: string;
+  }
+}
+
 type User = {
   id?: string;
   admin: boolean;
@@ -32,6 +41,25 @@ type WorksComment = {
   id?: string;
   name: string;
   text: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
+
+type ImageInfo = {
+  file?: File;
+  url: string;
+  height: number;
+  width: number;
+};
+
+type Exhibition = {
+  id?: string;
+  title: string;
+  isActive: boolean;
+  heroImage: {
+    pc: string;
+    sp: string;
+  };
   createdAt?: Date;
   updatedAt?: Date;
 };
