@@ -20,6 +20,7 @@ export const ArtistRegisterRow: React.FC<ArtistRegisterRowProps> = ({
     if (!artist.name) return;
     const newArtist: Artist = {
       name: artist.name,
+      social: artist.social,
     };
     if (isGraduated && artist.graduatedAt) {
       newArtist.graduatedAt = artist.graduatedAt;
@@ -74,6 +75,21 @@ export const ArtistRegisterRow: React.FC<ArtistRegisterRowProps> = ({
             />
           )}
         </div>
+      </td>
+      <td
+        scope="col"
+        className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+      >
+        <input
+          className="appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+          id="twitter"
+          type="text"
+          placeholder="@twitter_id"
+          value={artist.social?.twitter}
+          onChange={(e) =>
+            updateNewArtist({ social: { twitter: e.target.value } })
+          }
+        />
       </td>
       <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"></td>
       <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">

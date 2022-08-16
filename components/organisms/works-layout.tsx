@@ -2,6 +2,8 @@ import Image from "next/image";
 import { useState } from "react";
 
 import { useWorks } from "hooks/works/useWorks";
+import { WrapLink } from "@components/atoms/wrap-link";
+import { TwitterIcon } from "@components/atoms/icons/twitter-icon";
 
 type Props = {
   work: Work;
@@ -58,6 +60,20 @@ export const WorksLayout: React.FC<Props> = (props) => {
               <span>制作年: {work.workedAt}</span>
             </div>
           </div>
+          {work.artist.social && (
+            <div className="text-social-link">
+              <div className="social-link">
+                <WrapLink
+                  path={`https://twitter.com/${work.artist.social?.twitter}`}
+                  outerLink={true}
+                >
+                  <button className="social-link">
+                    <TwitterIcon />
+                  </button>
+                </WrapLink>
+              </div>
+            </div>
+          )}
           <div className="text-description">
             {work.description.split("\n").map((p, idx) => (
               <p key={idx}>{p}</p>

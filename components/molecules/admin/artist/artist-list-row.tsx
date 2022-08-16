@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 
 import { DeleteIcon } from "@components/atoms/icons/delete-icon";
+import { WrapLink } from "@components/atoms/wrap-link";
 
 interface ArtistListRowProps {
   artist: Artist;
@@ -33,6 +34,20 @@ export const ArtistListRow: React.FC<ArtistListRowProps> = ({
       </td>
       <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
         {artist.graduatedAt}
+      </td>
+      <td
+        scope="col"
+        className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+      >
+        {artist.social?.twitter && (
+          <WrapLink
+            path={`https://twitter.com/${artist.social?.twitter}`}
+            outerLink={true}
+          >
+            <span>{artist.social.twitter}</span>
+          </WrapLink>
+        )}
+        {!artist.social?.twitter && <span>設定なし</span>}
       </td>
       <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
         {dayjs(artist.createdAt).format("YYYY-MM-DD HH:mm:ss")}

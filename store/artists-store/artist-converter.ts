@@ -18,6 +18,7 @@ export const ArtistConverter: FirestoreDataConverter<Artist> = {
     return {
       name: artist.name,
       ...gradOfArtist,
+      social: artist.social,
       createdAt: artist.createdAt ?? serverTimestamp(),
       updatedAt: serverTimestamp(),
     };
@@ -34,6 +35,7 @@ export const ArtistConverter: FirestoreDataConverter<Artist> = {
       id: snapshot.id,
       name: data.name,
       graduatedAt: data.graduatedAt,
+      social: data.social,
       createdAt: data.createdAt?.toDate(),
       updatedAt: data.updatedAt?.toDate(),
     };

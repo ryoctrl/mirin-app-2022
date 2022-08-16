@@ -10,6 +10,7 @@ export const RegisterArtist: React.FC<RegisterArtistProps> = ({
   const [name, setName] = useState("");
   const [isGraduated, setIsGraduated] = useState(false);
   const [graduate, setGraduate] = useState(2020);
+  const [twitter, setTwitter] = useState("");
 
   const executeRegister = () => {
     const artist: Artist = {

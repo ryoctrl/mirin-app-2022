@@ -35,7 +35,7 @@ const initialErrors: FormErrors = {
 
 const validate = (
   title: string,
-  artist: Artist | null,
+  artist: Artist | null | void,
   workedAt: string,
   description: string,
   file?: File
@@ -87,6 +87,7 @@ const NewIllust: NextPage = () => {
 
   const [artistName, setArtistName] = useState("");
   const [isGraduated, setIsGraduated] = useState(false);
+  const [twitter, setTwitter] = useState("");
   const [graduate, setGraduate] = useState(2020);
   const [uploading, setUploading] = useState(false);
 
@@ -103,7 +104,23 @@ const NewIllust: NextPage = () => {
   const registerWork: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
     setUploading(true);
-    const artist = artistsState.artists.find((a) => a.id === artistId) ?? null;
+    let createdArtist;
+    if (artistId === "-1") {
+      const newArtist: Artist = {
+        name: artistName,
+      };
+      if (isGraduated) {
+        newArtist.graduatedAt = graduate;
+      }
+      if (twitter) {
+        newArtist.social = { twitter };
+      }
+      createdArtist = await createArtist(newArtist);
+    }
+    const artist =
+      artistId === "-1"
+        ? createdArtist
+        : artistsState.artists.find((a) => a.id === artistId) ?? null;
     const errors = validate(
       title,
       artist,
@@ -118,6 +135,11 @@ const NewIllust: NextPage = () => {
       !thumbPreview.file
     ) {
       setErrors(errors);
+      toast.error(
+        Object.entries(errors)
+          .map(([k, v]) => `${k}: ${v}`)
+          .join(",")
+      );
       return;
     }
 
@@ -278,6 +300,13 @@ const NewIllust: NextPage = () => {
                       />
                     )}
                   </div>
+                  <input
+                    id="twitter-input"
+                    placeholder="@twitter_id"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    value={twitter}
+                    onChange={(e) => setTwitter(e.target.value)}
+                  />
                 </>
               )}
               <input
