@@ -55,7 +55,6 @@ export const ArtistList: React.FC<ArtistListProps> = ({
         <table className="min-w-full">
           <thead className="border-b">
             <tr>
-              <th>削除</th>
               <th
                 scope="col"
                 className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
@@ -69,8 +68,8 @@ export const ArtistList: React.FC<ArtistListProps> = ({
                 入学年
               </th>
               <th
-              scope="col"
-              className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                scope="col"
+                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
               >
                 Twitter
               </th>
@@ -85,6 +84,18 @@ export const ArtistList: React.FC<ArtistListProps> = ({
                 className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
               >
                 更新日時
+              </th>
+              <th
+                scope="col"
+                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+              >
+                編集
+              </th>
+              <th
+                scope="col"
+                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+              >
+                削除
               </th>
             </tr>
           </thead>

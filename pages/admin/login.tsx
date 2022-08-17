@@ -29,7 +29,7 @@ const AdminLogin: NextPage = () => {
   useEffect(() => {
     if (!user) return;
     router.replace("/admin");
-  }, [user]);
+  }, [user, router]);
 
   const handleSubmit: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();

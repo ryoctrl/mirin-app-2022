@@ -8,6 +8,7 @@ import {
   DocumentReference,
   getDoc,
   getDocs,
+  updateDoc,
 } from "firebase/firestore";
 
 import { ArtistsStore } from "./artist-store.interface";
@@ -48,6 +49,11 @@ export class FirestoreArtistStore implements ArtistsStore {
 
   async delete(id: string): Promise<boolean> {
     await deleteDoc(doc(this.usersCollection, id));
+    return true;
+  }
+
+  async update(artist: Artist): Promise<boolean> {
+    await updateDoc(doc(this.usersCollection, artist.id), artist);
     return true;
   }
 }

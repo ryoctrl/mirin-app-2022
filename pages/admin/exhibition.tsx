@@ -44,7 +44,7 @@ const ExhibitionSettings: NextPage = () => {
       url: currentExhibition.heroImage.sp,
     });
     setExhibitionTitle(currentExhibition.title);
-  }, [currentExhibition]);
+  }, [currentExhibition, pcHeroImage, spHeroImage]);
 
   useEffect(() => {
     if (!userState.userInitialized) return;
