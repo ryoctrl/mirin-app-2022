@@ -20,6 +20,7 @@ interface WorksContextValue {
   addComment: (workId: string, comment: WorksComment) => void;
   deleteComment: (workId: string, comment: WorksComment) => void;
   deleteWork: (work: Work) => void;
+  updateWork: (work: Work) => Promise<void>;
 }
 
 export const WorksContext = createContext<WorksContextValue>({
@@ -28,6 +29,7 @@ export const WorksContext = createContext<WorksContextValue>({
   addComment: () => {},
   deleteComment: () => {},
   deleteWork: () => {},
+  updateWork: () => Promise.resolve(),
 });
 
 export const WorksContextProvider = ({
@@ -82,6 +84,10 @@ export const WorksContextProvider = ({
     await worksStore.update(work);
   };
 
+  const updateWork = async (work: Work) => {
+    await worksStore.update(work);
+  };
+
   useEffect(() => {
     listenWorks();
   }, []);
@@ -98,7 +104,14 @@ export const WorksContextProvider = ({
 
   return (
     <WorksContext.Provider
-      value={{ worksState, createWork, addComment, deleteWork, deleteComment }}
+      value={{
+        worksState,
+        createWork,
+        addComment,
+        deleteWork,
+        deleteComment,
+        updateWork,
+      }}
     >
       {children}
     </WorksContext.Provider>
