@@ -20,7 +20,7 @@ export const ArtistList: React.FC<ArtistListProps> = ({
   const [deleteTargetArtist, setDeleteArtist] = useState<Artist | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   return (
-    <div className="overflow-hidden">
+    <div className="overflow-hidden flex flex-1">
       <Modal id="test-modal" title="Confirm" isOpen={modalOpen}>
         <div className="p-6 space-y-6 text-white">
           {deleteTargetArtist?.name} さんを削除しますか?
@@ -51,61 +51,62 @@ export const ArtistList: React.FC<ArtistListProps> = ({
           </button>
         </div>
       </Modal>
-      <table className="min-w-full">
-        <thead className="border-b">
-          <tr>
-            <th>削除</th>
-            <th
+      <div className="overflow-y-auto w-full h-full">
+        <table className="min-w-full">
+          <thead className="border-b">
+            <tr>
+              <th>削除</th>
+              <th
+                scope="col"
+                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+              >
+                名前
+              </th>
+              <th
+                scope="col"
+                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+              >
+                入学年
+              </th>
+              <th
               scope="col"
               className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-            >
-              名前
-            </th>
-            <th
-              scope="col"
-              className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-            >
-              入学年
-            </th>
-            <th
-              scope="col"
-              className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-            >
-              Twitter
-            </th>
-            <th
-              scope="col"
-              className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-            >
-              登録日時
-            </th>
-
-            <th
-              scope="col"
-              className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-            >
-              更新日時
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <ArtistRegisterRow
-            artist={artistsState.create.artist}
-            updateNewArtist={setNewArtist}
-            createArtist={createArtist}
-          />
-          {artists.map((artist) => (
-            <ArtistListRow
-              key={artist.id}
-              artist={artist}
-              beginDeleteAction={() => {
-                setDeleteArtist(artist);
-                setModalOpen(true);
-              }}
+              >
+                Twitter
+              </th>
+              <th
+                scope="col"
+                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+              >
+                登録日時
+              </th>
+              <th
+                scope="col"
+                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+              >
+                更新日時
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <ArtistRegisterRow
+              artist={artistsState.create.artist}
+              updateNewArtist={setNewArtist}
+              createArtist={createArtist}
             />
-          ))}
-        </tbody>
-      </table>
+            {artists.map((artist) => (
+              <ArtistListRow
+                key={artist.id}
+                artist={artist}
+                beginDeleteAction={() => {
+                  setDeleteArtist(artist);
+                  setModalOpen(true);
+                }}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
