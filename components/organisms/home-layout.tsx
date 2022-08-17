@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { SectionTitle } from "@components/molecules";
 import { WorksState } from "hooks/works/state";
+import { convertWorksToSortableWorks } from "libs/utils";
 
 type Props = {
   worksState: WorksState;
@@ -63,9 +64,8 @@ export const HomeLayout: React.FC<Props> = ({ worksState }) => {
 
         <div>
           {worksState.isLoading && <span>Now Loading...</span>}
-          {worksState.works
-            .sort((a, b) => (a.order || 0) - (b.order || 0))
-            .map((work, idx) => {
+          {convertWorksToSortableWorks(worksState.works).map(
+            ({ work }, idx) => {
               return (
                 <Link key={idx + 1} href={`/works/${work.id}`}>
                   <div className="opus">
@@ -88,7 +88,8 @@ export const HomeLayout: React.FC<Props> = ({ worksState }) => {
                   </div>
                 </Link>
               );
-            })}
+            }
+          )}
         </div>
       </div>
     </div>
