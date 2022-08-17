@@ -13,18 +13,15 @@ export const ArtistRegisterRow: React.FC<ArtistRegisterRowProps> = ({
   updateNewArtist,
   createArtist,
 }) => {
-  const [isGraduated, setIsGraduated] = useState(false);
   const { artistsState } = useArtists();
 
   const onClickRegister = () => {
-    if (!artist.name) return;
+    if (!artist.name || !artist.admittedAt) return;
     const newArtist: Artist = {
       name: artist.name,
       social: artist.social,
+      admittedAt: artist.admittedAt,
     };
-    if (isGraduated && artist.graduatedAt) {
-      newArtist.graduatedAt = artist.graduatedAt;
-    }
     createArtist(newArtist);
   };
 
@@ -50,30 +47,18 @@ export const ArtistRegisterRow: React.FC<ArtistRegisterRowProps> = ({
         className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
       >
         <div className="my-2">
-          <label className="text-gray-700 text-sm font-bold mb-2 py-2">
-            卒業済み?
-          </label>
           <input
-            type="checkbox"
-            className=" border rounded py-2 mx-3"
-            checked={isGraduated}
-            onChange={(e) => setIsGraduated(e.target.checked)}
+            className="appearance-none border rounded  py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+            id="graduate"
+            type="number"
+            min="2000"
+            max="2030"
+            value={artist.admittedAt}
+            onChange={(e) => {
+              const admittedAt = Number(e.target.value);
+              updateNewArtist({ admittedAt });
+            }}
           />
-          {isGraduated && (
-            <input
-              className="appearance-none border rounded  py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
-              id="graduate"
-              type="number"
-              min="2000"
-              max="2030"
-              disabled={!isGraduated}
-              value={artist.graduatedAt}
-              onChange={(e) => {
-                const graduate = Number(e.target.value);
-                updateNewArtist({ graduatedAt: graduate });
-              }}
-            />
-          )}
         </div>
       </td>
       <td

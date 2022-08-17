@@ -21,7 +21,7 @@ type Artist = {
   social?: {
     twitter?: string;
   };
-  graduatedAt?: number;
+  admittedAt: number;
   createdAt?: Date;
   updatedAt?: Date;
 };

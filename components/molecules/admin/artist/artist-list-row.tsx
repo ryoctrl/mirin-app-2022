@@ -33,7 +33,7 @@ export const ArtistListRow: React.FC<ArtistListRowProps> = ({
         {artist.name}
       </td>
       <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-        {artist.graduatedAt}
+        {artist.admittedAt}
       </td>
       <td
         scope="col"

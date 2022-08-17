@@ -8,17 +8,14 @@ export const RegisterArtist: React.FC<RegisterArtistProps> = ({
   createArtist,
 }) => {
   const [name, setName] = useState("");
-  const [isGraduated, setIsGraduated] = useState(false);
-  const [graduate, setGraduate] = useState(2020);
   const [twitter, setTwitter] = useState("");
+  const [admittedAt, setAdmittedAt] = useState(2020);
 
   const executeRegister = () => {
     const artist: Artist = {
       name,
+      admittedAt,
     };
-    if (isGraduated) {
-      artist.graduatedAt = graduate;
-    }
     createArtist(artist);
   };
 
@@ -38,40 +35,24 @@ export const RegisterArtist: React.FC<RegisterArtistProps> = ({
         />
       </div>
       <div className="mb-6">
-        <div className="w-full">
-          <label className="text-gray-700 text-sm font-bold mb-2">
-            卒業済み?
-          </label>
-          <input
-            type="checkbox"
-            className=" border rounded py-2 mx-3"
-            checked={isGraduated}
-            onChange={(e) => setIsGraduated(e.target.checked)}
-          />
-        </div>
-        {isGraduated && (
-          <>
-            <label
-              className="text-gray-700 text-sm font-bold mb-2"
-              htmlFor="graduate"
-            >
-              卒業年度
-            </label>
-            <input
-              className="appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
-              id="graduate"
-              type="number"
-              min="2000"
-              max="2030"
-              disabled={!isGraduated}
-              value={graduate}
-              onChange={(e) => {
-                const graduate = Number(e.target.value);
-                setGraduate(isNaN(graduate) ? 2020 : graduate);
-              }}
-            />
-          </>
-        )}
+        <label
+          className="text-gray-700 text-sm font-bold mb-2"
+          htmlFor="graduate"
+        >
+          入学年度
+        </label>
+        <input
+          className="appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+          id="graduate"
+          type="number"
+          min="2000"
+          max="2030"
+          value={admittedAt}
+          onChange={(e) => {
+            const admittedAt = Number(e.target.value);
+            setAdmittedAt(isNaN(admittedAt) ? 2020 : admittedAt);
+          }}
+        />
       </div>
       <div className="flex items-center justify-between">
         <button
