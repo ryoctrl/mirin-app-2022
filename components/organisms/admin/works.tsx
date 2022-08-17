@@ -1,11 +1,14 @@
 import dayjs from "dayjs";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { ReactSortable } from "react-sortablejs";
 
 import { Modal } from "@components/atoms/modal/modal";
 import { generatePath } from "libs/utils/route-utils";
 import { routes } from "libs/routes";
+import { useWorks } from "hooks/works/useWorks";
+import { convertWorksToSortableWorks } from "libs/utils";
 
 interface WorksListProps {
   works: Work[];
@@ -13,8 +16,34 @@ interface WorksListProps {
 }
 
 export const WorksList: React.FC<WorksListProps> = ({ works, deleteWork }) => {
+  const { updateWork } = useWorks();
   const [deleteTargetWork, setDeleteWork] = useState<Work | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [sortableWorks, setSortableWork] = useState<SortableWork[]>(
+    convertWorksToSortableWorks(works)
+  );
+
+  useEffect(() => {
+    setSortableWork(convertWorksToSortableWorks(works));
+  }, [works]);
+
+  const handleReorder = async (reorderedSortableWorks: SortableWork[]) => {
+    const newWorks = reorderedSortableWorks.map((sw, idx) => {
+      return {
+        ...sw.work,
+        order: idx + 1,
+      };
+    });
+
+    const updatedWorks = newWorks.filter(
+      (nw) => nw.order !== works.find((w) => w.id === nw.id)?.order
+    );
+
+    await Promise.all(updatedWorks.map((nw) => updateWork(nw)));
+
+    setSortableWork(reorderedSortableWorks);
+  };
+
   return (
     <div className="overflow-hidden flex flex-1">
       <Modal id="test-modal" title="Confirm" isOpen={modalOpen}>
@@ -101,8 +130,13 @@ export const WorksList: React.FC<WorksListProps> = ({ works, deleteWork }) => {
               </th>
             </tr>
           </thead>
-          <tbody>
-            {works.map((work) => {
+          <ReactSortable
+            list={sortableWorks}
+            setList={handleReorder}
+            swap
+            tag="tbody"
+          >
+            {sortableWorks.map(({ id, work }) => {
               return (
                 <tr key={work.id}>
                   <td
@@ -161,7 +195,7 @@ export const WorksList: React.FC<WorksListProps> = ({ works, deleteWork }) => {
                 </tr>
               );
             })}
-          </tbody>
+          </ReactSortable>
         </table>
       </div>
     </div>
