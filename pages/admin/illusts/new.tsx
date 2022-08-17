@@ -86,9 +86,8 @@ const NewIllust: NextPage = () => {
   const [errors, setErrors] = useState({ ...initialErrors });
 
   const [artistName, setArtistName] = useState("");
-  const [isGraduated, setIsGraduated] = useState(false);
+  const [admittedAt, setAdmittedAt] = useState(2020);
   const [twitter, setTwitter] = useState("");
-  const [graduate, setGraduate] = useState(2020);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
@@ -108,10 +107,8 @@ const NewIllust: NextPage = () => {
     if (artistId === "-1") {
       const newArtist: Artist = {
         name: artistName,
+        admittedAt,
       };
-      if (isGraduated) {
-        newArtist.graduatedAt = graduate;
-      }
       if (twitter) {
         newArtist.social = { twitter };
       }
@@ -274,32 +271,17 @@ const NewIllust: NextPage = () => {
                     onChange={(e) => setArtistName(e.target.value)}
                   />
 
-                  <div className="my-2">
-                    <label className="text-gray-700 text-sm font-bold mb-2 py-2">
-                      卒業済み?
-                    </label>
-                    <input
-                      type="checkbox"
-                      className=" border rounded py-2 mx-3"
-                      checked={isGraduated}
-                      onChange={(e) => setIsGraduated(e.target.checked)}
-                    />
-                    {isGraduated && (
-                      <input
-                        className="appearance-none border rounded  py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
-                        id="graduate"
-                        type="number"
-                        min="2000"
-                        max="2030"
-                        disabled={!isGraduated}
-                        value={graduate}
-                        onChange={(e) => {
-                          const graduate = Number(e.target.value);
-                          setGraduate(isNaN(graduate) ? 2020 : graduate);
-                        }}
-                      />
-                    )}
-                  </div>
+                  <input
+                    className="appearance-none border rounded  py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+                    id="admitted-at"
+                    type="number"
+                    min="2000"
+                    max="2030"
+                    value={admittedAt}
+                    onChange={(e) => {
+                      setAdmittedAt(isNaN(admittedAt) ? 2020 : admittedAt);
+                    }}
+                  />
                   <input
                     id="twitter-input"
                     placeholder="@twitter_id"
