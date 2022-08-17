@@ -35,6 +35,7 @@ export const WorksConverter: FirestoreDataConverter<Work> = {
       artistId: data.artistId,
       artist: {
         name: "",
+        admittedAt: -1,
       },
       workedAt: data.workedAt,
       thumb: data.thumb,

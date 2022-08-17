@@ -52,9 +52,7 @@ export const WorksLayout: React.FC<Props> = (props) => {
               <span>{work.artist.name}</span>
             </div>
             <div>
-              {work.artist.graduatedAt && (
-                <span>卒業年: {work.artist.graduatedAt}</span>
-              )}
+              <span>入学年: {work.artist.admittedAt}</span>
               <span>制作年: {work.workedAt}</span>
             </div>
           </div>

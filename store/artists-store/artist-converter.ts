@@ -7,17 +7,11 @@ import {
   WithFieldValue,
 } from "firebase/firestore";
 
-import { artistsReducer } from "hooks/artists/reducer";
-
 export const ArtistConverter: FirestoreDataConverter<Artist> = {
   toFirestore: function (artist: WithFieldValue<Artist>): DocumentData {
-    const gradOfArtist: Pick<Artist, "graduatedAt"> = {};
-    if (artist.graduatedAt) {
-      gradOfArtist.graduatedAt = Number(artist.graduatedAt);
-    }
     return {
       name: artist.name,
-      ...gradOfArtist,
+      admittedAt: artist.admittedAt,
       createdAt: artist.createdAt ?? serverTimestamp(),
       updatedAt: serverTimestamp(),
     };
@@ -33,7 +27,7 @@ export const ArtistConverter: FirestoreDataConverter<Artist> = {
     return {
       id: snapshot.id,
       name: data.name,
-      graduatedAt: data.graduatedAt,
+      admittedAt: data.admittedAt,
       createdAt: data.createdAt?.toDate(),
       updatedAt: data.updatedAt?.toDate(),
     };
