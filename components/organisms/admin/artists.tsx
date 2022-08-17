@@ -66,7 +66,7 @@ export const ArtistList: React.FC<ArtistListProps> = ({
                 scope="col"
                 className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
               >
-                卒業年
+                入学年
               </th>
               <th
                 scope="col"
