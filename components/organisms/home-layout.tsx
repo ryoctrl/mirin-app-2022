@@ -63,30 +63,32 @@ export const HomeLayout: React.FC<Props> = ({ worksState }) => {
 
         <div>
           {worksState.isLoading && <span>Now Loading...</span>}
-          {worksState.works.map((work, idx) => {
-            return (
-              <Link key={idx + 1} href={`/works/${work.id}`}>
-                <div className="opus">
-                  <div className="thumb-wrapper">
-                    <Image
-                      className="thumb"
-                      src={work.thumb}
-                      alt={work.title}
-                      width="100%"
-                      height="100%"
-                      layout="responsive"
-                    />
-                  </div>
-                  <div className="text-wrapper">
-                    <p className="text-title">{work.title}</p>
-                    <p className="text-artist">{work.artist.name}</p>
+          {worksState.works
+            .sort((a, b) => (a.order || 0) - (b.order || 0))
+            .map((work, idx) => {
+              return (
+                <Link key={idx + 1} href={`/works/${work.id}`}>
+                  <div className="opus">
+                    <div className="thumb-wrapper">
+                      <Image
+                        className="thumb"
+                        src={work.thumb}
+                        alt={work.title}
+                        width="100%"
+                        height="100%"
+                        layout="responsive"
+                      />
+                    </div>
+                    <div className="text-wrapper">
+                      <p className="text-title">{work.title}</p>
+                      <p className="text-artist">{work.artist.name}</p>
 
-                    <p className="text-description">{work.description}</p>
+                      <p className="text-description">{work.description}</p>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            );
-          })}
+                </Link>
+              );
+            })}
         </div>
       </div>
     </div>
