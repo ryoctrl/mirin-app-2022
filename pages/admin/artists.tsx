@@ -35,7 +35,7 @@ const Admin: NextPage = () => {
       <AdminLayout>
         <main className="main h-screen flex flex-col flex-grow -ml-64 md:ml-0 transition-all duration-150 ease-in">
           <div className="m-4 py-8 h-full bg-white flex overflow-hidden">
-            <div className="mx-8 w-full overflow-hidden">
+            <div className="mx-8 w-full h-full flex flex-col">
               <h1 className="mb-8">
                 登録済みメンバー: {artistsState.artists.length}名
               </h1>
