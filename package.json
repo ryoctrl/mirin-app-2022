@@ -6,9 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "analyze": "ANALYZE=true pnpm build"
   },
   "dependencies": {
+    "@next/bundle-analyzer": "^12.2.5",
     "blueimp-load-image": "^5.16.0",
     "dayjs": "^1.11.4",
     "firebase": "^9.9.0",
