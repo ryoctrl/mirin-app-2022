@@ -11,6 +11,7 @@ export const ArtistConverter: FirestoreDataConverter<Artist> = {
   toFirestore: function (artist: WithFieldValue<Artist>): DocumentData {
     return {
       name: artist.name,
+      social: artist.social,
       admittedAt: artist.admittedAt,
       createdAt: artist.createdAt ?? serverTimestamp(),
       updatedAt: serverTimestamp(),
@@ -27,6 +28,7 @@ export const ArtistConverter: FirestoreDataConverter<Artist> = {
     return {
       id: snapshot.id,
       name: data.name,
+      social: data.social,
       admittedAt: data.admittedAt,
       createdAt: data.createdAt?.toDate(),
       updatedAt: data.updatedAt?.toDate(),

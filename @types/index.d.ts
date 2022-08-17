@@ -18,6 +18,9 @@ type User = {
 type Artist = {
   id?: string;
   name: string;
+  social?: {
+    twitter?: string;
+  };
   admittedAt: number;
   createdAt?: Date;
   updatedAt?: Date;
