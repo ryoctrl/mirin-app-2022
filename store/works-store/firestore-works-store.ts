@@ -50,7 +50,7 @@ export class FirestoreWorksStore implements WorksStore {
   }
 
   async listen(setWorks: (works: Work[]) => void) {
-    const artists = await this.artistsStore.findAll();
+    let artists = await this.artistsStore.findAll();
     onSnapshot(this.worksCollection, async (snapshot) => {
       const works = await Promise.all(
         snapshot.docs.map(async (doc) => {
@@ -59,7 +59,13 @@ export class FirestoreWorksStore implements WorksStore {
             collection(doc.ref, "comments").withConverter(CommentsConverter)
           );
           work.comments = commentsSS.docs.map((c) => c.data());
-          work.artist = artists.find((a) => a.id === work.artistId) || {
+
+          let artist = artists.find((a) => a.id === work.artistId) ?? null;
+          if (!artist) {
+            artist = await this.artistsStore.find(work.artistId ?? "");
+          }
+
+          work.artist = artist || {
             name: "none",
             admittedAt: -1,
           };
