@@ -18,7 +18,10 @@ type User = {
 type Artist = {
   id?: string;
   name: string;
-  graduatedAt?: number;
+  social?: {
+    twitter?: string;
+  };
+  admittedAt: number;
   createdAt?: Date;
   updatedAt?: Date;
 };

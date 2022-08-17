@@ -11,14 +11,16 @@ const artistsStore: ArtistsStore = new FirestoreArtistStore();
 
 interface ArtistsContextValue {
   artistsState: ArtistsState;
-  createArtist: (artist: Artist) => void;
+  createArtist: (artist: Artist) => Promise<Artist | void>;
   deleteArtist: (artistId: string) => void;
   setNewArtist: (artist: Partial<Artist>) => void;
 }
 
 export const ArtistContext = createContext<ArtistsContextValue>({
   artistsState: initialArtistsState,
-  createArtist: () => {},
+  createArtist: () => {
+    return Promise.resolve();
+  },
   deleteArtist: () => {},
   setNewArtist: () => {},
 });
@@ -78,6 +80,7 @@ export const ArtistsContextProvider = ({
       },
     });
     await fetchArtists();
+    return newArtist;
   };
 
   const setNewArtist = (artist: Partial<Artist>) => {

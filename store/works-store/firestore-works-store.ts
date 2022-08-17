@@ -43,6 +43,7 @@ export class FirestoreWorksStore implements WorksStore {
       .map((work) => {
         work.artist = artists.find((a) => a.id === work.artistId) || {
           name: "none",
+          admittedAt: -1,
         };
         return work;
       });
@@ -60,6 +61,7 @@ export class FirestoreWorksStore implements WorksStore {
           work.comments = commentsSS.docs.map((c) => c.data());
           work.artist = artists.find((a) => a.id === work.artistId) || {
             name: "none",
+            admittedAt: -1,
           };
           return work;
         })
@@ -80,12 +82,14 @@ export class FirestoreWorksStore implements WorksStore {
     if (!work.artistId) {
       work.artist = {
         name: "none",
+        admittedAt: -1,
       };
       return work;
     }
 
     work.artist = (await this.artistsStore.find(work.artistId)) || {
       name: "none",
+      admittedAt: -1,
     };
     return work;
   }
