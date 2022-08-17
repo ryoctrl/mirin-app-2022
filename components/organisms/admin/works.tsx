@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 
 import { Modal } from "@components/atoms/modal/modal";
-import { DeleteIcon } from "@components/atoms/icons/delete-icon";
 import { generatePath } from "libs/utils/route-utils";
 import { routes } from "libs/routes";
 
@@ -52,7 +51,6 @@ export const WorksList: React.FC<WorksListProps> = ({ works, deleteWork }) => {
         <table className="min-w-full">
           <thead className="border-b">
             <tr>
-              <th>削除</th>
               <th
                 scope="col"
                 className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
@@ -89,67 +87,78 @@ export const WorksList: React.FC<WorksListProps> = ({ works, deleteWork }) => {
               >
                 更新日時
               </th>
+              <th
+                scope="col"
+                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+              >
+                編集
+              </th>
+              <th
+                scope="col"
+                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+              >
+                削除
+              </th>
             </tr>
           </thead>
           <tbody>
             {works.map((work) => {
               return (
-                <Link
-                  href={generatePath(routes.ADMIN_ILLUST_DETAIL, {
-                    id: work.id || "",
-                  })}
-                  key={work.id}
-                >
-                  <tr className="cursor-pointer">
-                    <td
-                      scope="col"
-                      className="text-sm font-medium text-gray-900 px-6 py-4 text-center"
+                <tr key={work.id}>
+                  <td
+                    scope="col"
+                    className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                  >
+                    {work.id}
+                  </td>
+                  <td
+                    scope="col"
+                    className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                  >
+                    <div className="relative w-16 h-16">
+                      <Image alt={work.title} src={work.thumb} layout="fill" />
+                    </div>
+                  </td>
+                  <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                    {work.title}
+                  </td>
+                  <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                    {work.artist.name}
+                  </td>
+                  <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                    {dayjs(work.createdAt).format("YYYY-MM-DD HH:mm:ss")}
+                  </td>
+                  <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                    {dayjs(work.updatedAt).format("YYYY-MM-DD HH:mm:ss")}
+                  </td>
+                  <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                    <Link
+                      href={generatePath(routes.ADMIN_ILLUST_DETAIL, {
+                        id: work.id || "",
+                      })}
                     >
                       <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setDeleteWork(work);
-                          setModalOpen(true);
-                        }}
+                        className="bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-sky-200"
                         type="button"
-                        data-modal-toggle="test-modal"
                       >
-                        <DeleteIcon className="rotate-45 flex-shrink-0 w-6 h-6 text-red-500 transition duration-75 dark:text-red group-hover:text-gray-900 dark:group-hover:text-white" />
+                        編集
                       </button>
-                    </td>
-
-                    <td
-                      scope="col"
-                      className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                    </Link>
+                  </td>
+                  <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                    <button
+                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-red-200"
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setDeleteWork(work);
+                        setModalOpen(true);
+                      }}
                     >
-                      {work.id}
-                    </td>
-                    <td
-                      scope="col"
-                      className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-                    >
-                      <div className="relative w-16 h-16">
-                        <Image
-                          alt={work.title}
-                          src={work.thumb}
-                          layout="fill"
-                        />
-                      </div>
-                    </td>
-                    <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                      {work.title}
-                    </td>
-                    <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                      {work.artist.name}
-                    </td>
-                    <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                      {dayjs(work.createdAt).format("YYYY-MM-DD HH:mm:ss")}
-                    </td>
-                    <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                      {dayjs(work.updatedAt).format("YYYY-MM-DD HH:mm:ss")}
-                    </td>
-                  </tr>
-                </Link>
+                      削除
+                    </button>
+                  </td>
+                </tr>
               );
             })}
           </tbody>
