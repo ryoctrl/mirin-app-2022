@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 import type { NextPage } from "next";
 
@@ -7,10 +8,24 @@ import styles from "@styles/Home.module.scss";
 import { useWorks } from "hooks/works/useWorks";
 import { AdminLayout } from "@components/templates/admin-layout";
 import { WorksDetail } from "@components/organisms/admin/works-detail";
+import { useUser } from "hooks/users/useUser";
+import { LoadPanel } from "@components/organisms/admin/load-panel";
+import { routes } from "libs/routes";
 
 const Works: NextPage = () => {
   const router = useRouter();
+  const { userState, isLoggedIn } = useUser();
   const { worksState } = useWorks();
+
+  useEffect(() => {
+    if (!userState.userInitialized) return;
+    if (isLoggedIn()) return;
+    router.replace(routes.ADMIN_LOGIN);
+  }, [userState.userInitialized, isLoggedIn, router]);
+
+  if (!userState.userInitialized || !isLoggedIn()) {
+    return <LoadPanel />;
+  }
 
   const { id } = router.query;
   if (!id || Array.isArray(id)) {
