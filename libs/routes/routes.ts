@@ -3,6 +3,7 @@ export const routes = {
   ADMIN_NEW_ILLUST: "/admin/illusts/new",
   ADMIN_ILLUST_DETAIL: "/admin/illusts/[id]",
   ADMIN_ARTISTS: "/admin/artists",
+  ADMIN_ARTIST_DETAIL: "/admin/artists/[id]",
   ADMIN_USERS: "/admin/users",
   ADMIN_TOP: "/admin",
   ADMIN_LOGIN: "/admin/login",

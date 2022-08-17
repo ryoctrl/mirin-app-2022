@@ -36,8 +36,20 @@ type Work = {
   image: string;
   description: string;
   comments: WorksComment[];
+  order?: number;
   createdAt?: Date;
   updatedAt?: Date;
+};
+
+/**
+ * Work model needs to be able to re-order in illusts list page (/admin).
+ * This application realize it using react-sortablejs, then it requires the unique model.
+ * ref: https://github.com/SortableJS/react-sortablejs
+ */
+type SortableWork = {
+  id: number;
+  work: Work;
+  chosen?: boolean;
 };
 
 type WorksComment = {

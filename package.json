@@ -6,9 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "analyze": "ANALYZE=true pnpm build"
   },
   "dependencies": {
+    "@next/bundle-analyzer": "^12.2.5",
     "blueimp-load-image": "^5.16.0",
     "dayjs": "^1.11.4",
     "firebase": "^9.9.0",
@@ -16,13 +18,16 @@
     "next": "12.2.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-toastify": "^9.0.7"
+    "react-sortablejs": "^6.1.4",
+    "react-toastify": "^9.0.7",
+    "sortablejs": "^1.15.0"
   },
   "devDependencies": {
     "@types/blueimp-load-image": "^5.16.0",
     "@types/node": "18.0.4",
     "@types/react": "18.0.15",
     "@types/react-dom": "18.0.6",
+    "@types/sortablejs": "^1.13.0",
     "autoprefixer": "^10.4.8",
     "eslint": "8.19.0",
     "eslint-config-next": "12.2.2",

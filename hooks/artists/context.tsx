@@ -14,6 +14,7 @@ interface ArtistsContextValue {
   createArtist: (artist: Artist) => Promise<Artist | void>;
   deleteArtist: (artistId: string) => void;
   setNewArtist: (artist: Partial<Artist>) => void;
+  updateArtist: (artist: Artist) => Promise<boolean> | void;
 }
 
 export const ArtistContext = createContext<ArtistsContextValue>({
@@ -23,6 +24,7 @@ export const ArtistContext = createContext<ArtistsContextValue>({
   },
   deleteArtist: () => {},
   setNewArtist: () => {},
+  updateArtist: () => {},
 });
 
 export const ArtistsContextProvider = ({
@@ -97,6 +99,12 @@ export const ArtistsContextProvider = ({
     await fetchArtists();
   };
 
+  const updateArtist = async (artist: Artist) => {
+    await artistsStore.update(artist);
+    await fetchArtists();
+    return true;
+  };
+
   useEffect(() => {
     fetchArtists();
   }, []);
@@ -108,6 +116,7 @@ export const ArtistsContextProvider = ({
         createArtist,
         deleteArtist,
         setNewArtist,
+        updateArtist,
       }}
     >
       {children}

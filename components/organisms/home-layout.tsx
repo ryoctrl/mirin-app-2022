@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { SectionTitle } from "@components/molecules";
 import { WorksState } from "hooks/works/state";
+import { convertWorksToSortableWorks } from "libs/utils";
 
 type Props = {
   worksState: WorksState;
@@ -63,30 +64,32 @@ export const HomeLayout: React.FC<Props> = ({ worksState }) => {
 
         <div>
           {worksState.isLoading && <span>Now Loading...</span>}
-          {worksState.works.map((work, idx) => {
-            return (
-              <Link key={idx + 1} href={`/works/${work.id}`}>
-                <div className="opus">
-                  <div className="thumb-wrapper">
-                    <Image
-                      className="thumb"
-                      src={work.thumb}
-                      alt={work.title}
-                      width="100%"
-                      height="100%"
-                      layout="responsive"
-                    />
-                  </div>
-                  <div className="text-wrapper">
-                    <p className="text-title">{work.title}</p>
-                    <p className="text-artist">{work.artist.name}</p>
+          {convertWorksToSortableWorks(worksState.works).map(
+            ({ work }, idx) => {
+              return (
+                <Link key={idx + 1} href={`/works/${work.id}`}>
+                  <div className="opus">
+                    <div className="thumb-wrapper">
+                      <Image
+                        className="thumb"
+                        src={work.thumb}
+                        alt={work.title}
+                        width="100%"
+                        height="100%"
+                        layout="responsive"
+                      />
+                    </div>
+                    <div className="text-wrapper">
+                      <p className="text-title">{work.title}</p>
+                      <p className="text-artist">{work.artist.name}</p>
 
-                    <p className="text-description">{work.description}</p>
+                      <p className="text-description">{work.description}</p>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            );
-          })}
+                </Link>
+              );
+            }
+          )}
         </div>
       </div>
     </div>
