@@ -1,7 +1,9 @@
 import dayjs from "dayjs";
+import Link from "next/link";
 
-import { DeleteIcon } from "@components/atoms/icons/delete-icon";
 import { WrapLink } from "@components/atoms/wrap-link";
+import { generatePath } from "libs/utils/route-utils";
+import { routes } from "libs/routes";
 
 interface ArtistListRowProps {
   artist: Artist;
@@ -13,19 +15,7 @@ export const ArtistListRow: React.FC<ArtistListRowProps> = ({
   beginDeleteAction,
 }) => {
   return (
-    <tr key={artist.id}>
-      <td
-        scope="col"
-        className="text-sm font-medium text-gray-900 px-6 py-4 text-center"
-      >
-        <button
-          onClick={() => beginDeleteAction(artist)}
-          type="button"
-          data-modal-toggle="test-modal"
-        >
-          <DeleteIcon className="rotate-45 flex-shrink-0 w-6 h-6 text-red-500 transition duration-75 dark:text-red group-hover:text-gray-900 dark:group-hover:text-white" />
-        </button>
-      </td>
+    <tr>
       <td
         scope="col"
         className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
@@ -54,6 +44,29 @@ export const ArtistListRow: React.FC<ArtistListRowProps> = ({
       </td>
       <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
         {dayjs(artist.updatedAt).format("YYYY-MM-DD HH:mm:ss")}
+      </td>
+      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+        <Link
+          href={generatePath(routes.ADMIN_ARTIST_DETAIL, {
+            id: artist.id || "",
+          })}
+        >
+          <button
+            className="bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-sky-200"
+            type="button"
+          >
+            編集
+          </button>
+        </Link>
+      </td>
+      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+        <button
+          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-red-200"
+          type="button"
+          onClick={() => beginDeleteAction(artist)}
+        >
+          削除
+        </button>
       </td>
     </tr>
   );

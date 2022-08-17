@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import { useArtists } from "hooks/artists/use-artists";
 
 interface ArtistRegisterRowProps {
@@ -28,7 +26,6 @@ export const ArtistRegisterRow: React.FC<ArtistRegisterRowProps> = ({
   const isCreateActive = artist.name && !artistsState.create.isCreating;
   return (
     <tr>
-      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"></td>
       <td
         scope="col"
         className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
@@ -77,7 +74,11 @@ export const ArtistRegisterRow: React.FC<ArtistRegisterRowProps> = ({
         />
       </td>
       <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"></td>
-      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"></td>
+      <td
+        className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+        colSpan={2}
+      >
         <button
           className="bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-sky-200"
           type="button"
