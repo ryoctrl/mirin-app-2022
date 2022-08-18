@@ -17,32 +17,35 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
   chooseText,
   altText,
 }) => {
-  const chooseFiles = useCallback((files: File[] | FileList) => {
-    const file = files[0];
-    if (!file) {
-      return;
-    }
+  const chooseFiles = useCallback(
+    (files: File[] | FileList) => {
+      const file = files[0];
+      if (!file) {
+        return;
+      }
 
-    const img = new Image();
-    const url = window.URL.createObjectURL(file);
-    img.onload = () => {
-      setImage({
-        file,
-        url,
-        width: img.width,
-        height: img.height,
-      });
-    };
+      const img = new Image();
+      const url = window.URL.createObjectURL(file);
+      img.onload = () => {
+        setImage({
+          file,
+          url,
+          width: img.width,
+          height: img.height,
+        });
+      };
 
-    img.src = url;
-  }, []);
+      img.src = url;
+    },
+    [setImage]
+  );
 
   const onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
     chooseFiles(files ?? []);
   };
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     onDrop: chooseFiles,
   });
 
