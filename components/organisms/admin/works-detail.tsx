@@ -83,7 +83,7 @@ export const WorksDetail: React.FC<WorksDetailProps> = ({ work }) => {
       </Modal>
       <div className="flex-1">
         <div className="flex h-1/2">
-          <div className="relative w-full h-full flex justify-center">
+          <div className="relative w-full h-full flex justify-center mx-2">
             <div>イラスト</div>
             <Image
               alt={`${work.title} - イラスト`}
@@ -92,7 +92,7 @@ export const WorksDetail: React.FC<WorksDetailProps> = ({ work }) => {
               objectFit="contain"
             />
           </div>
-          <div className="relative w-full h-full flex justify-center">
+          <div className="relative w-full h-full flex justify-center mx-2">
             <div>サムネイル</div>
             <Image
               alt={`${work.title} - サムネイル`}
