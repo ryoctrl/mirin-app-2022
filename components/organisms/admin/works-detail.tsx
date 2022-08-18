@@ -6,9 +6,11 @@ import { CommentListRow } from "@components/molecules/admin/comment/comment-list
 import { Modal } from "@components/atoms/modal/modal";
 import { useWorks } from "hooks/works/useWorks";
 import { useArtists } from "hooks/artists/use-artists";
-import { validateWork } from "libs/utils";
+import { initialImageInfo, validateWork } from "libs/utils";
 import { generateMessageByWork } from "libs/utils/message-utils";
 import { SystemMessages } from "libs/messages/system";
+import { ImagePicker } from "@components/molecules/image-picker";
+import { uploadImage } from "libs/firebase/upload-to-storage";
 
 interface WorksDetailProps {
   work: Work;
@@ -21,17 +23,71 @@ export const WorksDetail: React.FC<WorksDetailProps> = ({ work }) => {
   );
   const [modalOpen, setModalOpen] = useState(false);
   const { artistsState } = useArtists();
+  const [updating, setUpdating] = useState(false);
+
+  const [illustPreview, setIllustPreview] = useState<ImageInfo>({
+    ...initialImageInfo,
+    url: work.image,
+  });
+
+  const [thumbPreview, setThumbPreview] = useState<ImageInfo>({
+    ...initialImageInfo,
+    url: work.thumb,
+  });
 
   const [title, setTitle] = useState(work.title);
   const [artistId, setArtistId] = useState(work.artistId);
   const [workedAt, setWorkedAt] = useState(work.workedAt?.toString());
 
   const executeSave = async () => {
+    setUpdating(true);
+    const [illustUrl, thumbUrl] = await Promise.all([
+      (() =>
+        illustPreview.file
+          ? uploadImage(illustPreview.file, {
+              maxWidth: 1920,
+              canvas: true,
+            }).catch(() => {
+              toast.error("イラスト画像の圧縮に失敗しました。", {
+                position: toast.POSITION.TOP_CENTER,
+                theme: "colored",
+              });
+              return null;
+            })
+          : illustPreview.url)(),
+      (() =>
+        thumbPreview.file
+          ? uploadImage(thumbPreview.file, {
+              maxWidth: 480,
+              minWidth: 480,
+              maxHeight: 480,
+              minHeight: 480,
+              canvas: true,
+            }).catch(() => {
+              toast.error("サムネイル画像の圧縮に失敗しました。", {
+                position: toast.POSITION.TOP_CENTER,
+                theme: "colored",
+              });
+              return null;
+            })
+          : thumbPreview.url)(),
+    ]);
+    if (!illustUrl || !thumbUrl) {
+      toast.error(
+        `${!illustUrl ? "イラスト" : ""} ${
+          !thumbUrl ? "サムネイル" : ""
+        }画像のアップロードに失敗しました。`
+      );
+      return;
+    }
+
     const newWork: Work = {
       ...work,
       title,
       artistId,
       workedAt: Number(workedAt),
+      image: illustUrl,
+      thumb: thumbUrl,
     };
     const validateResult = validateWork(newWork);
 
@@ -47,6 +103,8 @@ export const WorksDetail: React.FC<WorksDetailProps> = ({ work }) => {
     await updateWork(newWork);
 
     toast.success(generateMessageByWork("ILLUSTS_UPDATED", newWork));
+
+    setUpdating(false);
   };
 
   return (
@@ -83,27 +141,27 @@ export const WorksDetail: React.FC<WorksDetailProps> = ({ work }) => {
       </Modal>
       <div className="flex-1">
         <div className="flex h-1/2">
-          <div className="relative w-full h-full flex justify-center mx-2">
-            <div>イラスト</div>
-            <Image
-              alt={`${work.title} - イラスト`}
-              src={work.image}
-              layout="fill"
-              objectFit="contain"
+          <div className="relative w-full h-full justify-center mx-2">
+            <div>イラスト作品</div>
+            <ImagePicker
+              image={illustPreview}
+              setImage={setIllustPreview}
+              chooseText="作品を選ぶ"
+              altText={`${work.title} - イラスト`}
             />
           </div>
-          <div className="relative w-full h-full flex justify-center mx-2">
+          <div className="relative w-full h-full justify-center mx-2">
             <div>サムネイル</div>
-            <Image
-              alt={`${work.title} - サムネイル`}
-              src={work.thumb}
-              layout="fill"
-              objectFit="contain"
+            <ImagePicker
+              image={thumbPreview}
+              setImage={setThumbPreview}
+              chooseText="サムネイルを選ぶ"
+              altText={`${work.title} - サムネイル`}
             />
           </div>
         </div>
 
-        <div>
+        <div className="mt-8">
           <div className="my-2">
             <label htmlFor="name">タイトル</label>
             <input
@@ -147,9 +205,10 @@ export const WorksDetail: React.FC<WorksDetailProps> = ({ work }) => {
             <button
               className="w-full my-2 bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-sky-200"
               type="button"
+              disabled={updating}
               onClick={executeSave}
             >
-              保存
+              {updating ? "保存中..." : "保存"}
             </button>
           </div>
         </div>

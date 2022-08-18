@@ -1,5 +1,6 @@
 import NextImage from "next/image";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useCallback } from "react";
+import { useDropzone } from "react-dropzone";
 
 import { ImageIcon } from "@components/atoms/icons/image-icon";
 
@@ -16,9 +17,8 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
   chooseText,
   altText,
 }) => {
-  const onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { files } = e.target;
-    const file = files?.[0];
+  const chooseFiles = useCallback((files: File[] | FileList) => {
+    const file = files[0];
     if (!file) {
       return;
     }
@@ -35,15 +35,32 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
     };
 
     img.src = url;
+  }, []);
+
+  const onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { files } = e.target;
+    chooseFiles(files ?? []);
   };
 
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: chooseFiles,
+  });
+
   return (
-    <label className="flex flex-col justify-center w-full h-full border hover:bg-gray-100 hover:border-gray-300 relative">
+    <label
+      className="flex flex-col justify-center w-full h-full border hover:bg-gray-100 hover:border-gray-300 relative"
+      {...getRootProps()}
+    >
       {!image.url && (
         <div className="flex flex-col items-center justify-center">
           <ImageIcon />
+          {chooseText && (
+            <p className="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
+              {chooseText}
+            </p>
+          )}
           <p className="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
-            {chooseText ?? "画像を選ぶ"}
+            ここをクリックするか、画像をドラッグ&ドロップで選択できます。
           </p>
         </div>
       )}
@@ -61,7 +78,7 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
         accept="image/*"
         className="opacity-0 h-0"
         onChange={onFileChange}
-        // onChange={(e) => onFileChange(e, setIllustPreview)}
+        {...getInputProps()}
       />
     </label>
   );
