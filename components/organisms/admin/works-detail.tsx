@@ -1,20 +1,54 @@
 import Image from "next/image";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 import { CommentListRow } from "@components/molecules/admin/comment/comment-list-row";
 import { Modal } from "@components/atoms/modal/modal";
 import { useWorks } from "hooks/works/useWorks";
+import { useArtists } from "hooks/artists/use-artists";
+import { validateWork } from "libs/utils";
+import { generateMessageByWork } from "libs/utils/message-utils";
+import { SystemMessages } from "libs/messages/system";
 
 interface WorksDetailProps {
   work: Work;
 }
 
 export const WorksDetail: React.FC<WorksDetailProps> = ({ work }) => {
-  const { deleteComment } = useWorks();
+  const { deleteComment, updateWork } = useWorks();
   const [deleteTargetComment, setDeleteComment] = useState<WorksComment | null>(
     null
   );
   const [modalOpen, setModalOpen] = useState(false);
+  const { artistsState } = useArtists();
+
+  const [title, setTitle] = useState(work.title);
+  const [artistId, setArtistId] = useState(work.artistId);
+  const [workedAt, setWorkedAt] = useState(work.workedAt?.toString());
+
+  const executeSave = async () => {
+    const newWork: Work = {
+      ...work,
+      title,
+      artistId,
+      workedAt: Number(workedAt),
+    };
+    const validateResult = validateWork(newWork);
+
+    if (!validateResult.result) {
+      toast.error(
+        Object.values(validateResult)
+          .filter((m) => !!m)
+          .join("\n")
+      );
+      return;
+    }
+
+    await updateWork(newWork);
+
+    toast.success(generateMessageByWork("ILLUSTS_UPDATED", newWork));
+  };
+
   return (
     <div className="flex h-full">
       <Modal id="test-modal" title="Confirm" isOpen={modalOpen}>
@@ -69,34 +103,56 @@ export const WorksDetail: React.FC<WorksDetailProps> = ({ work }) => {
           </div>
         </div>
 
-        <table className="w-full space-y-4">
-          <tbody className="border">
-            <tr>
-              <td colSpan={1} className="text-center border">
-                タイトル
-              </td>
-              <td colSpan={2} className="text-center border">
-                {work.title}
-              </td>
-            </tr>
-            <tr>
-              <td colSpan={1} className="text-center border">
-                アーティスト
-              </td>
-              <td colSpan={2} className="text-center border">
-                {work.artist.name}
-              </td>
-            </tr>
-            <tr>
-              <td colSpan={1} className="text-center border">
-                制作年
-              </td>
-              <td colSpan={2} className="text-center border">
-                {work.workedAt}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div>
+          <div className="my-2">
+            <label htmlFor="name">タイトル</label>
+            <input
+              className="appearance-none border rounded w-full my-2 py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+              id="name"
+              type="text"
+              placeholder="タイトル"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
+          <div className="my-2">
+            <label htmlFor="admitted-at">アーティスト・作者</label>
+            <select
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              id="artist-input"
+              value={artistId}
+              onChange={(e) => setArtistId(e.target.value)}
+            >
+              <option>アーティスト/作者を選択</option>
+              <option value="-1">作者を追加する</option>
+              {artistsState.artists.map((artist) => (
+                <option key={artist.id} value={artist.id}>
+                  {artist.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="my-2">
+            <label htmlFor="twitter">制作年</label>
+            <input
+              className="appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+              id="twitter"
+              type="text"
+              placeholder="2022"
+              value={workedAt}
+              onChange={(e) => setWorkedAt(e.target.value)}
+            />
+          </div>
+          <div className="my-2">
+            <button
+              className="w-full my-2 bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-sky-200"
+              type="button"
+              onClick={executeSave}
+            >
+              保存
+            </button>
+          </div>
+        </div>
       </div>
       <div className="flex-1 bg-white mx-4 radius">
         {work.comments.length === 0 && (
