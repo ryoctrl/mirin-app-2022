@@ -1,20 +1,112 @@
 import Image from "next/image";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 import { CommentListRow } from "@components/molecules/admin/comment/comment-list-row";
 import { Modal } from "@components/atoms/modal/modal";
 import { useWorks } from "hooks/works/useWorks";
+import { useArtists } from "hooks/artists/use-artists";
+import { initialImageInfo, validateWork } from "libs/utils";
+import { generateMessageByWork } from "libs/utils/message-utils";
+import { SystemMessages } from "libs/messages/system";
+import { ImagePicker } from "@components/molecules/image-picker";
+import { uploadImage } from "libs/firebase/upload-to-storage";
 
 interface WorksDetailProps {
   work: Work;
 }
 
 export const WorksDetail: React.FC<WorksDetailProps> = ({ work }) => {
-  const { deleteComment } = useWorks();
+  const { deleteComment, updateWork } = useWorks();
   const [deleteTargetComment, setDeleteComment] = useState<WorksComment | null>(
     null
   );
   const [modalOpen, setModalOpen] = useState(false);
+  const { artistsState } = useArtists();
+  const [updating, setUpdating] = useState(false);
+
+  const [illustPreview, setIllustPreview] = useState<ImageInfo>({
+    ...initialImageInfo,
+    url: work.image,
+  });
+
+  const [thumbPreview, setThumbPreview] = useState<ImageInfo>({
+    ...initialImageInfo,
+    url: work.thumb,
+  });
+
+  const [title, setTitle] = useState(work.title);
+  const [artistId, setArtistId] = useState(work.artistId);
+  const [workedAt, setWorkedAt] = useState(work.workedAt?.toString());
+
+  const executeSave = async () => {
+    setUpdating(true);
+    const [illustUrl, thumbUrl] = await Promise.all([
+      (() =>
+        illustPreview.file
+          ? uploadImage(illustPreview.file, {
+              maxWidth: 1920,
+              canvas: true,
+            }).catch(() => {
+              toast.error("イラスト画像の圧縮に失敗しました。", {
+                position: toast.POSITION.TOP_CENTER,
+                theme: "colored",
+              });
+              return null;
+            })
+          : illustPreview.url)(),
+      (() =>
+        thumbPreview.file
+          ? uploadImage(thumbPreview.file, {
+              maxWidth: 480,
+              minWidth: 480,
+              maxHeight: 480,
+              minHeight: 480,
+              canvas: true,
+            }).catch(() => {
+              toast.error("サムネイル画像の圧縮に失敗しました。", {
+                position: toast.POSITION.TOP_CENTER,
+                theme: "colored",
+              });
+              return null;
+            })
+          : thumbPreview.url)(),
+    ]);
+    if (!illustUrl || !thumbUrl) {
+      toast.error(
+        `${!illustUrl ? "イラスト" : ""} ${
+          !thumbUrl ? "サムネイル" : ""
+        }画像のアップロードに失敗しました。`
+      );
+      return;
+    }
+
+    const newWork: Work = {
+      ...work,
+      title,
+      artistId,
+      workedAt: Number(workedAt),
+      image: illustUrl,
+      thumb: thumbUrl,
+    };
+    const validateResult = validateWork(newWork);
+
+    if (!validateResult.result) {
+      toast.error(
+        Object.values(validateResult)
+          .filter((m) => !!m)
+          .join("\n")
+      );
+      return;
+    }
+
+    await updateWork(newWork);
+
+    toast.success(generateMessageByWork("ILLUSTS_UPDATED", newWork));
+
+    setUpdating(false);
+  };
+
   return (
     <div className="flex h-full">
       <Modal id="test-modal" title="Confirm" isOpen={modalOpen}>
@@ -49,54 +141,77 @@ export const WorksDetail: React.FC<WorksDetailProps> = ({ work }) => {
       </Modal>
       <div className="flex-1">
         <div className="flex h-1/2">
-          <div className="relative w-full h-full flex justify-center">
-            <div>イラスト</div>
-            <Image
-              alt={`${work.title} - イラスト`}
-              src={work.image}
-              layout="fill"
-              objectFit="contain"
+          <div className="relative w-full h-full justify-center mx-2">
+            <div>イラスト作品</div>
+            <ImagePicker
+              image={illustPreview}
+              setImage={setIllustPreview}
+              chooseText="作品を選ぶ"
+              altText={`${work.title} - イラスト`}
             />
           </div>
-          <div className="relative w-full h-full flex justify-center">
+          <div className="relative w-full h-full justify-center mx-2">
             <div>サムネイル</div>
-            <Image
-              alt={`${work.title} - サムネイル`}
-              src={work.thumb}
-              layout="fill"
-              objectFit="contain"
+            <ImagePicker
+              image={thumbPreview}
+              setImage={setThumbPreview}
+              chooseText="サムネイルを選ぶ"
+              altText={`${work.title} - サムネイル`}
             />
           </div>
         </div>
 
-        <table className="w-full space-y-4">
-          <tbody className="border">
-            <tr>
-              <td colSpan={1} className="text-center border">
-                タイトル
-              </td>
-              <td colSpan={2} className="text-center border">
-                {work.title}
-              </td>
-            </tr>
-            <tr>
-              <td colSpan={1} className="text-center border">
-                アーティスト
-              </td>
-              <td colSpan={2} className="text-center border">
-                {work.artist.name}
-              </td>
-            </tr>
-            <tr>
-              <td colSpan={1} className="text-center border">
-                制作年
-              </td>
-              <td colSpan={2} className="text-center border">
-                {work.workedAt}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="mt-8">
+          <div className="my-2">
+            <label htmlFor="name">タイトル</label>
+            <input
+              className="appearance-none border rounded w-full my-2 py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+              id="name"
+              type="text"
+              placeholder="タイトル"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
+          <div className="my-2">
+            <label htmlFor="admitted-at">アーティスト・作者</label>
+            <select
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              id="artist-input"
+              value={artistId}
+              onChange={(e) => setArtistId(e.target.value)}
+            >
+              <option>アーティスト/作者を選択</option>
+              <option value="-1">作者を追加する</option>
+              {artistsState.artists.map((artist) => (
+                <option key={artist.id} value={artist.id}>
+                  {artist.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="my-2">
+            <label htmlFor="twitter">制作年</label>
+            <input
+              className="appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+              id="twitter"
+              type="text"
+              placeholder="2022"
+              value={workedAt}
+              onChange={(e) => setWorkedAt(e.target.value)}
+            />
+          </div>
+          <div className="my-2">
+            <button
+              className="w-full my-2 bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-sky-200"
+              type="button"
+              disabled={updating}
+              onClick={executeSave}
+            >
+              {updating ? "保存中..." : "保存"}
+            </button>
+          </div>
+        </div>
       </div>
       <div className="flex-1 bg-white mx-4 radius">
         {work.comments.length === 0 && (
