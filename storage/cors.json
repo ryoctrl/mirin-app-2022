@@ -1,0 +1,11 @@
+[
+  {
+    "origin": [
+        "http://localhost:3000", 
+        "https://kumd.mosin.jp",
+        "https://mirin-app-2022-git-develop-ryoctrl.vercel.app"
+    ],
+    "method": ["GET"],
+    "maxAgeSeconds": 3600
+  }
+]
