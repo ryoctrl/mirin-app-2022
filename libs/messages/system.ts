@@ -11,6 +11,8 @@ export const SystemMessages = {
 
   REGISTER_SUCCEEDED: "イラストを投稿しました。",
 
+  ILLUSTS_UPDATED: "イラスト {{title}} を更新しました。",
+
   "The email address is already in use by another account.":
     "対象のメールアドレスは既に利用されています。",
 } as const;

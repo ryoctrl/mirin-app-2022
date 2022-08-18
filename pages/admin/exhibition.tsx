@@ -44,7 +44,8 @@ const ExhibitionSettings: NextPage = () => {
       url: currentExhibition.heroImage.sp,
     });
     setExhibitionTitle(currentExhibition.title);
-  }, [currentExhibition, pcHeroImage, spHeroImage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentExhibition]);
 
   useEffect(() => {
     if (!userState.userInitialized) return;
