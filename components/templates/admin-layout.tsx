@@ -53,6 +53,14 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     },
     {
       icon: (
+        <SettingsIcon className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+      ),
+      text: "アップロード済みファイル一覧",
+      path: routes.ADMIN_STORAGE,
+      isAdminOnly: true,
+    },
+    {
+      icon: (
         <PublicIcon className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
       ),
       text: "公開ページへ",
