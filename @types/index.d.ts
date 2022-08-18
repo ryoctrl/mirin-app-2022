@@ -78,3 +78,10 @@ type Exhibition = {
   createdAt?: Date;
   updatedAt?: Date;
 };
+
+type StoredFile = {
+  name: string;
+  url: string;
+  path: string;
+  getBlob: () => Promise<Blob>;
+};
