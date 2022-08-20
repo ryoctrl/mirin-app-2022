@@ -1,4 +1,5 @@
 import React, { createContext, ReactNode, useEffect, useReducer } from "react";
+import { toast } from "react-toastify";
 
 import { ArtistsActions, artistsReducer } from "./reducer";
 import { ArtistsState, initialArtistsState } from "./state";
@@ -10,14 +11,20 @@ const artistsStore: ArtistsStore = new FirestoreArtistStore();
 
 interface ArtistsContextValue {
   artistsState: ArtistsState;
-  createArtist: (artist: Artist) => void;
+  createArtist: (artist: Artist) => Promise<Artist | void>;
   deleteArtist: (artistId: string) => void;
+  setNewArtist: (artist: Partial<Artist>) => void;
+  updateArtist: (artist: Artist) => Promise<boolean> | void;
 }
 
 export const ArtistContext = createContext<ArtistsContextValue>({
   artistsState: initialArtistsState,
-  createArtist: () => {},
+  createArtist: () => {
+    return Promise.resolve();
+  },
   deleteArtist: () => {},
+  setNewArtist: () => {},
+  updateArtist: () => {},
 });
 
 export const ArtistsContextProvider = ({
@@ -49,16 +56,53 @@ export const ArtistsContextProvider = ({
     });
   };
 
-  // TODO: add support for dispatching reducer methods
   const createArtist = async (artist: Artist) => {
-    await artistsStore.create(artist);
+    dispatch({ type: ArtistsActions.CREATE_ARTIST, payload: { artist } });
+    const newArtist = await artistsStore.create(artist).catch((err) => {
+      return err.message;
+    });
 
+    if (typeof newArtist === "string") {
+      dispatch({
+        type: ArtistsActions.CREATE_ARTIST_FAILED,
+        payload: {
+          error: newArtist,
+        },
+      });
+      toast.error("アーティストの作成に失敗しました。");
+      return;
+    }
+
+    toast.success("アーティストを作成しました。");
+
+    dispatch({
+      type: ArtistsActions.CREATE_ARTIST_SUCCEEDED,
+      payload: {
+        artist: newArtist,
+      },
+    });
     await fetchArtists();
+    return newArtist;
+  };
+
+  const setNewArtist = (artist: Partial<Artist>) => {
+    dispatch({
+      type: ArtistsActions.SET_NEW_ARTIST,
+      payload: {
+        artist,
+      },
+    });
   };
 
   const deleteArtist = async (artistId: string) => {
     await artistsStore.delete(artistId);
     await fetchArtists();
+  };
+
+  const updateArtist = async (artist: Artist) => {
+    await artistsStore.update(artist);
+    await fetchArtists();
+    return true;
   };
 
   useEffect(() => {
@@ -71,6 +115,8 @@ export const ArtistsContextProvider = ({
         artistsState,
         createArtist,
         deleteArtist,
+        setNewArtist,
+        updateArtist,
       }}
     >
       {children}

@@ -1,3 +1,12 @@
+declare namespace NodeJS {
+  interface ProcessEnv {
+    /**
+     * google analytics id
+     */
+    readonly NEXT_PUBLIC_GA_ID: string;
+  }
+}
+
 type User = {
   id?: string;
   admin: boolean;
@@ -9,7 +18,10 @@ type User = {
 type Artist = {
   id?: string;
   name: string;
-  graduatedAt?: number;
+  social?: {
+    twitter?: string;
+  };
+  admittedAt: number;
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -24,8 +36,20 @@ type Work = {
   image: string;
   description: string;
   comments: WorksComment[];
+  order?: number;
   createdAt?: Date;
   updatedAt?: Date;
+};
+
+/**
+ * Work model needs to be able to re-order in illusts list page (/admin).
+ * This application realize it using react-sortablejs, then it requires the unique model.
+ * ref: https://github.com/SortableJS/react-sortablejs
+ */
+type SortableWork = {
+  id: number;
+  work: Work;
+  chosen?: boolean;
 };
 
 type WorksComment = {
@@ -34,4 +58,30 @@ type WorksComment = {
   text: string;
   createdAt?: Date;
   updatedAt?: Date;
+};
+
+type ImageInfo = {
+  file?: File;
+  url: string;
+  height: number;
+  width: number;
+};
+
+type Exhibition = {
+  id?: string;
+  title: string;
+  isActive: boolean;
+  heroImage: {
+    pc: string;
+    sp: string;
+  };
+  createdAt?: Date;
+  updatedAt?: Date;
+};
+
+type StoredFile = {
+  name: string;
+  url: string;
+  path: string;
+  getBlob: () => Promise<Blob>;
 };

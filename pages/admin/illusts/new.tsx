@@ -1,12 +1,5 @@
-import {
-  ChangeEvent,
-  ChangeEventHandler,
-  MouseEventHandler,
-  useEffect,
-  useState,
-} from "react";
+import { MouseEventHandler, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import NextImage from "next/image";
 import loadImage from "blueimp-load-image";
 import { toast } from "react-toastify";
 import Head from "next/head";
@@ -18,10 +11,11 @@ import { useArtists } from "hooks/artists/use-artists";
 import { useUser } from "hooks/users/useUser";
 import { AdminLayout } from "@components/templates/admin-layout";
 import { routes } from "libs/routes";
-import { ImageIcon } from "@components/atoms/icons/image-icon";
-import { RegisterArtist } from "@components/organisms/admin/register-artist";
 import { Messages } from "libs/messages";
-import { uploadToStorage } from "libs/firebase/upload-to-storage";
+import { uploadImage } from "libs/firebase/upload-to-storage";
+import { LoadPanel } from "@components/organisms/admin/load-panel";
+import { ImagePicker } from "@components/molecules/image-picker";
+import { initialImageInfo } from "libs/utils/image-utils";
 
 type FormErrors = {
   title: string;
@@ -41,7 +35,7 @@ const initialErrors: FormErrors = {
 
 const validate = (
   title: string,
-  artist: Artist | null,
+  artist: Artist | null | void,
   workedAt: string,
   description: string,
   file?: File
@@ -70,71 +64,19 @@ const isEmptyErrors = (errors: FormErrors): boolean => {
   return Object.values(errors).every((e) => !e);
 };
 
-type ImageInfo = {
-  file?: File;
-  url: string;
-  height: number;
-  width: number;
-};
-
-const uploadImage = async (file: File, options: loadImage.LoadImageOptions) => {
-  const img = await loadImage(file, options);
-
-  const blob = await new Promise<Blob | null>((r) => {
-    (img.image as HTMLCanvasElement).toBlob((b) => {
-      r(b);
-    });
-  });
-
-  if (!blob) {
-    throw new Error("画像の圧縮に失敗しました。");
-  }
-  return await uploadToStorage(blob);
-};
-
-const calcPreviewSize = (
-  image: ImageInfo
-): { width: number; height: number } => {
-  const useHeight = image.height > image.width;
-  console.log(image);
-
-  let height = image.height;
-  let width = image.width;
-
-  if (useHeight) {
-    height = image.height > 600 ? 600 : image.height;
-    if (height === 600) {
-      width *= 600 / image.height;
-    }
-  } else {
-    width = image.width > 600 ? 600 : image.width;
-    if (width === 600) {
-      height *= 600 / image.width;
-    }
-  }
-  return {
-    height,
-    width,
-  };
-};
-
 const NewIllust: NextPage = () => {
   const { artistsState, createArtist } = useArtists();
   const { createWork } = useWorks();
 
-  const { isLoggedIn } = useUser();
+  const { isLoggedIn, userState } = useUser();
   const router = useRouter();
 
   const [illustPreview, setIllustPreview] = useState<ImageInfo>({
-    url: "",
-    height: -1,
-    width: -1,
+    ...initialImageInfo,
   });
 
   const [thumbPreview, setThumbPreview] = useState<ImageInfo>({
-    url: "",
-    height: -1,
-    width: -1,
+    ...initialImageInfo,
   });
 
   const [title, setTitle] = useState("");
@@ -144,21 +86,38 @@ const NewIllust: NextPage = () => {
   const [errors, setErrors] = useState({ ...initialErrors });
 
   const [artistName, setArtistName] = useState("");
-  const [isGraduated, setIsGraduated] = useState(false);
-  const [graduate, setGraduate] = useState(2020);
+  const [admittedAt, setAdmittedAt] = useState(2020);
+  const [twitter, setTwitter] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
+    if (!userState.userInitialized) return;
     if (isLoggedIn()) return;
     router.replace(routes.ADMIN_LOGIN);
-  }, [isLoggedIn]);
+  }, [userState.userInitialized, isLoggedIn, router]);
 
-  if (!isLoggedIn) {
-    return <div></div>;
+  if (!userState.userInitialized || !isLoggedIn()) {
+    return <LoadPanel />;
   }
 
   const registerWork: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
-    const artist = artistsState.artists.find((a) => a.id === artistId) ?? null;
+    setUploading(true);
+    let createdArtist;
+    if (artistId === "-1") {
+      const newArtist: Artist = {
+        name: artistName,
+        admittedAt,
+      };
+      if (twitter) {
+        newArtist.social = { twitter };
+      }
+      createdArtist = await createArtist(newArtist);
+    }
+    const artist =
+      artistId === "-1"
+        ? createdArtist
+        : artistsState.artists.find((a) => a.id === artistId) ?? null;
     const errors = validate(
       title,
       artist,
@@ -173,6 +132,11 @@ const NewIllust: NextPage = () => {
       !thumbPreview.file
     ) {
       setErrors(errors);
+      toast.error(
+        Object.entries(errors)
+          .map(([k, v]) => `${k}: ${v}`)
+          .join(",")
+      );
       return;
     }
 
@@ -206,43 +170,34 @@ const NewIllust: NextPage = () => {
       return;
     }
 
-    createWork({
-      title,
-      artist,
-      workedAt: Number(workedAt),
-      thumb: thumbUrl,
-      image: illustUrl,
-      description,
-      comments: [],
-    });
+    setUploading(false);
+
+    createWork(
+      {
+        title,
+        artist,
+        workedAt: Number(workedAt),
+        thumb: thumbUrl,
+        image: illustUrl,
+        description,
+        comments: [],
+      },
+      {
+        path: routes.ADMIN_ILLUSTS,
+      }
+    );
   };
 
-  const onFileChange = (
-    e: ChangeEvent<HTMLInputElement>,
-    setImage: (image: ImageInfo) => void
-  ) => {
-    const { files } = e.target;
-    const file = files?.[0];
-    if (!file) {
-      return;
-    }
+  const isNotNewArtist = artistId && artistId !== "-1";
+  const newArtistSet = artistId === "-1" && !!artistName;
+  const isArtistSelected = isNotNewArtist || newArtistSet;
 
-    const img = new Image();
-    const url = window.URL.createObjectURL(file);
-    img.onload = () => {
-      setImage({
-        file,
-        url,
-        width: img.width,
-        height: img.height,
-      });
-    };
-
-    img.src = url;
-  };
-
-  const illustPreviewSize = calcPreviewSize(illustPreview);
-  const thumbPreviewSize = calcPreviewSize(thumbPreview);
+  const isRegisterActive =
+    !uploading &&
+    title &&
+    isArtistSelected &&
+    illustPreview.file &&
+    thumbPreview.file;
 
   return (
     <>
@@ -251,39 +206,19 @@ const NewIllust: NextPage = () => {
       </Head>
       <AdminLayout>
         <main className="main flex flex-col flex-grow -ml-64 md:ml-0 transition-all duration-150 ease-in">
-          <div className="m-4 py-8  bg-white  ">
-            <form className="px-8">
+          <div className="m-4 py-8  bg-white h-full">
+            <form className="px-8 h-full">
               <div className="w-full flex justify-center mb-4">
                 <h1 className="text-xl">イラスト登録</h1>
               </div>
               <div className="mb-4">
-                <div className="flex items-center justify-center w-full">
-                  <label className="flex flex-col items-center w-full border hover:bg-gray-100 hover:border-gray-300 relative">
-                    {!illustPreview.url && (
-                      <div className="flex flex-col items-center justify-center pt-7">
-                        <ImageIcon />
-                        <p className="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
-                          イラストを選ぶ
-                        </p>
-                      </div>
-                    )}
-
-                    {illustPreview.url && (
-                      <NextImage
-                        src={illustPreview.url}
-                        alt={title}
-                        width={illustPreviewSize.width.toString()}
-                        height={illustPreviewSize.height.toString()}
-                        layout="fixed"
-                      />
-                    )}
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="opacity-0 h-0"
-                      onChange={(e) => onFileChange(e, setIllustPreview)}
-                    />
-                  </label>
+                <div className="flex items-center justify-center w-full h-128">
+                  <ImagePicker
+                    image={illustPreview}
+                    setImage={setIllustPreview}
+                    chooseText="イラストを選ぶ"
+                    altText={title}
+                  />
                 </div>
                 <p className="text-xs italic">
                   ※ 長辺が最大 1920px を基準にリサイズされます。
@@ -291,33 +226,13 @@ const NewIllust: NextPage = () => {
               </div>
 
               <div className="mb-4">
-                <div className="flex items-center justify-center w-full">
-                  <label className="flex flex-col items-center w-full border hover:bg-gray-100 hover:border-gray-300 relative">
-                    {!thumbPreview.url && (
-                      <div className="flex flex-col items-center justify-center pt-7">
-                        <ImageIcon />
-                        <p className="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
-                          サムネイル画像を選ぶ
-                        </p>
-                      </div>
-                    )}
-
-                    {thumbPreview.url && (
-                      <NextImage
-                        src={thumbPreview.url}
-                        alt={title}
-                        layout="fixed"
-                        width={thumbPreviewSize.width}
-                        height={thumbPreviewSize.height}
-                      />
-                    )}
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="opacity-0 h-0"
-                      onChange={(e) => onFileChange(e, setThumbPreview)}
-                    />
-                  </label>
+                <div className="flex items-center justify-center w-full h-64">
+                  <ImagePicker
+                    image={thumbPreview}
+                    setImage={setThumbPreview}
+                    chooseText="サムネイル画像を選ぶ"
+                    altText={title}
+                  />
                 </div>
                 <p className="text-xs italic">
                   ※ サムネイル画像は 480px 四方の正方形にリサイズされます。
@@ -352,36 +267,28 @@ const NewIllust: NextPage = () => {
                     id="title-input"
                     placeholder="作者名"
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    value={artistName}
+                    onChange={(e) => setArtistName(e.target.value)}
                   />
 
-                  <div className="my-2">
-                    <label className="text-gray-700 text-sm font-bold mb-2 py-2">
-                      卒業済み?
-                    </label>
-                    <input
-                      type="checkbox"
-                      className=" border rounded py-2 mx-3"
-                      checked={isGraduated}
-                      onChange={(e) => setIsGraduated(e.target.checked)}
-                    />
-                    {isGraduated && (
-                      <input
-                        className="appearance-none border rounded  py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
-                        id="graduate"
-                        type="number"
-                        min="2000"
-                        max="2030"
-                        disabled={!isGraduated}
-                        value={graduate}
-                        onChange={(e) => {
-                          const graduate = Number(e.target.value);
-                          setGraduate(isNaN(graduate) ? 2020 : graduate);
-                        }}
-                      />
-                    )}
-                  </div>
+                  <input
+                    className="appearance-none border rounded  py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+                    id="admitted-at"
+                    type="number"
+                    min="2000"
+                    max="2030"
+                    value={admittedAt}
+                    onChange={(e) => {
+                      setAdmittedAt(isNaN(admittedAt) ? 2020 : admittedAt);
+                    }}
+                  />
+                  <input
+                    id="twitter-input"
+                    placeholder="@twitter_id"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    value={twitter}
+                    onChange={(e) => setTwitter(e.target.value)}
+                  />
                 </>
               )}
               <input
@@ -405,10 +312,11 @@ const NewIllust: NextPage = () => {
               />
               <button
                 type="submit"
-                className="shadow appearance-none border rounded w-full bg-sky-500 hover:bg-sky-700 py-2 px-3 text-white mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded w-full bg-sky-500 hover:bg-sky-700 py-2 px-3 text-white mb-3 leading-tight focus:outline-none focus:shadow-outline disabled:bg-sky-200"
+                disabled={!isRegisterActive}
                 onClick={registerWork}
               >
-                登録
+                {uploading ? "アップロード中..." : "登録"}
               </button>
             </form>
           </div>

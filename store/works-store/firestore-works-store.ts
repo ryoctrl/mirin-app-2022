@@ -2,6 +2,7 @@ import {
   addDoc,
   collection,
   CollectionReference,
+  deleteDoc,
   doc,
   DocumentData,
   DocumentReference,
@@ -42,13 +43,14 @@ export class FirestoreWorksStore implements WorksStore {
       .map((work) => {
         work.artist = artists.find((a) => a.id === work.artistId) || {
           name: "none",
+          admittedAt: -1,
         };
         return work;
       });
   }
 
   async listen(setWorks: (works: Work[]) => void) {
-    const artists = await this.artistsStore.findAll();
+    let artists = await this.artistsStore.findAll();
     onSnapshot(this.worksCollection, async (snapshot) => {
       const works = await Promise.all(
         snapshot.docs.map(async (doc) => {
@@ -57,8 +59,15 @@ export class FirestoreWorksStore implements WorksStore {
             collection(doc.ref, "comments").withConverter(CommentsConverter)
           );
           work.comments = commentsSS.docs.map((c) => c.data());
-          work.artist = artists.find((a) => a.id === work.artistId) || {
+
+          let artist = artists.find((a) => a.id === work.artistId) ?? null;
+          if (!artist) {
+            artist = await this.artistsStore.find(work.artistId ?? "");
+          }
+
+          work.artist = artist || {
             name: "none",
+            admittedAt: -1,
           };
           return work;
         })
@@ -66,6 +75,7 @@ export class FirestoreWorksStore implements WorksStore {
       setWorks(works);
     });
   }
+
   async find(id: string) {
     const workRef = doc(this.worksCollection, id);
     const snapshot = await getDoc(workRef);
@@ -78,17 +88,23 @@ export class FirestoreWorksStore implements WorksStore {
     if (!work.artistId) {
       work.artist = {
         name: "none",
+        admittedAt: -1,
       };
       return work;
     }
 
     work.artist = (await this.artistsStore.find(work.artistId)) || {
       name: "none",
+      admittedAt: -1,
     };
     return work;
   }
   async create(work: Work) {
     await addDoc(this.worksCollection, work);
+  }
+
+  async update(work: Work) {
+    await updateDoc(doc(this.worksCollection, work.id), work);
   }
 
   async addComment(workId: string, comment: WorksComment) {
@@ -98,4 +114,20 @@ export class FirestoreWorksStore implements WorksStore {
     ).withConverter(CommentsConverter);
     addDoc(document, comment);
   }
+
+  async deleteComment(workId: string, comment: WorksComment) {
+    const commentsCollection = collection(
+      this.worksCollection,
+      `${workId}/comments`
+    ).withConverter(CommentsConverter);
+
+    await deleteDoc(doc(commentsCollection, comment.id));
+  }
+
+  async delete(id: string): Promise<boolean> {
+    await deleteDoc(doc(this.worksCollection, id));
+    return true;
+  }
 }
+
+export const firestoreWorksStore = new FirestoreWorksStore();

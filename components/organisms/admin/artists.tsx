@@ -1,22 +1,26 @@
 import { useState } from "react";
-import dayjs from "dayjs";
 
-import { DeleteIcon } from "@components/atoms/icons/delete-icon";
 import { Modal } from "@components/atoms/modal/modal";
+import { ArtistListRow } from "@components/molecules/admin/artist/artist-list-row";
+import { ArtistRegisterRow } from "@components/molecules/admin/artist/artist-register-row";
+import { useArtists } from "hooks/artists/use-artists";
 
 interface ArtistListProps {
   artists: Artist[];
   deleteArtist: (artistId: string) => void;
+  createArtist: (artist: Artist) => void;
 }
 
 export const ArtistList: React.FC<ArtistListProps> = ({
   artists,
   deleteArtist,
+  createArtist,
 }) => {
+  const { artistsState, setNewArtist } = useArtists();
   const [deleteTargetArtist, setDeleteArtist] = useState<Artist | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   return (
-    <div className="overflow-hidden">
+    <div className="overflow-hidden flex flex-1">
       <Modal id="test-modal" title="Confirm" isOpen={modalOpen}>
         <div className="p-6 space-y-6 text-white">
           {deleteTargetArtist?.name} さんを削除しますか?
@@ -47,75 +51,73 @@ export const ArtistList: React.FC<ArtistListProps> = ({
           </button>
         </div>
       </Modal>
-      <table className="min-w-full">
-        <thead className="border-b">
-          <tr>
-            <th>削除</th>
-            <th
-              scope="col"
-              className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-            >
-              名前
-            </th>
-            <th
-              scope="col"
-              className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-            >
-              卒業年度
-            </th>
-            <th
-              scope="col"
-              className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-            >
-              登録日時
-            </th>
-            <th
-              scope="col"
-              className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-            >
-              更新日時
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {artists.map((artist) => {
-            return (
-              <tr key={artist.id}>
-                <td
-                  scope="col"
-                  className="text-sm font-medium text-gray-900 px-6 py-4 text-center"
-                >
-                  <button
-                    onClick={() => {
-                      setDeleteArtist(artist);
-                      setModalOpen(true);
-                    }}
-                    type="button"
-                    data-modal-toggle="test-modal"
-                  >
-                    <DeleteIcon className="rotate-45 flex-shrink-0 w-6 h-6 text-red-500 transition duration-75 dark:text-red group-hover:text-gray-900 dark:group-hover:text-white" />
-                  </button>
-                </td>
-                <td
-                  scope="col"
-                  className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-                >
-                  {artist.name}
-                </td>
-                <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {artist.graduatedAt}
-                </td>
-                <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {dayjs(artist.createdAt).format("YYYY-MM-DD HH:mm:ss")}
-                </td>
-                <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {dayjs(artist.updatedAt).format("YYYY-MM-DD HH:mm:ss")}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <div className="overflow-y-auto w-full h-full">
+        <table className="min-w-full">
+          <thead className="border-b">
+            <tr>
+              <th
+                scope="col"
+                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+              >
+                名前
+              </th>
+              <th
+                scope="col"
+                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+              >
+                入学年
+              </th>
+              <th
+                scope="col"
+                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+              >
+                Twitter
+              </th>
+              <th
+                scope="col"
+                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+              >
+                登録日時
+              </th>
+              <th
+                scope="col"
+                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+              >
+                更新日時
+              </th>
+              <th
+                scope="col"
+                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+              >
+                編集
+              </th>
+              <th
+                scope="col"
+                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+              >
+                削除
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <ArtistRegisterRow
+              artist={artistsState.create.artist}
+              updateNewArtist={setNewArtist}
+              createArtist={createArtist}
+            />
+            {artists.map((artist) => (
+              <ArtistListRow
+                key={artist.id}
+                artist={artist}
+                beginDeleteAction={() => {
+                  setDeleteArtist(artist);
+                  setModalOpen(true);
+                }}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

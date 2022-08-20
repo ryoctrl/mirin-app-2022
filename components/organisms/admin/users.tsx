@@ -1,21 +1,28 @@
 import dayjs from "dayjs";
 
+import { UserListRow } from "@components/molecules/admin/user/user-list-row";
 import { useUser } from "hooks/users/useUser";
+import { UserRegisterRow } from "@components/molecules/admin/user/user-register-row";
+import { useAdmin } from "hooks/admin/useAdmin";
 
 interface UserListProps {
   users: User[];
   updateUsers: User[];
   modifyUpdateUser: (user: User) => void;
+  registerNewUser: (user: User) => void;
 }
 
 export const UserList: React.FC<UserListProps> = ({
   users,
   updateUsers,
   modifyUpdateUser,
+  registerNewUser,
 }) => {
   const {
     userState: { user: currentUser },
   } = useUser();
+
+  const { adminState } = useAdmin();
 
   const finalyUsers = users.map((user) => {
     const updateUser = updateUsers.find((u) => u.id === user.id);
@@ -54,40 +61,15 @@ export const UserList: React.FC<UserListProps> = ({
           </tr>
         </thead>
         <tbody>
-          {finalyUsers.map((user) => {
-            return (
-              <tr key={user.id}>
-                <td
-                  scope="col"
-                  className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-                >
-                  {user.email}
-                </td>
-                <td
-                  scope="col"
-                  className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-                >
-                  <input
-                    type="checkbox"
-                    checked={user.admin}
-                    disabled={currentUser?.uid === user.id}
-                    onChange={(e) =>
-                      modifyUpdateUser({
-                        ...user,
-                        admin: e.target.checked,
-                      })
-                    }
-                  />
-                </td>
-                <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {dayjs(user.createdAt).format("YYYY-MM-DD HH:mm:ss")}
-                </td>
-                <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {dayjs(user.updatedAt).format("YYYY-MM-DD HH:mm:ss")}
-                </td>
-              </tr>
-            );
-          })}
+          <UserRegisterRow registerNewUser={registerNewUser} />
+          {finalyUsers.map((user) => (
+            <UserListRow
+              key={user.id}
+              user={user}
+              modifyUpdateUser={modifyUpdateUser}
+              isEditable={currentUser?.uid === user.id}
+            />
+          ))}
         </tbody>
       </table>
     </div>

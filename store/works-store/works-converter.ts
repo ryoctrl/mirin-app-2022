@@ -17,6 +17,7 @@ export const WorksConverter: FirestoreDataConverter<Work> = {
       image: work.image,
       description: work.description,
       comments: work.comments,
+      order: work.order,
       createdAt: work.createdAt ?? serverTimestamp(),
       updatedAt: serverTimestamp(),
     };
@@ -35,12 +36,14 @@ export const WorksConverter: FirestoreDataConverter<Work> = {
       artistId: data.artistId,
       artist: {
         name: "",
+        admittedAt: -1,
       },
       workedAt: data.workedAt,
       thumb: data.thumb,
       image: data.image,
       description: data.description,
       comments: data.comments,
+      order: data.order,
       createdAt: data.createdAt?.toDate(),
       updatedAt: data.updatedAt?.toDate(),
     };
