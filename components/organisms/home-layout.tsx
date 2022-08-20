@@ -27,10 +27,13 @@ export const HomeLayout: React.FC<Props> = ({ worksState }) => {
           <p>目的として開催したイベントです.</p>
         </div>
         <div className="description">
-          <img
-            src="/KUMD.svg"
-            className="description-logo"
-          />
+          <div className="description-logo">
+            <Image
+              alt="背景ロゴ"
+              src="/KUMD.svg"
+              layout="fill"
+            />
+          </div>
           <p>
             現在は<span className="black-background">2022.06~08</span>の期間に募集した
           </p>

@@ -1,5 +1,8 @@
-import styles from "@styles/Home.module.scss";
+import Image from "next/image";
 import React, { useState } from "react";
+
+import styles from "@styles/Home.module.scss";
+
 import { HeaderScrollRefs, scroll } from "libs/utils/header";
 
 export const HeaderMenu: React.FC = () => {
@@ -14,11 +17,15 @@ export const HeaderMenu: React.FC = () => {
     <div className={styles.headerMenu}>
       <div className={styles.headerWrapper}>
         <div className={styles.headerBar}>
-          <img
-            src="/KUMD.svg"
-            className={styles.titleLogo}
-            onClick={() => scrollAndMenuClose(HeaderScrollRefs.TOP)}
-          />
+          <div className={styles.titleLogo}>
+            <Image
+              alt="タイトルロゴ"
+              src="/KUMD.svg"
+              width="129px"
+              height="33px"
+              onClick={() => scrollAndMenuClose(HeaderScrollRefs.TOP)}
+            />
+          </div>
           <div className={styles.pcScrollBtns}>
             <span onClick={() => scrollAndMenuClose(HeaderScrollRefs.TOP)}>
               top

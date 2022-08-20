@@ -129,10 +129,12 @@
       justify-content: space-between;
       transition: 0.5s;
       .titleLogo {
+        cursor: pointer;
         margin-left: 2.5vw;
         width: 129px;
       }
       .pcScrollBtns {
+        cursor: pointer;
         display: none;
         align-items: center;
         justify-content: space-between;
