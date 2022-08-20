@@ -37,9 +37,9 @@ export default function CustomDocument() {
           crossOrigin="true"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@700&family=M+PLUS+1p:wght@400;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@700&family=Noto+Sans+JP:wght@700&display=swap"
           rel="stylesheet"
-        ></link>
+        />
       </Head>
       <body>
         <Main />

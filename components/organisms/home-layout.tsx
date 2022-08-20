@@ -3,7 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { SectionTitle } from "@components/molecules";
+import { HeaderMenu } from "@components/molecules";
 import { WorksState } from "hooks/works/state";
+import { HeaderScrollRefs, scroll } from "libs/utils/header";
 
 type Props = {
   worksState: WorksState;
@@ -12,20 +14,24 @@ type Props = {
 export const HomeLayout: React.FC<Props> = ({ worksState }) => {
   return (
     <div className="layout">
-      <h1 className="logo-font">KUMD</h1>
-      <div className="section-about">
+      <HeaderMenu></HeaderMenu>
+      <div className="section-about" ref={HeaderScrollRefs.ABOUT}>
         <SectionTitle>はじめに</SectionTitle>
 
-        <div>
+        <div className="description">
           <p>KUMD海賊版パネル展示会は</p>
-          <p>現回生OBOG問わず、さまざまな世代の漫画同好会が</p>
+          <p>現回生OBOG問わず、様々な世代の漫画同好会が</p>
           <p>イラスト漫画を通じ、公開鑑賞交流しあえることを</p>
+          <br/>
           <p>目的として開催したイベントです.</p>
         </div>
         <div className="description">
-          <div className="description-logo"></div>
+          <img
+            src="/KUMD.svg"
+            className="description-logo"
+          />
           <p>
-            現在は<span>2022.06~08</span>の期間に募集した
+            現在は<span className="black-background">2022.06~08</span>の期間に募集した
           </p>
           <p>作品を展示しています。</p>
         </div>
@@ -38,30 +44,32 @@ export const HomeLayout: React.FC<Props> = ({ worksState }) => {
             </div>
             <div className="author">
               <span>Engineering</span>
-              <span>つんぱ。</span>
+              <span>藤井遼 つんぱ。</span>
             </div>
             <div className="author">
               <span>Top picture</span>
               <span>cacao</span>
             </div>
+            <div className="scroll-bar" onClick={() => scroll(HeaderScrollRefs.GALLERY)}>
+              <div className="bar"></div>
+              <p>scroll</p>
+            </div>
           </div>
 
-          <div className="artists-table">
-            <div>Artists</div>
-            <div className="artists">
-              {Array.from(
-                new Set(worksState.works.map((work) => work.artist))
-              ).map((artist, idx) => (
-                <span key={idx}>{artist.name}</span>
-              ))}
+          <div className="news-contents">
+            <div className="news">
+              coming soon
+            </div>
+            <div className="news">
+              coming soon
             </div>
           </div>
         </div>
       </div>
-      <div>
-        <SectionTitle>作品一覧</SectionTitle>
 
-        <div>
+      <div ref={HeaderScrollRefs.GALLERY}>
+        <SectionTitle>GALLERY</SectionTitle>
+        <div className="opus-wrapper">
           {worksState.isLoading && <span>Now Loading...</span>}
           {worksState.works.map((work, idx) => {
             return (
@@ -78,10 +86,8 @@ export const HomeLayout: React.FC<Props> = ({ worksState }) => {
                     />
                   </div>
                   <div className="text-wrapper">
-                    <p className="text-title">{work.title}</p>
                     <p className="text-artist">{work.artist.name}</p>
-
-                    <p className="text-description">{work.description}</p>
+                    <p className="text-title">{work.title}</p>
                   </div>
                 </div>
               </Link>
