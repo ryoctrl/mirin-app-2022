@@ -2,7 +2,6 @@ import Image from "next/image";
 import React, { useState } from "react";
 
 import styles from "@styles/Home.module.scss";
-
 import { HeaderScrollRefs, scroll } from "libs/utils/header";
 
 export const HeaderMenu: React.FC = () => {
