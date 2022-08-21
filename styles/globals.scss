@@ -206,7 +206,7 @@ a {
   margin-top: 40px;
 
   .image-wrapper {
-    padding: calc(50vw - $side-padding);
+    padding: 50%;
     flex: 1;
     position: relative;
 
@@ -306,7 +306,8 @@ a {
     margin-bottom: 3px;
   }
   div:nth-child(2) {
-    font-weight: 400 !important;
+    font-weight: 400;
+    line-height: 12px;
   }
 }
 
