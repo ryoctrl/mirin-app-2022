@@ -183,6 +183,8 @@
         }
       }
       .openHamburger {
+        position: fixed !important;
+        top: 30px;
         span:nth-of-type(1) {
           transform: translateY(10px) rotate(-45deg);
         }
@@ -236,11 +238,6 @@
       width: 100vw;
     }
   }
-}
-
-.openHeader {
-  position: fixed;
-  top: 10px;
 }
 
 @media screen and (min-width: 768px) {

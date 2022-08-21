@@ -13,7 +13,7 @@ export const HeaderMenu: React.FC = () => {
   }
 
   return (
-    <div className={`${styles.headerMenu} ${menuOpen ? styles.openHeader : ""}`}>
+    <div className={styles.headerMenu}>
       <div className={styles.headerWrapper}>
         <div className={styles.headerBar}>
           <div className={styles.titleLogo}>
