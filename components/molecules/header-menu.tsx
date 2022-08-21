@@ -19,7 +19,7 @@ export const HeaderMenu: React.FC = () => {
           <div className={styles.titleLogo}>
             <Image
               alt="タイトルロゴ"
-              src="/KUMD.svg"
+              src="/KUMD.png"
               width="129px"
               height="33px"
               onClick={() => scrollAndMenuClose(HeaderScrollRefs.TOP)}
