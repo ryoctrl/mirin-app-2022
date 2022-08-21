@@ -49,7 +49,7 @@
 .description {
   margin: 4rem 0;
   line-height: 1.5;
-  font-size: 1.5rem;
+  font-size: 1rem !important;
 }
 
 .code {
@@ -236,6 +236,11 @@
       width: 100vw;
     }
   }
+}
+
+.openHeader {
+  position: fixed;
+  top: 10px;
 }
 
 @media screen and (min-width: 768px) {
