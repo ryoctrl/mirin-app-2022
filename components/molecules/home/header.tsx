@@ -14,6 +14,7 @@ export const HomeHeader: React.FC = () => {
           src={currentExhibition.heroImage.pc}
           className="invisible md:visible"
           layout="fill"
+          objectFit="cover"
         />
       )}
       {currentExhibition?.heroImage.sp && (
@@ -22,6 +23,7 @@ export const HomeHeader: React.FC = () => {
           src={currentExhibition.heroImage.sp}
           className="visible md:invisible"
           layout="fill"
+          objectFit="cover"
         />
       )}
     </div>

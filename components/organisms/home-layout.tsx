@@ -48,7 +48,7 @@ export const HomeLayout: React.FC<Props> = ({ worksState }) => {
             </div>
             <div className="author">
               <span>Engineering</span>
-              <span>藤井遼 つんぱ。</span>
+              <span>mosin つんぱ。</span>
             </div>
             <div className="author">
               <span>Top picture</span>
