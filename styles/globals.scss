@@ -206,11 +206,14 @@ a {
   margin-top: 40px;
 
   .image-wrapper {
-    padding: 50%;
     position: relative;
-
+    span {
+      position: unset !important;
+    }
     .image {
-      object-fit: contain;
+      position: relative !important;
+      width: 100% !important;
+      height: unset !important;
     }
   }
 }

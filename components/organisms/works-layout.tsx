@@ -56,12 +56,13 @@ export const WorksLayout: React.FC<Props> = (props) => {
     <div className="layout">
       <div className="work-wrapper">
         <div className="opus-container">
-          <div className="image-wrapper">
+          <div className="image-wrapper" >
             <Image
               src={work.image}
               layout="fill"
               alt={work.title}
               className="image"
+              objectFit="contain"
             />
           </div>
         </div>
