@@ -207,16 +207,18 @@ a {
 
   .image-wrapper {
     padding: 50%;
-    flex: 1;
     position: relative;
 
     .image {
       object-fit: contain;
     }
   }
+}
 
+.text-container {
   .text-title {
     font-size: 2.5rem;
+    margin-top: 15px;
     margin-bottom: 10px;
   }
 
@@ -347,6 +349,31 @@ p {
       left: calc(85% - 70px) !important;
       font-size: 70px !important;
       line-height: 22px;
+    }
+  }
+
+  .work-wrapper {
+    margin-top: 70px;
+    display: flex;
+    justify-content: space-between;
+    .opus-container {
+      width: 42.5vw;
+      margin-top: 20px;
+    }
+    .other-container {
+      width: 42.5vw;
+      .text-container {
+        .text-artist-info {
+          display: initial;
+        }
+        .text-social-link {
+          margin-bottom: 45px;
+        }
+      }
+      .comment-title {
+        border-top: initial;
+        margin-top: 140px;
+      }
     }
   }
 }

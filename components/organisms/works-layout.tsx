@@ -64,6 +64,8 @@ export const WorksLayout: React.FC<Props> = (props) => {
               className="image"
             />
           </div>
+        </div>
+        <div className="other-container">
           <div className="text-container">
             <div className="text-title">
               <span>{work.title}</span>
@@ -97,42 +99,41 @@ export const WorksLayout: React.FC<Props> = (props) => {
               ))}
             </div>
           </div>
-        </div>
 
-        <hr />
-        <div>
-          <div className="comment-title">コメント</div>
-          <div className="inputs-wrapper">
-            <div className="inputs">
-              <input
-                className="name-input"
-                placeholder="名前"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-              <textarea
-                className="text-input"
-                placeholder="コメントする..."
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                ref={textAreaRef}
-              />
+          <div>
+            <div className="comment-title">コメント</div>
+            <div className="inputs-wrapper">
+              <div className="inputs">
+                <input
+                  className="name-input"
+                  placeholder="名前"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+                <textarea
+                  className="text-input"
+                  placeholder="コメントする..."
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  ref={textAreaRef}
+                />
+              </div>
+              <button className="submit-btn" onClick={() => registerComment()}></button>
             </div>
-            <button className="submit-btn" onClick={() => registerComment()}></button>
           </div>
-        </div>
 
-        <div>
-          {!hasComments && <span>コメントはまだありません。</span>}
-          {hasComments &&
-            Object.values(work.comments)
-              .reverse()
-              .map((comment, idx) => (
-                <div key={idx} className="comment">
-                  <div>{comment.name}</div>
-                  <div>{comment.text}</div>
-                </div>
-              ))}
+          <div>
+            {!hasComments && <span>コメントはまだありません。</span>}
+            {hasComments &&
+              Object.values(work.comments)
+                .reverse()
+                .map((comment, idx) => (
+                  <div key={idx} className="comment">
+                    <div>{comment.name}</div>
+                    <div>{comment.text}</div>
+                  </div>
+                ))}
+          </div>
         </div>
       </div>
     </div>
