@@ -16,6 +16,7 @@ a {
 
 * {
   box-sizing: border-box;
+  font-weight: 700;
 }
 
 .section-title {
@@ -149,6 +150,11 @@ a {
   }
 }
 
+.work-wrapper {
+  width: 90vw;
+  margin: auto auto;
+}
+
 .opus-wrapper {
   display: flex;
   flex-wrap: wrap;
@@ -197,10 +203,10 @@ a {
   font-weight: bold;
   display: flex;
   flex-direction: column;
-  height: 80vh;
+  margin-top: 40px;
 
   .image-wrapper {
-    padding: $side-padding 0;
+    padding: calc(50vw - $side-padding);
     flex: 1;
     position: relative;
 
@@ -210,17 +216,20 @@ a {
   }
 
   .text-title {
-    font-size: 3rem;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
   }
 
   .text-artist-info {
     display: flex;
     justify-content: space-between;
     font-size: 1rem;
+    margin-bottom: 15px;
   }
 
   .text-social-link {
     margin-top: 0.5rem;
+    margin-bottom: 15px;
     display: flex;
     align-items: center;
   }
@@ -228,10 +237,12 @@ a {
   .social-link {
     height: 1.5rem;
     width: 1.5rem;
+    background-color: black;
   }
 
   .text-description {
     margin-top: 0.5rem;
+    margin-bottom: 30px;
     font-size: 1rem;
     font-weight: 400;
     p {
@@ -240,38 +251,62 @@ a {
   }
 }
 
-.inputs {
+.inputs-wrapper {
   display: flex;
-  height: 1.5rem;
-  margin: 1rem 0;
+  justify-content: space-between;
+  margin: 1rem 0 2rem 0;
+  .inputs {
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 50px);
+    font-weight: 400;
 
-  .name-input {
-    flex: 1;
-    border: 1px solid black;
-    border-right: initial;
-    border-radius: initial;
-    margin: 0;
+    .name-input {
+      border: 1px solid black;
+      border-bottom: initial;
+      border-radius: initial;
+      margin: 0;
+      padding: 7px;
+    }
+
+    .text-input {
+      border: 1px solid black;
+      border-top: initial;
+      border-radius: initial;
+      margin: 0;
+      padding: 7px;
+
+      resize: auto;
+      max-height: 1000px;
+      font-weight: 400;
+    }
   }
+  .submit-btn {
+    width: 20px;
+    height: 20px;
+    margin: auto auto 5px auto;
 
-  .text-input {
-    flex: 3;
-    border: 1px solid black;
-    border-left: initial;
-    border-radius: initial;
-    margin: 0;
+    background-image: url("/submitBtn.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 }
 
+.comment-title {
+  font-weight: 700;
+  padding-top: 15px;
+  border-top: black solid 1.5px;
+}
+
 .comment {
-  display: flex;
   font-size: 10px;
   margin: 1rem 0;
 
   div:nth-child(1) {
-    flex: 1;
+    margin-bottom: 3px;
   }
   div:nth-child(2) {
-    flex: 3;
+    font-weight: 400 !important;
   }
 }
 
