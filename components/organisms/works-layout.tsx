@@ -18,7 +18,7 @@ const useAutoResizeTextArea = (value: string | undefined) => {
 
     const { borderTopWidth, borderBottomWidth } = getComputedStyle(element);
 
-    element.style.height = "40px";
+    element.style.height = "20px";
     element.style.height = `calc(${element.scrollHeight}px + ${borderTopWidth} + ${borderBottomWidth})`;
   }, [value]);
 
