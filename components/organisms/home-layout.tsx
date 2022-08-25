@@ -91,8 +91,8 @@ export const HomeLayout: React.FC<Props> = ({ worksState }) => {
                       />
                     </div>
                     <div className="text-wrapper">
-                      <p className="text-artist">{work.artist.name}</p>
                       <p className="text-title">{work.title}</p>
+                      <p className="text-artist">{work.artist.name}</p>
                     </div>
                   </div>
                 </Link>
