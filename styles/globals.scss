@@ -411,11 +411,12 @@ p {
   .scroll-bar {
     .bar {
       width: 15px !important;
+      right: 10% !important;
     }
     p {
       position: absolute;
       top: 3% !important;
-      left: calc(85% - 70px) !important;
+      left: calc(90% - 70px) !important;
       font-size: 70px !important;
       line-height: 22px;
     }
