@@ -6,6 +6,9 @@ const nextConfig = {
   images: {
     domains: ["firebasestorage.googleapis.com"],
   },
+  experimental: {
+    scrollRestoration: true,
+  },
 };
 
 const withBundleAnalyzer = require("@next/bundle-analyzer")({

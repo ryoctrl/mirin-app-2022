@@ -38,9 +38,9 @@ export default function CustomDocument() {
           crossOrigin="true"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@700&family=M+PLUS+1p:wght@400;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap"
           rel="stylesheet"
-        ></link>
+        />
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
           strategy="afterInteractive"
