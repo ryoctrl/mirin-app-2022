@@ -231,11 +231,92 @@
           font-weight: bold;
           font-size: 36px;
           line-height: 45px;
+
+          h3 {
+            position: relative;
+            &::after {
+              transition: 0.5s;
+              transition-delay: 0s;
+              content: "";
+              position: absolute;
+              top: 0;
+              left: 0;
+
+              width: 100%;
+              height: calc(100% - 5px);
+              background-color: black;
+            }
+          }
+          &:nth-of-type(1) {
+            h3:nth-of-type(1) {
+              width: 55px;
+            }
+            h3:nth-of-type(2) {
+              width: 80px;
+            }
+          }
+          &:nth-of-type(2) {
+            h3:nth-of-type(1) {
+              width: 55px;
+            }
+            h3:nth-of-type(2) {
+              width: 130px;
+            }
+          }
+          &:nth-of-type(3) {
+            h3:nth-of-type(1) {
+              width: 55px;
+            }
+            h3:nth-of-type(2) {
+              width: 165px;
+            }
+          }
         }
       }
     }
     .openContent {
       width: 100vw;
+      .scrollBtn {
+        h3:after {
+          width: 0 !important;
+        }
+        &:nth-of-type(1) {
+          h3:nth-of-type(1) {
+            &::after {
+              transition-delay: 0.2s;
+            }
+          }
+          h3:nth-of-type(2) {
+            &::after {
+              transition-delay: 0.3s;
+            }
+          }
+        }
+        &:nth-of-type(2) {
+          h3:nth-of-type(1) {
+            &::after {
+              transition-delay: 0.4s;
+            }
+          }
+          h3:nth-of-type(2) {
+            &::after {
+              transition-delay: 0.5s;
+            }
+          }
+        }
+        &:nth-of-type(3) {
+          h3:nth-of-type(1) {
+            &::after {
+              transition-delay: 0.6s;
+            }
+          }
+          h3:nth-of-type(2) {
+            &::after {
+              transition-delay: 0.7s;
+            }
+          }
+        }
+      }
     }
   }
 }

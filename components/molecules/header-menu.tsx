@@ -48,13 +48,22 @@ export const HeaderMenu: React.FC = () => {
           <div className={styles.borderTop}></div>
           <div className={styles.scrollBtnWrapper}>
             <div className={styles.scrollBtn} onClick={() => scrollAndMenuClose(HeaderScrollRefs.TOP)}>
-              <div>01<br/>TOP</div>
+              <div>
+                <h3>01</h3>
+                <h3>TOP</h3>
+              </div>
             </div>
             <div className={styles.scrollBtn} onClick={() => scrollAndMenuClose(HeaderScrollRefs.ABOUT)}>
-              <div>02<br/>ABOUT</div>
+              <div>
+                <h3>02</h3>
+                <h3>ABOUT</h3>
+              </div>
             </div>
             <div className={styles.scrollBtn} onClick={() => scrollAndMenuClose(HeaderScrollRefs.GALLERY)}>
-              <div>03<br/>GALLERY</div>
+              <div>
+                <h3>03</h3>
+                <h3>GALLERY</h3>
+              </div>
             </div>
           </div>
           <div className={styles.borderBottom}></div>
