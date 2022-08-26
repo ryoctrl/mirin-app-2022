@@ -11,6 +11,7 @@ import { HeaderScrollRefs } from "libs/utils/header"
 import { useExhibitions } from "hooks/exhibitions/use-exhibitions";
 import OGP from "@components/organisms/ogp";
 import { firestoreExhibitionStore } from "store/exhibitions-store";
+import { HomeFooter } from "@components/molecules/home/footer";
 
 const Home: NextPage = () => {
   const { worksState } = useWorks();
@@ -37,6 +38,7 @@ const Home: NextPage = () => {
       <main className={styles.main}>
         <HomeHeader />
         <HomeLayout worksState={worksState} />
+        <HomeFooter />
       </main>
     </div>
   );
