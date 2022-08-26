@@ -306,10 +306,15 @@ a {
   }
 }
 
+.no-comment {
+  font-size: 10px;
+  font-weight: 400;
+}
+
 .inputs-wrapper {
   display: flex;
   justify-content: space-between;
-  margin: 1rem 0 2rem 0;
+  margin: 1rem 0 1.5rem 0;
   .inputs {
     display: flex;
     flex-direction: column;

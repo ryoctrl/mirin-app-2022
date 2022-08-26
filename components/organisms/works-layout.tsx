@@ -124,7 +124,7 @@ export const WorksLayout: React.FC<Props> = (props) => {
           </div>
 
           <div>
-            {!hasComments && <span>コメントはまだありません。</span>}
+            {!hasComments && <span className="no-comment">コメントはまだありません。</span>}
             {hasComments &&
               Object.values(work.comments)
                 .reverse()
