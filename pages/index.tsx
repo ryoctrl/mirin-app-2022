@@ -7,9 +7,11 @@ import styles from "@styles/Home.module.scss";
 import { HomeHeader } from "@components/molecules";
 import { HomeLayout } from "@components/organisms";
 import { useWorks } from "hooks/works/useWorks";
+import { HeaderScrollRefs } from "libs/utils/header"
 import { useExhibitions } from "hooks/exhibitions/use-exhibitions";
 import OGP from "@components/organisms/ogp";
 import { firestoreExhibitionStore } from "store/exhibitions-store";
+import { HomeFooter } from "@components/molecules/home/footer";
 
 const Home: NextPage = () => {
   const { worksState } = useWorks();
@@ -18,7 +20,7 @@ const Home: NextPage = () => {
     exhibitionsState: { currentExhibition },
   } = useExhibitions();
   return (
-    <div className={styles.container}>
+    <div className={styles.container} ref={ HeaderScrollRefs.TOP }>
       <Head>
         <title>{currentExhibition?.title ?? "KUMD海賊版パネル展示会"}</title>
         <meta
@@ -36,6 +38,7 @@ const Home: NextPage = () => {
       <main className={styles.main}>
         <HomeHeader />
         <HomeLayout worksState={worksState} />
+        <HomeFooter />
       </main>
     </div>
   );
