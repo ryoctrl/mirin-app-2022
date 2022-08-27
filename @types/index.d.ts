@@ -4,6 +4,11 @@ declare namespace NodeJS {
      * google analytics id
      */
     readonly NEXT_PUBLIC_GA_ID: string;
+
+    /**
+     * A flag represents the developer mode is activated.
+     */
+    readonly NEXT_PUBLIC_DEV_MODE: string;
   }
 }
 
@@ -75,6 +80,9 @@ type Exhibition = {
     pc: string;
     sp: string;
   };
+  inPeriod: boolean;
+  startAt?: Date;
+  endAt?: Date;
   createdAt?: Date;
   updatedAt?: Date;
 };
