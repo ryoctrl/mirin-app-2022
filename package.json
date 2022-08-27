@@ -26,7 +26,6 @@
     "sortablejs": "^1.15.0"
   },
   "devDependencies": {
-    "@heroicons-react": "link:@types/@heroicons-react",
     "@types/blueimp-load-image": "^5.16.0",
     "@types/node": "18.0.4",
     "@types/react": "18.0.15",
