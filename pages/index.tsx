@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
+import dayjs from "dayjs";
 
 import type { NextPage } from "next";
 
@@ -37,7 +38,10 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <HomeHeader />
-        <HomeLayout worksState={worksState} />
+        <HomeLayout
+          worksState={worksState}
+          inPeriod={currentExhibition?.inPeriod ?? true}
+        />
         <HomeFooter />
       </main>
     </div>

@@ -10,9 +10,10 @@ import { convertWorksToSortableWorks } from "libs/utils";
 
 type Props = {
   worksState: WorksState;
+  inPeriod: boolean;
 };
 
-export const HomeLayout: React.FC<Props> = ({ worksState }) => {
+export const HomeLayout: React.FC<Props> = ({ worksState, inPeriod }) => {
   return (
     <div className="layout">
       <HeaderMenu></HeaderMenu>
@@ -75,30 +76,36 @@ export const HomeLayout: React.FC<Props> = ({ worksState }) => {
         <SectionTitle>GALLERY</SectionTitle>
         <div className="opus-wrapper">
           {worksState.isLoading && <span>Now Loading...</span>}
-          {convertWorksToSortableWorks(worksState.works).map(
-            ({ work }, idx) => {
-              return (
-                <Link key={idx + 1} href={`/works/${work.id}`}>
-                  <div className="opus">
-                    <div className="thumb-wrapper">
-                      <Image
-                        className="thumb"
-                        src={work.thumb}
-                        alt={work.title}
-                        width="100%"
-                        height="100%"
-                        layout="responsive"
-                      />
-                    </div>
-                    <div className="text-wrapper">
-                      <p className="text-title">{work.title}</p>
-                      <p className="text-artist">{work.artist.name}</p>
-                    </div>
-                  </div>
-                </Link>
-              );
-            }
+          {!inPeriod && (
+            <div className="flex justify-center w-full">
+              展示会は終了しました。 次回の開催をお待ちください。
+            </div>
           )}
+          {inPeriod &&
+            convertWorksToSortableWorks(worksState.works).map(
+              ({ work }, idx) => {
+                return (
+                  <Link key={idx + 1} href={`/works/${work.id}`}>
+                    <div className="opus">
+                      <div className="thumb-wrapper">
+                        <Image
+                          className="thumb"
+                          src={work.thumb}
+                          alt={work.title}
+                          width="100%"
+                          height="100%"
+                          layout="responsive"
+                        />
+                      </div>
+                      <div className="text-wrapper">
+                        <p className="text-title">{work.title}</p>
+                        <p className="text-artist">{work.artist.name}</p>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              }
+            )}
         </div>
       </div>
     </div>
