@@ -7,6 +7,7 @@ import { HeaderMenu } from "@components/molecules";
 import { WorksState } from "hooks/works/state";
 import { HeaderScrollRefs, scroll } from "libs/utils/header";
 import { convertWorksToSortableWorks } from "libs/utils";
+import { OutOfPeriod } from "@components/molecules/out-of-period";
 
 type Props = {
   worksState: WorksState;
@@ -76,11 +77,7 @@ export const HomeLayout: React.FC<Props> = ({ worksState, inPeriod }) => {
         <SectionTitle>GALLERY</SectionTitle>
         <div className="opus-wrapper">
           {worksState.isLoading && <span>Now Loading...</span>}
-          {!inPeriod && (
-            <div className="flex justify-center w-full">
-              展示会は終了しました。 次回の開催をお待ちください。
-            </div>
-          )}
+          {!inPeriod && <OutOfPeriod />}
           {inPeriod &&
             convertWorksToSortableWorks(worksState.works).map(
               ({ work }, idx) => {
