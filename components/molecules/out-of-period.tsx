@@ -9,15 +9,21 @@ export const OutOfPeriod = () => {
     exhibitionsState: { currentExhibition },
   } = useExhibitions();
   return (
-    <div className="flex items-center flex-col w-full">
-      <p>展示会は終了しました。 次回の開催をお待ちください。</p>
-      <p>
-        開催期間:
-        {dayjs(currentExhibition?.startAt).format(
-          "YYYY-MM-DD(ddd) HH:mm:ss"
-        )} ~{" "}
-        {dayjs(currentExhibition?.endAt).format("YYYY-MM-DD(ddd) HH:mm:ss")}
-      </p>
+    <div className="out-of-period">
+      <div className="out-of-period-line">
+        <p>展示会は終了しました。 </p>
+        <p>次回の開催をお待ちください。</p>
+      </div>
+      <div className="out-of-period-line">
+        <p>開催期間</p>
+        <p>
+          {dayjs(currentExhibition?.startAt).format("YYYY-MM-DD(ddd) HH:mm:ss")}
+        </p>
+        <p> ~ </p>
+        <p>
+          {dayjs(currentExhibition?.endAt).format("YYYY-MM-DD(ddd) HH:mm:ss")}
+        </p>
+      </div>
     </div>
   );
 };

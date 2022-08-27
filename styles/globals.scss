@@ -546,3 +546,26 @@ p {
     }
   }
 }
+
+.out-of-period {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  p {
+    line-height: 0px;
+    display: inline-block;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .out-of-period-line {
+    width: 100%;
+    text-align: center;
+    p {
+      display: block;
+      line-height: 1rem;
+      width: 100%;
+    }
+  }
+}
