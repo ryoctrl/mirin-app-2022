@@ -1,5 +1,5 @@
 import DatePicker from "react-datepicker";
-import { forwardRef, useEffect, useState } from "react";
+import { forwardRef } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import { format } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
