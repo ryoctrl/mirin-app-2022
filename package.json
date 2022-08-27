@@ -10,6 +10,7 @@
     "analyze": "ANALYZE=true pnpm build"
   },
   "dependencies": {
+    "@heroicons/react": "v1",
     "@next/bundle-analyzer": "^12.2.5",
     "blueimp-load-image": "^5.16.0",
     "dayjs": "^1.11.4",
@@ -17,6 +18,7 @@
     "flowbite": "^1.5.1",
     "next": "12.2.2",
     "react": "18.2.0",
+    "react-datepicker": "^4.8.0",
     "react-dom": "18.2.0",
     "react-dropzone": "^14.2.2",
     "react-sortablejs": "^6.1.4",
@@ -24,9 +26,11 @@
     "sortablejs": "^1.15.0"
   },
   "devDependencies": {
+    "@heroicons-react": "link:@types/@heroicons-react",
     "@types/blueimp-load-image": "^5.16.0",
     "@types/node": "18.0.4",
     "@types/react": "18.0.15",
+    "@types/react-datepicker": "^4.4.2",
     "@types/react-dom": "18.0.6",
     "@types/sortablejs": "^1.13.0",
     "autoprefixer": "^10.4.8",
