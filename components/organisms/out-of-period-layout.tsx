@@ -2,24 +2,34 @@ import dayjs from "dayjs";
 import LocalizedFormat from "dayjs/plugin/localizedFormat";
 dayjs.extend(LocalizedFormat);
 import Image from "next/image";
-
-import { useExhibitions } from "hooks/exhibitions/use-exhibitions";
+import { useEffect, useState } from "react";
 
 export const OutOfPeriodLayout = () => {
-  const {
-    exhibitionsState: { currentExhibition },
-  } = useExhibitions();
+  const [heroSrc, setHeroSrc] = useState("/coming-soon-stop.png");
+
+  useEffect(() => {
+    const heroSrc =
+      window?.innerWidth > 768 ? "/coming-soon.png" : "/coming-soon-stop.png";
+    setHeroSrc(heroSrc);
+  }, [global.window]);
+
   return (
     <div className="out-of-period">
       <div>
         <div className="out-of-period-line-image">
           <div className="out-of-period-hero-image">
             <Image
-              alt="elephant"
-              src="/coming-soon.png"
+              alt="hero-image"
+              src={heroSrc}
               layout="fill"
               unoptimized={true}
               objectFit="contain"
+              onClick={(e) => {
+                if ((e.target as HTMLImageElement).src === "/coming-soon.png") {
+                  return;
+                }
+                (e.target as HTMLImageElement).src = "/coming-soon.png";
+              }}
             />
           </div>
         </div>
