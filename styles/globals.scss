@@ -586,11 +586,17 @@ p {
     position: absolute;
     width: 50%;
     right: 4rem;
-    bottom: 16rem;
+    bottom: 0;
     height: 16rem;
 
     opacity: 0;
     animation: messageAnimAfter 1s linear 10s 1 normal forwards;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .out-of-period .out-of-period-line-text .animate-before {
+    font-size: 2.5rem;
   }
 }
 
@@ -629,7 +635,7 @@ p {
         position: absolute;
         top: 1.5rem;
         opacity: 0%;
-        animation: messageAnimAfter 1s linear 10s 1 normal forwards;
+        animation: messageAnimAfter 1s linear 13s 1 normal forwards;
       }
 
       p.animate-after {

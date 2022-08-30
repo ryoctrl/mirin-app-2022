@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import LocalizedFormat from "dayjs/plugin/localizedFormat";
 dayjs.extend(LocalizedFormat);
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export const OutOfPeriodLayout = () => {
   const [heroSrc, setHeroSrc] = useState("/coming-soon-stop.png");
@@ -19,16 +19,19 @@ export const OutOfPeriodLayout = () => {
         <div className="out-of-period-line-image">
           <div className="out-of-period-hero-image">
             <Image
+              id="test"
               alt="hero-image"
               src={heroSrc}
               layout="fill"
               unoptimized={true}
               objectFit="contain"
               onClick={(e) => {
-                if ((e.target as HTMLImageElement).src === "/coming-soon.png") {
-                  return;
-                }
-                (e.target as HTMLImageElement).src = "/coming-soon.png";
+                setHeroSrc((heroSrc) => {
+                  if (heroSrc === "/coming-soon.png") {
+                    return heroSrc;
+                  }
+                  return "/coming-soon.png";
+                });
               }}
             />
           </div>
