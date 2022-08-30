@@ -18,6 +18,7 @@ export const OutOfPeriodLayout = () => {
               alt="elephant"
               src="/coming-soon.png"
               layout="fill"
+              unoptimized={true}
               objectFit="contain"
             />
           </div>
