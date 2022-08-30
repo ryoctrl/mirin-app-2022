@@ -36,7 +36,8 @@ export const ExhibitionConverter: FirestoreDataConverter<Exhibition> = {
       process.env.NEXT_PUBLIC_DEV_MODE === "true" ||
       !startAt.isValid() ||
       !endAt.isValid() ||
-      (now.isAfter(startAt) && now.isBefore(startAt));
+      (now.isAfter(startAt) && now.isBefore(endAt));
+
     return {
       id: snapshot.id,
       title: data.title,

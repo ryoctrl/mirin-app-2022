@@ -550,22 +550,126 @@ p {
 .out-of-period {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-content: space-between;
   width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
   p {
     line-height: 0px;
     display: inline-block;
   }
+
+  .out-of-period-hero-image {
+    animation: messageAnim 10s linear 0s 1 normal forwards;
+  }
+
+  .out-of-period-line-text {
+    position: absolute;
+    top: 8rem;
+    opacity: 0;
+    animation: messageAnimAfter 1s linear 10s 1 normal forwards;
+    text-align: center;
+
+    .animate-before {
+      font-size: 4rem;
+      // opacity: 0;
+      // animation: messageAnimAfter 1s linear 10s 1 normal forwards;
+    }
+
+    p.animate-after {
+      display: none;
+    }
+  }
+
+  .out-of-period-logo {
+    position: absolute;
+    width: 50%;
+    right: 4rem;
+    bottom: 16rem;
+    height: 16rem;
+
+    opacity: 0;
+    animation: messageAnimAfter 1s linear 10s 1 normal forwards;
+  }
 }
 
 @media screen and (max-width: 768px) {
-  .out-of-period-line {
-    width: 100%;
-    text-align: center;
-    p {
-      display: block;
-      line-height: 1rem;
+  .out-of-period {
+    .out-of-period-hero-image {
+      position: relative;
       width: 100%;
+      height: 50vh;
+      animation: initial;
     }
+    .out-of-period-line-text {
+      position: initial;
+      top: initial;
+      opacity: initial;
+      animation: initial;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 1rem;
+      position: relative;
+      p {
+        display: block;
+        line-height: 1rem;
+        width: 100%;
+        margin: 0.25rem 0;
+      }
+      .animate-before {
+        font-size: initial;
+        animation: messageAnim 10s linear 0s 1 normal forwards;
+      }
+
+      .animate-after {
+        display: block;
+        position: absolute;
+        top: 1.5rem;
+        opacity: 0%;
+        animation: messageAnimAfter 1s linear 10s 1 normal forwards;
+      }
+
+      p.animate-after {
+        display: initial;
+      }
+    }
+
+    .out-of-period-logo {
+      position: relative;
+      animation: initial;
+      right: initial;
+      bottom: initial;
+      height: 4rem;
+      animation: initial;
+      margin: 0 auto;
+      opacity: initial;
+    }
+  }
+}
+
+@keyframes messageAnim {
+  0% {
+    opacity: 100%;
+  }
+  95% {
+    opacity: 100%;
+  }
+  100% {
+    opacity: 0%;
+  }
+}
+
+@keyframes messageAnimAfter {
+  0% {
+    opacity: 0%;
+  }
+  5% {
+    opacity: 100%;
+  }
+  100% {
+    opacity: 100%;
   }
 }
