@@ -1,7 +1,6 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
-import { useEffect } from "react";
 
 import type { NextPage } from "next";
 
@@ -9,35 +8,22 @@ import styles from "@styles/Home.module.scss";
 import { HomeHeader } from "@components/molecules";
 import { HomeLayout } from "@components/organisms";
 import { useWorks } from "hooks/works/useWorks";
-import { HeaderScrollRefs } from "libs/utils/header"
+import { HeaderScrollRefs } from "libs/utils/header";
 import { useExhibitions } from "hooks/exhibitions/use-exhibitions";
 import OGP from "@components/organisms/ogp";
 import { firestoreExhibitionStore } from "store/exhibitions-store";
 import { HomeFooter } from "@components/molecules/home/footer";
+import { OutOfPeriodLayout } from "@components/organisms/out-of-period-layout";
 
-const Home: NextPage = () => {
+const OutOfPeriod: NextPage = () => {
   const { worksState } = useWorks();
   const router = useRouter();
   const {
     exhibitionsState: { currentExhibition },
   } = useExhibitions();
 
-  useEffect(() => {
-    if (!currentExhibition || currentExhibition?.inPeriod) {
-      return;
-    }
-    if (!router.isReady) {
-      return;
-    }
-    router.replace("/out-of-period");
-  }, [currentExhibition, router]);
-
-  if (!currentExhibition?.inPeriod) {
-    return <div></div>;
-  }
-
   return (
-    <div className={styles.container} ref={ HeaderScrollRefs.TOP }>
+    <div className={styles.container} ref={HeaderScrollRefs.TOP}>
       <Head>
         <title>{currentExhibition?.title ?? "KUMD海賊版パネル展示会"}</title>
         <meta
@@ -53,18 +39,13 @@ const Home: NextPage = () => {
       />
 
       <main className={styles.main}>
-        <HomeHeader />
-        <HomeLayout
-          worksState={worksState}
-          inPeriod={currentExhibition?.inPeriod ?? true}
-        />
-        <HomeFooter />
+        <OutOfPeriodLayout />
       </main>
     </div>
   );
 };
 
-Home.getInitialProps = async (context) => {
+OutOfPeriod.getInitialProps = async (context) => {
   const currentExhibition =
     await firestoreExhibitionStore.findCurrentExhibition();
   return {
@@ -74,4 +55,4 @@ Home.getInitialProps = async (context) => {
   };
 };
 
-export default Home;
+export default OutOfPeriod;

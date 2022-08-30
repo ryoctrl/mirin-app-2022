@@ -14,6 +14,7 @@ import { initialImageInfo } from "libs/utils/image-utils";
 import { uploadImage } from "libs/firebase/upload-to-storage";
 import { useExhibitions } from "hooks/exhibitions/use-exhibitions";
 import { SaveIcon } from "@components/atoms/icons/save-icon";
+import { DateRangePicker } from "@components/molecules/date-range-picker";
 
 const ExhibitionSettings: NextPage = () => {
   const { isLoggedIn, userState } = useUser();
@@ -32,6 +33,21 @@ const ExhibitionSettings: NextPage = () => {
   });
 
   const [exhibitionTitle, setExhibitionTitle] = useState("");
+  const [startAt, setStartAt] = useState(() => {
+    const date = new Date();
+    date.setDate(date.getDate() + 1);
+    date.setHours(0);
+    date.setMinutes(0);
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+    return date;
+  });
+
+  const [endAt, setEndAt] = useState(() => {
+    const date = new Date();
+    date.setMonth(startAt.getMonth() + 1);
+    return date;
+  });
 
   useEffect(() => {
     if (!currentExhibition) return;
@@ -44,6 +60,13 @@ const ExhibitionSettings: NextPage = () => {
       url: currentExhibition.heroImage.sp,
     });
     setExhibitionTitle(currentExhibition.title);
+    if (currentExhibition.startAt) {
+      setStartAt(currentExhibition.startAt);
+    }
+    if (currentExhibition.endAt) {
+      setEndAt(currentExhibition.endAt);
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentExhibition]);
 
@@ -52,6 +75,16 @@ const ExhibitionSettings: NextPage = () => {
     if (isLoggedIn()) return;
     router.replace(routes.ADMIN_LOGIN);
   }, [isLoggedIn, router, userState.userInitialized]);
+
+  useEffect(() => {
+    if (startAt.getTime() > endAt.getTime()) setStartAt(endAt);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [endAt]);
+
+  useEffect(() => {
+    if (startAt.getTime() > endAt.getTime()) setEndAt(startAt);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [startAt]);
 
   if (!userState.userInitialized || !isLoggedIn()) {
     return <LoadPanel />;
@@ -86,6 +119,8 @@ const ExhibitionSettings: NextPage = () => {
     updateExhibition({
       ...currentExhibition,
       title: exhibitionTitle,
+      startAt,
+      endAt,
       heroImage: {
         pc: pcUrl ?? currentExhibition.heroImage.pc,
         sp: spUrl ?? currentExhibition.heroImage.sp,
@@ -120,6 +155,15 @@ const ExhibitionSettings: NextPage = () => {
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                   value={exhibitionTitle}
                   onChange={(e) => setExhibitionTitle(e.target.value)}
+                />
+              </div>
+              <div>
+                <label>展示会開催期間</label>
+                <DateRangePicker
+                  startDate={startAt}
+                  setStartDate={setStartAt}
+                  endDate={endAt}
+                  setEndDate={setEndAt}
                 />
               </div>
               <div className="mb-4 flex h-64">
