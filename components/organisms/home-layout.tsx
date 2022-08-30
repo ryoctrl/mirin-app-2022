@@ -7,12 +7,14 @@ import { HeaderMenu } from "@components/molecules";
 import { WorksState } from "hooks/works/state";
 import { HeaderScrollRefs, scroll } from "libs/utils/header";
 import { convertWorksToSortableWorks } from "libs/utils";
+import { OutOfPeriod } from "@components/molecules/out-of-period";
 
 type Props = {
   worksState: WorksState;
+  inPeriod: boolean;
 };
 
-export const HomeLayout: React.FC<Props> = ({ worksState }) => {
+export const HomeLayout: React.FC<Props> = ({ worksState, inPeriod }) => {
   return (
     <div className="layout">
       <HeaderMenu></HeaderMenu>
@@ -75,30 +77,32 @@ export const HomeLayout: React.FC<Props> = ({ worksState }) => {
         <SectionTitle>GALLERY</SectionTitle>
         <div className="opus-wrapper">
           {worksState.isLoading && <span>Now Loading...</span>}
-          {convertWorksToSortableWorks(worksState.works).map(
-            ({ work }, idx) => {
-              return (
-                <Link key={idx + 1} href={`/works/${work.id}`}>
-                  <div className="opus">
-                    <div className="thumb-wrapper">
-                      <Image
-                        className="thumb"
-                        src={work.thumb}
-                        alt={work.title}
-                        width="100%"
-                        height="100%"
-                        layout="responsive"
-                      />
+          {!inPeriod && <OutOfPeriod />}
+          {inPeriod &&
+            convertWorksToSortableWorks(worksState.works).map(
+              ({ work }, idx) => {
+                return (
+                  <Link key={idx + 1} href={`/works/${work.id}`}>
+                    <div className="opus">
+                      <div className="thumb-wrapper">
+                        <Image
+                          className="thumb"
+                          src={work.thumb}
+                          alt={work.title}
+                          width="100%"
+                          height="100%"
+                          layout="responsive"
+                        />
+                      </div>
+                      <div className="text-wrapper">
+                        <p className="text-title">{work.title}</p>
+                        <p className="text-artist">{work.artist.name}</p>
+                      </div>
                     </div>
-                    <div className="text-wrapper">
-                      <p className="text-title">{work.title}</p>
-                      <p className="text-artist">{work.artist.name}</p>
-                    </div>
-                  </div>
-                </Link>
-              );
-            }
-          )}
+                  </Link>
+                );
+              }
+            )}
         </div>
       </div>
     </div>
