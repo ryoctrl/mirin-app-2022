@@ -3,7 +3,7 @@ const serviceAccount = require("../mirin-app-2022-firebase-adminsdk-x6nb0-c1bcbc
 
 admin.initializeApp({
   credential: admin.credential.cert(
-    serviceAccount as Parameters<typeof admin["credential"]["cert"]>[0]
+    serviceAccount as Parameters<(typeof admin)["credential"]["cert"]>[0]
   ),
   databaseURL: "https://mirin-app-2022-default-rtdb.firebaseio.com",
 });
@@ -18,7 +18,7 @@ admin.initializeApp({
  * cp /path/to/<credentials.json> ./
  * pnpm ts-node migrations/20220816_change_graduatedAt_field_to_admittedAt_field.ts
  */
-const artistsKey = "/app/v1/artists";
+const artistsKey = "/app/2023/artists";
 const run = async () => {
   const users = await admin.firestore().collection(artistsKey).get();
   await Promise.all(
