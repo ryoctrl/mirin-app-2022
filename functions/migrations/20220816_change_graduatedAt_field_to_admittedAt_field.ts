@@ -3,7 +3,7 @@ const serviceAccount = require("../mirin-app-2022-firebase-adminsdk-x6nb0-c1bcbc
 
 admin.initializeApp({
   credential: admin.credential.cert(
-    serviceAccount as Parameters<typeof admin["credential"]["cert"]>[0]
+    serviceAccount as Parameters<(typeof admin)["credential"]["cert"]>[0]
   ),
   databaseURL: "https://mirin-app-2022-default-rtdb.firebaseio.com",
 });

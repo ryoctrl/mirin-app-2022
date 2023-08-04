@@ -19,19 +19,19 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <UserContextProvider>
       <StoredFileContextProvider>
-        <WorksContextProvider
+        <ExhibitionsContextProvider
           initialState={{
-            ...initialWorksState,
-            ...worksState,
+            ...initialExhibitionsState,
+            ...exhibitionsState,
           }}
         >
-          <ArtistsContextProvider>
-            <ExhibitionsContextProvider
-              initialState={{
-                ...initialExhibitionsState,
-                ...exhibitionsState,
-              }}
-            >
+          <WorksContextProvider
+            initialState={{
+              ...initialWorksState,
+              ...worksState,
+            }}
+          >
+            <ArtistsContextProvider>
               <AdminContextProvider>
                 <Component {...pageProps} />
                 <ToastContainer
@@ -39,9 +39,9 @@ function MyApp({ Component, pageProps }: AppProps) {
                   theme="colored"
                 />
               </AdminContextProvider>
-            </ExhibitionsContextProvider>
-          </ArtistsContextProvider>
-        </WorksContextProvider>
+            </ArtistsContextProvider>
+          </WorksContextProvider>
+        </ExhibitionsContextProvider>
       </StoredFileContextProvider>
     </UserContextProvider>
   );
