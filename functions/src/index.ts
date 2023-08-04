@@ -7,15 +7,15 @@ import { UserRecord } from "firebase-functions/v1/auth";
 admin.initializeApp();
 
 const builder = functions.region("asia-northeast1");
-const usersDocs = builder.firestore.document("/app/2023/users/{userId}");
+const usersDocs = builder.firestore.document("/app/v1/users/{userId}");
 const users = builder.auth.user();
 
 const handleUser = async (user: UserRecord, context: EventContext) => {
   if (context.eventType === "google.firebase.auth.user.delete") {
-    await admin.firestore().doc(`/app/2023/users/${user.uid}`).delete();
+    await admin.firestore().doc(`/app/v1/users/${user.uid}`).delete();
     return;
   }
-  await admin.firestore().doc(`/app/2023/users/${user.uid}`).set({
+  await admin.firestore().doc(`/app/v1/users/${user.uid}`).set({
     email: user.email,
     name: user.displayName,
     admin: false,

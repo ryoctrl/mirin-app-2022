@@ -1,5 +1,5 @@
 export const CollectionKeys = {
-  ROOT: "app/2023",
+  ROOT: "app/v1",
   USERS: "users",
   ARTISTS: "artists",
   EXHIBITIONS: "exhibitions",

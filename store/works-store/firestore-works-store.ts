@@ -33,8 +33,20 @@ export class FirestoreWorksStore implements WorksStore {
     ).withConverter(WorksConverter);
     this.artistsStore = new FirestoreArtistStore();
   }
-  async findAll() {
-    const snapshot = await getDocs(this.worksCollection);
+
+  private getExhibitionCollection(exhibition: Exhibition) {
+    const col = collection(
+      this.appRef,
+      CollectionKeys.EXHIBITIONS,
+      exhibition.id || "",
+      CollectionKeys.WORKS
+    ).withConverter(WorksConverter);
+
+    return col;
+  }
+  async findAll(exhibition: Exhibition) {
+    const col = this.getExhibitionCollection(exhibition);
+    const snapshot = await getDocs(col);
     // FIXME: more elegant...
     const artists = await this.artistsStore.findAll();
     const works = snapshot.docs.map((doc) => doc.data());
@@ -49,9 +61,9 @@ export class FirestoreWorksStore implements WorksStore {
       });
   }
 
-  async listen(setWorks: (works: Work[]) => void) {
+  async listen(exhibition: Exhibition, setWorks: (works: Work[]) => void) {
     let artists = await this.artistsStore.findAll();
-    onSnapshot(this.worksCollection, async (snapshot) => {
+    onSnapshot(this.getExhibitionCollection(exhibition), async (snapshot) => {
       const works = await Promise.all(
         snapshot.docs.map(async (doc) => {
           const work = doc.data();
@@ -76,8 +88,8 @@ export class FirestoreWorksStore implements WorksStore {
     });
   }
 
-  async find(id: string) {
-    const workRef = doc(this.worksCollection, id);
+  async find(exhibition: Exhibition, id: string) {
+    const workRef = doc(this.getExhibitionCollection(exhibition), id);
     const snapshot = await getDoc(workRef);
     const work = snapshot.data();
     if (!work) return null;
@@ -99,33 +111,45 @@ export class FirestoreWorksStore implements WorksStore {
     };
     return work;
   }
-  async create(work: Work) {
-    await addDoc(this.worksCollection, work);
+  async create(exhibition: Exhibition, work: Work) {
+    const col = this.getExhibitionCollection(exhibition);
+    await addDoc(col, work);
   }
 
-  async update(work: Work) {
-    await updateDoc(doc(this.worksCollection, work.id), work);
+  async update(exhibition: Exhibition, work: Work) {
+    await updateDoc(
+      doc(this.getExhibitionCollection(exhibition), work.id),
+      work
+    );
   }
 
-  async addComment(workId: string, comment: WorksComment) {
+  async addComment(
+    exhibition: Exhibition,
+    workId: string,
+    comment: WorksComment
+  ) {
     const document = collection(
-      this.worksCollection,
+      this.getExhibitionCollection(exhibition),
       `${workId}/comments`
     ).withConverter(CommentsConverter);
     addDoc(document, comment);
   }
 
-  async deleteComment(workId: string, comment: WorksComment) {
+  async deleteComment(
+    exhibition: Exhibition,
+    workId: string,
+    comment: WorksComment
+  ) {
     const commentsCollection = collection(
-      this.worksCollection,
+      this.getExhibitionCollection(exhibition),
       `${workId}/comments`
     ).withConverter(CommentsConverter);
 
     await deleteDoc(doc(commentsCollection, comment.id));
   }
 
-  async delete(id: string): Promise<boolean> {
-    await deleteDoc(doc(this.worksCollection, id));
+  async delete(exhibition: Exhibition, id: string): Promise<boolean> {
+    await deleteDoc(doc(this.getExhibitionCollection(exhibition), id));
     return true;
   }
 }

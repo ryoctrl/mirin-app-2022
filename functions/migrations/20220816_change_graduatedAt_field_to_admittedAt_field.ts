@@ -18,7 +18,7 @@ admin.initializeApp({
  * cp /path/to/<credentials.json> ./
  * pnpm ts-node migrations/20220816_change_graduatedAt_field_to_admittedAt_field.ts
  */
-const artistsKey = "/app/2023/artists";
+const artistsKey = "/app/v1/artists";
 const run = async () => {
   const users = await admin.firestore().collection(artistsKey).get();
   await Promise.all(

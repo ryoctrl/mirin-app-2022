@@ -53,7 +53,7 @@ export class FirestoreExhibitionStore implements ExhibitionsStore {
     const newDocumentRef = await addDoc(this.exhibitionsCollection, exhibition);
     const newDocument = await getDoc(newDocumentRef).then((ss) => ss.data());
     if (!newDocument) {
-      throw new Error("failed to create artist");
+      throw new Error("failed to create exhibition");
     }
     return newDocument;
   }

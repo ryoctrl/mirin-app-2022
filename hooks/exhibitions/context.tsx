@@ -1,4 +1,5 @@
 import React, { createContext, ReactNode, useEffect, useReducer } from "react";
+import { toast } from "react-toastify";
 
 import { ExhibitionsActions, exhibitionsReducer } from "./reducer";
 import { ExhibitionsState, initialExhibitionsState } from "./state";
@@ -14,11 +15,13 @@ const exhibitionsStore: ExhibitionsStore = new FirestoreExhibitionStore();
 interface ExhibitionsContextValue {
   exhibitionsState: ExhibitionsState;
   updateExhibition: (exhibition: Exhibition) => void;
+  createExhibition: (exhibition: Exhibition) => Promise<Exhibition>;
 }
 
 export const ExhibitionContext = createContext<ExhibitionsContextValue>({
   exhibitionsState: initialExhibitionsState,
   updateExhibition: () => {},
+  createExhibition: (e) => Promise.resolve(e),
 });
 
 export const ExhibitionsContextProvider = ({
@@ -74,8 +77,43 @@ export const ExhibitionsContextProvider = ({
     });
   };
 
+  const disActivateAnotherExhibition = async (
+    newActiveExhibition: Exhibition
+  ) => {
+    if (!newActiveExhibition.isActive) return;
+    const exhibitions = await exhibitionsStore.findAll();
+    exhibitions
+      .filter(
+        (exhibition) =>
+          exhibition.isActive && exhibition.id !== newActiveExhibition.id
+      )
+      .map(async (exhibition) => {
+        exhibition.isActive = false;
+        await exhibitionsStore.update(exhibition);
+      });
+  };
+
   const updateExhibition = async (exhibition: Exhibition) => {
     await exhibitionsStore.update(exhibition);
+    await disActivateAnotherExhibition(exhibition);
+
+    toast.success(`展示会${exhibition.title}を更新しました。`);
+
+    fetchCurrentExhibition();
+    fetchExhibitions();
+
+    return exhibition;
+  };
+
+  const createExhibition = async (exhibition: Exhibition) => {
+    const newExhibition = await exhibitionsStore.create(exhibition);
+    await disActivateAnotherExhibition(newExhibition);
+    toast.success(`展示会${newExhibition.title}を作成しました。`);
+
+    fetchCurrentExhibition();
+    fetchExhibitions();
+
+    return newExhibition;
   };
 
   useEffect(() => {
@@ -90,6 +128,7 @@ export const ExhibitionsContextProvider = ({
       value={{
         exhibitionsState,
         updateExhibition,
+        createExhibition,
       }}
     >
       {children}
