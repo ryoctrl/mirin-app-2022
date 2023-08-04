@@ -7,6 +7,7 @@ import { initialWorksState, WorksState } from "./state";
 
 import { WorksStore } from "store/works-store/works-store.interface";
 import { FirestoreWorksStore } from "store/works-store/firestore-works-store";
+import { useExhibitions } from "hooks/exhibitions/use-exhibitions";
 
 const worksStore: WorksStore = new FirestoreWorksStore();
 
@@ -44,16 +45,21 @@ export const WorksContextProvider = ({
     ...initialState,
   });
   const router = useRouter();
+  const {
+    exhibitionsState: { currentExhibition },
+  } = useExhibitions();
 
   const listenWorks = async () => {
-    worksStore.listen((works) => {
+    if (!currentExhibition) return;
+    worksStore.listen(currentExhibition, (works) => {
       dispatch({ type: WorksActions.WORKS_UPDATED, payload: { works } });
     });
   };
 
   // TODO: add support for dispatching reducer methods
   const createWork = async (work: Work, options?: CreateWorkOptions) => {
-    await worksStore.create(work);
+    if (!currentExhibition) return;
+    await worksStore.create(currentExhibition, work);
 
     toast.success(`作品 ${work.title} を作成しました。`);
     if (options?.path) {
@@ -62,8 +68,9 @@ export const WorksContextProvider = ({
   };
 
   const deleteWork = async (work: Work) => {
+    if (!currentExhibition) return;
     if (!work.id) return;
-    const result = await worksStore.delete(work.id);
+    const result = await worksStore.delete(currentExhibition, work.id);
     if (!result) {
       toast.error(`作品 ${work.title}(${work.id}) の削除に失敗しました。`);
       return;
@@ -72,7 +79,8 @@ export const WorksContextProvider = ({
   };
 
   const deleteComment = async (workId: string, comment: WorksComment) => {
-    await worksStore.deleteComment(workId, comment);
+    if (!currentExhibition) return;
+    await worksStore.deleteComment(currentExhibition, workId, comment);
 
     toast.success(`コメント ID:${comment.id} を削除しました。`);
 
@@ -81,20 +89,22 @@ export const WorksContextProvider = ({
       return;
     }
 
-    await worksStore.update(work);
+    await worksStore.update(currentExhibition, work);
   };
 
   const updateWork = async (work: Work) => {
-    await worksStore.update(work);
+    if (!currentExhibition) return;
+    await worksStore.update(currentExhibition, work);
   };
 
   useEffect(() => {
     listenWorks();
-  }, []);
+  }, [currentExhibition]);
 
   const addComment = async (workId: string, comment: WorksComment) => {
-    await worksStore.addComment(workId, comment);
-    const work = await worksStore.find(workId);
+    if (!currentExhibition) return;
+    await worksStore.addComment(currentExhibition, workId, comment);
+    const work = await worksStore.find(currentExhibition, workId);
     if (!work) return;
     dispatch({
       type: WorksActions.WORK_UPDATED,

@@ -6,8 +6,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import dayjs from "dayjs";
 
 type DateRangePickerProps = {
-  startDate: Date;
-  endDate: Date;
+  startDate?: Date;
+  endDate?: Date;
   setStartDate: (date: Date) => void;
   setEndDate: (date: Date) => void;
 };

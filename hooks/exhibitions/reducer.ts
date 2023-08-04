@@ -10,6 +10,14 @@ export enum ExhibitionsActions {
   FETCH_EXHIBITIONS = "ExhibitionsActions:FETCH_EXHIBITIONS",
   FETCH_EXHIBITIONS_SUCCEEDED = "ExhibitionsActions:FETCH_EXHIBITIONS_SUCCEEDED",
   FETCH_EXHIBITIONS_FAILED = "ExhibitionsActions:FETCH_EXHIBITIONS_FAILED",
+
+  UPDATE_EXHIBITION = "ExhibitionsActions:UPDATE_EXHIBITION",
+  UPDATE_EXHIBITION_SUCCEEDED = "ExhibitionsActions:UPDATE_EXHIBITION_SUCCEEDED",
+  UDPATE_EXHIBITION_FAILED = "ExhibitionsActions:UPDATE_EXHIBITION_FAILED",
+
+  CREATE_EXHIBITION = "ExhibitionsActions:CREATE_EXHIBITION",
+  CREATE_EXHIBITION_SUCCEEDED = "ExhibitionsActions:CREATE_EXHIBITION_SUCCEEDED",
+  CREATE_EXHIBITION_FAILED = "ExhibitionsActions:CREATE_EXHIBITION_FAILED",
 }
 export type ExhibitionsAction =
   | {
@@ -38,6 +46,42 @@ export type ExhibitionsAction =
     }
   | {
       type: typeof ExhibitionsActions.FETCH_EXHIBITIONS_FAILED;
+      payload: {
+        error: string;
+      };
+    }
+  | {
+      type: typeof ExhibitionsActions.UPDATE_EXHIBITION;
+      payload: {
+        exhibition: Exhibition;
+      };
+    }
+  | {
+      type: typeof ExhibitionsActions.UPDATE_EXHIBITION_SUCCEEDED;
+      payload: {
+        exhibition: Exhibition;
+      };
+    }
+  | {
+      type: typeof ExhibitionsActions.UDPATE_EXHIBITION_FAILED;
+      payload: {
+        error: string;
+      };
+    }
+  | {
+      type: typeof ExhibitionsActions.CREATE_EXHIBITION;
+      payload: {
+        exhibition: Exhibition;
+      };
+    }
+  | {
+      type: typeof ExhibitionsActions.CREATE_EXHIBITION_SUCCEEDED;
+      payload: {
+        exhibition: Exhibition;
+      };
+    }
+  | {
+      type: typeof ExhibitionsActions.CREATE_EXHIBITION_FAILED;
       payload: {
         error: string;
       };
