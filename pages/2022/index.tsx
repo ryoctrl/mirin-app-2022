@@ -14,7 +14,6 @@ import { useExhibitions } from "hooks/exhibitions/use-exhibitions";
 import OGP from "@components/organisms/ogp";
 import { firestoreExhibitionStore } from "store/exhibitions-store";
 import { HomeFooter } from "@components/molecules/home/footer";
-import { HomeLayout2023 } from "@components/organisms/2023/home-layout";
 
 const Home: NextPage = () => {
   const { worksState } = useWorks();
@@ -48,18 +47,18 @@ const Home: NextPage = () => {
       </Head>
       <OGP
         pageTitle={`${currentExhibition?.title ?? "KUMD海賊版パネル展示会"}`}
-        pagePath={`https://kumd.mosin.jp${router.asPath}`}
+        pagePath={`https://mirin-app-2022.mosin.jp${router.asPath}`}
         pageDescription={currentExhibition?.title ?? "KUMD海賊版パネル展示会"}
         pageImg={currentExhibition?.heroImage?.pc}
       />
 
       <main className={styles.main}>
-        {/* <HomeHeader /> */}
-        <HomeLayout2023
+        <HomeHeader />
+        <HomeLayout
           worksState={worksState}
           inPeriod={currentExhibition?.inPeriod ?? true}
         />
-        {/* <HomeFooter /> */}
+        <HomeFooter />
       </main>
     </div>
   );

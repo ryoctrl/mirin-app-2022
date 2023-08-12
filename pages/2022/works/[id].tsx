@@ -10,7 +10,6 @@ import OGP from "@components/organisms/ogp";
 import { useExhibitions } from "hooks/exhibitions/use-exhibitions";
 import { firestoreExhibitionStore } from "store/exhibitions-store";
 import { firestoreWorksStore } from "store/works-store/firestore-works-store";
-import { WorksLayout2023 } from "@components/organisms/2023/works/works-layout";
 
 const Works: NextPage = () => {
   const router = useRouter();
@@ -42,7 +41,7 @@ const Works: NextPage = () => {
       />
 
       <main className={styles.main}>
-        <WorksLayout2023 work={work} />
+        <WorksLayout work={work} />
       </main>
     </div>
   );
