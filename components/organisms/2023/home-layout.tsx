@@ -8,6 +8,7 @@ import { WorksState } from "hooks/works/state";
 import { HeaderScrollRefs, scroll } from "libs/utils/header";
 import { convertWorksToSortableWorks } from "libs/utils";
 import { OutOfPeriod } from "@components/molecules/out-of-period";
+import { PopUpMenu2023 } from "@components/molecules/2023/popup-menu";
 
 type Props = {
   worksState: WorksState;
@@ -42,7 +43,8 @@ export const HomeLayout2023: React.FC<Props> = ({ worksState, inPeriod }) => {
                 <div className="bottom-menu"></div>
               </div>
             </a>
-            <div className="menu menu-open">
+            <PopUpMenu2023 isOpen={true} />
+            {/* <div className="menu menu-open">
               <div className="top-menu ">
                 <a className="menu-x">
                   <img src="./2023/img/icon-x.webp" width="19px" />
@@ -66,7 +68,7 @@ export const HomeLayout2023: React.FC<Props> = ({ worksState, inPeriod }) => {
                 </div>
               </div>
               <div className="bottom-menu"></div>
-            </div>
+            </div> */}
           </div>
         </header>
         <main>

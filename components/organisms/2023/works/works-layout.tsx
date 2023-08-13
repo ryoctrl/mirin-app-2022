@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useWorks } from "hooks/works/useWorks";
 import { WrapLink } from "@components/atoms/wrap-link";
 import { TwitterIcon } from "@components/atoms/icons/twitter-icon";
+import { PopUpMenu2023 } from "@components/molecules/2023/popup-menu";
 
 type Props = {
   work: Work;
@@ -79,7 +80,8 @@ export const WorksLayout2023: React.FC<Props> = (props) => {
                 <div className="bottom-menu"></div>
               </div>
             </a>
-            <div className="menu menu-open">
+            <PopUpMenu2023 isOpen={true} />
+            {/* <div className="menu menu-open">
               <div className="top-menu ">
                 <a className="menu-x">
                   <img src="/2023/img/icon-x.webp" width="19px" />
@@ -103,7 +105,7 @@ export const WorksLayout2023: React.FC<Props> = (props) => {
                 </div>
               </div>
               <div className="bottom-menu"></div>
-            </div>
+            </div> */}
           </div>
         </header>
         <main>
