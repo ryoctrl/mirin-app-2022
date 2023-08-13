@@ -108,43 +108,65 @@ export const WorksLayout2023: React.FC<Props> = (props) => {
         </header>
         <main>
           <section id="work">
-            {/* <img className="work-img" src="/2023/img/img-works1.webp" /> */}
             <img className="work-img" src={work.image} />
-            {/* <img
-              src={work.image}
-              layout="fill"
-              alt={work.title}
-              className="work-img"
-              objectFit="contain"
-            /> */}
             <div id="caption">
-              <p className="text20">タイトル</p>
+              <p className="text20">{work.title}</p>
               <div className="text12">
-                <p>ペンネーム</p>
+                <p>{work.artist.name}</p>
                 <div className="flex year">
-                  <p>入学年</p>
-                  <p>制作年</p>
+                  <p>{work.artist.admittedAt} 年入学</p>
+                  <p>{work.workedAt} 年制作</p>
                 </div>
               </div>
-              <p>
-                テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト
-              </p>
+              <p>{work.description}</p>
             </div>
             <div id="comment" className="text10">
               <div>
                 <div>
-                  <div id="comment-text" className="flex">
-                    <p className="name">ペンネーム</p>
-                    <p className="comment">コメント内容</p>
-                  </div>
+                  {!hasComments && (
+                    <div id="comment-text" className="flex">
+                      <span className="no-comment">
+                        コメントはまだありません。
+                      </span>
+                    </div>
+                  )}
+                  {hasComments &&
+                    Object.values(work.comments)
+                      .reverse()
+                      .map((comment, idx) => (
+                        <div
+                          key={comment.id}
+                          id="comment-text"
+                          className="flex"
+                        >
+                          <p className="name">{comment.name}</p>
+                          <p className="comment">{comment.text}</p>
+                        </div>
+                      ))}
                 </div>
                 <div id="comment-send" className="flex">
                   <div className="flex">
-                    <p className="name">名前</p>
-                    <p className="comment">コメントする</p>
+                    <input
+                      className="name"
+                      placeholder="名前"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                    <textarea
+                      className="comment"
+                      placeholder="コメントする..."
+                      value={text}
+                      onChange={(e) => setText(e.target.value)}
+                      ref={textAreaRef}
+                    />
                   </div>
                   <a>
-                    <img src="/2023/img/icon-send.webp" width="18px" />
+                    <button
+                      className="submit-btn"
+                      onClick={() => registerComment()}
+                    >
+                      <img src="/2023/img/icon-send.webp" width="18px" />
+                    </button>
                   </a>
                 </div>
               </div>

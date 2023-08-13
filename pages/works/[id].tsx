@@ -52,7 +52,7 @@ Works.getInitialProps = async (context) => {
   const currentExhibition =
     await firestoreExhibitionStore.findCurrentExhibition();
   const works = currentExhibition
-    ? firestoreWorksStore.findAll(currentExhibition)
+    ? await firestoreWorksStore.findAll(currentExhibition)
     : [];
   return {
     worksState: {
