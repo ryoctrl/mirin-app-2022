@@ -3,14 +3,17 @@ import { ScriptProps } from "next/script";
 
 type PopUpMenu2023Props = ScriptProps & {
   isOpen: boolean;
+  close: () => void;
 };
 
 export const PopUpMenu2023: React.FC<PopUpMenu2023Props> = (props) => {
-  const { isOpen } = props;
+  const { isOpen, close } = props;
   return (
-    <div className={`menu ${isOpen ? "menu-open" : ""}`}>
+    <div
+      className={`menu menu-open popupContainer ${isOpen ? "open" : "close"}`}
+    >
       <div className="top-menu ">
-        <a className="menu-x">
+        <a className="menu-x" onClick={close}>
           <img src="/2023/img/icon-x.webp" width="19px" />
         </a>
         <div className="flex">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -16,6 +16,7 @@ type Props = {
 };
 
 export const HomeLayout2023: React.FC<Props> = ({ worksState, inPeriod }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
     <>
       <div className="pc left-scroll" id="left">
@@ -36,14 +37,18 @@ export const HomeLayout2023: React.FC<Props> = ({ worksState, inPeriod }) => {
           <div>
             <a>
               <div className="menu">
-                <div className="top-menu">
+                <div className="top-menu" onClick={() => setIsMenuOpen(true)}>
                   <div className="menu-border"></div>
                   <div className="menu-border"></div>
                 </div>
                 <div className="bottom-menu"></div>
               </div>
+              <PopUpMenu2023
+                isOpen={isMenuOpen}
+                close={() => setIsMenuOpen(false)}
+              />
             </a>
-            <PopUpMenu2023 isOpen={true} />
+
             {/* <div className="menu menu-open">
               <div className="top-menu ">
                 <a className="menu-x">

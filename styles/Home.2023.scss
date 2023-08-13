@@ -86,6 +86,25 @@ header {
   font-family: futura;
 }
 
+.popupContainer {
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  position: absolute;
+  right: 24px;
+  transform-origin: right top;
+  padding: 20px 10px;
+}
+
+.open {
+  transform: scale(1);
+  transition: 100ms;
+}
+
+.close {
+  transform: scale(0);
+  transition: 100ms;
+}
+
 .top-menu {
   position: absolute;
   width: 58px;

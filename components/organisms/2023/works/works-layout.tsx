@@ -52,6 +52,7 @@ export const WorksLayout2023: React.FC<Props> = (props) => {
   const textAreaRef = useAutoResizeTextArea(text);
 
   const hasComments = !!work.comments.length;
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <>
@@ -80,7 +81,10 @@ export const WorksLayout2023: React.FC<Props> = (props) => {
                 <div className="bottom-menu"></div>
               </div>
             </a>
-            <PopUpMenu2023 isOpen={true} />
+            <PopUpMenu2023
+              isOpen={isMenuOpen}
+              close={() => setIsMenuOpen(false)}
+            />
             {/* <div className="menu menu-open">
               <div className="top-menu ">
                 <a className="menu-x">
