@@ -29,14 +29,14 @@ const Works: NextPage = () => {
     return <div></div>;
   }
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container}  exhibition-2023`}>
       <Head>
         <title>{`${work.title} | ${work.artist.name}`}</title>
         <meta name="description" content={work.description} />
       </Head>
       <OGP
         pageTitle={`${work.title} - ${currentExhibition?.title}`}
-        pagePath={`https://mirin-app-2022.mosin.jp${router.asPath}`}
+        pagePath={`https://kumd.mosin.jp${router.asPath}`}
         pageDescription={work.description}
         pageImg={work.image}
       />
