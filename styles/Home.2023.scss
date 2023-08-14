@@ -404,16 +404,25 @@ body {
 
   #comment > div {
     background-color: white;
-    border: solid;
+    border: solid 1px black;
   }
 
   .name {
     width: 60px;
     margin-right: 12px;
+    font-size: 10px;
+    padding-left: 4px;
   }
 
   .comment {
     width: 230px;
+    font-size: 10px;
+    margin: initial;
+  }
+
+  textarea.comment {
+    padding-left: 4px;
+    padding-top: 2px;
   }
 
   #comment-text {
@@ -422,7 +431,7 @@ body {
 
   #comment-send {
     padding: 8px 15px;
-    border-top: solid;
+    border-top: solid 1px black;
   }
 
   #comment-send p {
