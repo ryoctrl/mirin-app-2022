@@ -13,6 +13,7 @@ import { StoredFileContextProvider } from "hooks/stored-files/context";
 
 import "@styles/globals.scss";
 import "react-toastify/dist/ReactToastify.css";
+
 import "@styles/Home.2023.scss";
 
 function MyApp({ Component, pageProps }: AppProps) {
