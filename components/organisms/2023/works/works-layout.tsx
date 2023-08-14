@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 
 import { useWorks } from "hooks/works/useWorks";
 import { WrapLink } from "@components/atoms/wrap-link";
@@ -68,14 +69,15 @@ export const WorksLayout2023: React.FC<Props> = (props) => {
       </div>
       <div id="center">
         <header className="flex">
-          <a>
+          <Link href="/">
             <img src="/2023/img/img-logo.webp" width="113px" height="15px" />
-          </a>
+          </Link>
           <div>
             <a>
               <div className="menu">
-                <div className="top-menu">
+                <div className="top-menu" onClick={() => setIsMenuOpen(true)}>
                   <div className="menu-border"></div>
+
                   <div className="menu-border"></div>
                 </div>
                 <div className="bottom-menu"></div>
@@ -85,31 +87,6 @@ export const WorksLayout2023: React.FC<Props> = (props) => {
               isOpen={isMenuOpen}
               close={() => setIsMenuOpen(false)}
             />
-            {/* <div className="menu menu-open">
-              <div className="top-menu ">
-                <a className="menu-x">
-                  <img src="/2023/img/icon-x.webp" width="19px" />
-                </a>
-                <div className="flex">
-                  <a href="./index.html#top">
-                    <img src="/2023/img/text-top.webp" width="46px" />
-                  </a>
-                  <a href="./index.html#about">
-                    <img src="/2023/img/text-about.webp" width="79px" />
-                  </a>
-                  <a href="./index.html#special">
-                    <img src="/2023/img/text-special.webp" width="98px" />
-                  </a>
-                  <a href="./index.html#works">
-                    <img src="/2023/img/text-gallery.webp" width="104px" />
-                  </a>
-                  <a href="">
-                    <img src="/2023/img/text-3d.webp" width="119px" />
-                  </a>
-                </div>
-              </div>
-              <div className="bottom-menu"></div>
-            </div> */}
           </div>
         </header>
         <main>

@@ -273,25 +273,15 @@ export const HomeLayout2023: React.FC<Props> = ({ worksState, inPeriod }) => {
                           height="300px"
                           layout="responsive"
                         />
-                        {/* <img src="./2023/img/img-works1.webp" /> */}
                       </Link>
                       <div>
                         <div className="flex">
-                          <div>
-                            <Image
-                              // src={work.thumb}
-                              src="/2023/img/icon-works-01.webp"
-                              alt={work.title}
-                              width="74px"
-                              height="55px"
-                            />
-                            {/* <img
-                              width="74px"
-                            /> */}
+                          <div className="work-index">
+                            {`0${idx + 1}`.slice(-2)}
                           </div>
                           <div className="text12">
-                            <h3>タイトルタイトルタイトル</h3>
-                            <p>PN:みりん</p>
+                            <h3>{work.title}</h3>
+                            <p>PN:{work.artist.name}</p>
                           </div>
                         </div>
                       </div>

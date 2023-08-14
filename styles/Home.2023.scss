@@ -348,6 +348,18 @@ body {
 
   /* ↓↓↓↓↓↓　works */
 
+  #works {
+    article {
+      margin-bottom: 20px;
+
+      .work-index {
+        line-height: 56px;
+        font-size: 56px;
+        font-family: "futura";
+      }
+    }
+  }
+
   #works article a img {
     width: 100%;
   }
