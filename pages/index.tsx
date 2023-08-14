@@ -38,7 +38,10 @@ const Home: NextPage = () => {
   }
 
   return (
-    <div className={styles.container} ref={HeaderScrollRefs.TOP}>
+    <div
+      className={`${styles.container} exhibition-2023`}
+      ref={HeaderScrollRefs.TOP}
+    >
       <Head>
         <title>{currentExhibition?.title ?? "KUMD海賊版パネル展示会"}</title>
         <meta
