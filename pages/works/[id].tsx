@@ -41,9 +41,7 @@ const Works: NextPage = () => {
         pageImg={work.image}
       />
 
-      <main className={styles.main}>
-        <WorksLayout2023 work={work} />
-      </main>
+      <WorksLayout2023 work={work} />
     </div>
   );
 };
