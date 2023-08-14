@@ -154,8 +154,8 @@ const NewIllust: NextPage = () => {
       uploadImage(thumbPreview.file, {
         maxWidth: 480,
         minWidth: 480,
-        maxHeight: 480,
-        minHeight: 480,
+        maxHeight: 300,
+        minHeight: 300,
         canvas: true,
       }).catch(() => {
         toast.error("サムネイル画像の圧縮に失敗しました。", {
