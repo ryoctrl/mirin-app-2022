@@ -95,7 +95,7 @@ export const WorksLayout2023: React.FC<Props> = (props) => {
             <div id="caption">
               <p className="text20">{work.title}</p>
               <div className="text12">
-                <p>{work.artist.name}</p>
+                <p>PN:{work.artist.name}</p>
                 <div className="flex year">
                   <p>{work.artist.admittedAt} 年入学</p>
                   <p>{work.workedAt} 年制作</p>
