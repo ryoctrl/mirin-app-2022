@@ -48,32 +48,6 @@ export const HomeLayout2023: React.FC<Props> = ({ worksState, inPeriod }) => {
                 close={() => setIsMenuOpen(false)}
               />
             </a>
-
-            {/* <div className="menu menu-open">
-              <div className="top-menu ">
-                <a className="menu-x">
-                  <img src="./2023/img/icon-x.webp" width="19px" />
-                </a>
-                <div className="flex">
-                  <a href="#top">
-                    <img src="./2023/img/text-top.webp" width="46px" />
-                  </a>
-                  <a href="#about">
-                    <img src="./2023/img/text-about.webp" width="79px" />
-                  </a>
-                  <a href="#special">
-                    <img src="./2023/img/text-special.webp" width="98px" />
-                  </a>
-                  <a href="#works">
-                    <img src="./2023/img/text-gallery.webp" width="104px" />
-                  </a>
-                  <a href="">
-                    <img src="./2023/img/text-3d.webp" width="119px" />
-                  </a>
-                </div>
-              </div>
-              <div className="bottom-menu"></div>
-            </div> */}
           </div>
         </header>
         <main>
@@ -295,8 +269,8 @@ export const HomeLayout2023: React.FC<Props> = ({ worksState, inPeriod }) => {
                         <Image
                           src={work.thumb}
                           alt={work.title}
-                          width="100%"
-                          height="100%"
+                          width="480px"
+                          height="300px"
                           layout="responsive"
                         />
                         {/* <img src="./2023/img/img-works1.webp" /> */}

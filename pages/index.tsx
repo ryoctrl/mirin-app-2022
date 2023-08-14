@@ -53,14 +53,12 @@ const Home: NextPage = () => {
         pageImg={currentExhibition?.heroImage?.pc}
       />
 
-      <main className={styles.main}>
-        {/* <HomeHeader /> */}
-        <HomeLayout2023
-          worksState={worksState}
-          inPeriod={currentExhibition?.inPeriod ?? true}
-        />
-        {/* <HomeFooter /> */}
-      </main>
+      {/* <HomeHeader /> */}
+      <HomeLayout2023
+        worksState={worksState}
+        inPeriod={currentExhibition?.inPeriod ?? true}
+      />
+      {/* <HomeFooter /> */}
     </div>
   );
 };
