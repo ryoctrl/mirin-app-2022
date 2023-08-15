@@ -38,6 +38,7 @@ export const WorksDetail: React.FC<WorksDetailProps> = ({ work }) => {
   const [title, setTitle] = useState(work.title);
   const [artistId, setArtistId] = useState(work.artistId);
   const [workedAt, setWorkedAt] = useState(work.workedAt?.toString());
+  const [description, setDescription] = useState(work.description);
 
   const executeSave = async () => {
     setUpdating(true);
@@ -86,6 +87,7 @@ export const WorksDetail: React.FC<WorksDetailProps> = ({ work }) => {
       title,
       artistId,
       workedAt: Number(workedAt),
+      description,
       image: illustUrl,
       thumb: thumbUrl,
     };
@@ -199,6 +201,16 @@ export const WorksDetail: React.FC<WorksDetailProps> = ({ work }) => {
               placeholder="2022"
               value={workedAt}
               onChange={(e) => setWorkedAt(e.target.value)}
+            />
+          </div>
+          <div className="my-2">
+            <label htmlFor="description">作品詳細</label>
+            <textarea
+              id="description"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="作品詳細"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
           </div>
           <div className="my-2">
