@@ -101,7 +101,7 @@ export const WorksLayout2023: React.FC<Props> = (props) => {
                   <p>{work.workedAt} 年制作</p>
                 </div>
               </div>
-              <p>{work.description}</p>
+              <p className="description">{work.description}</p>
             </div>
             <div id="comment" className="text10">
               <div>

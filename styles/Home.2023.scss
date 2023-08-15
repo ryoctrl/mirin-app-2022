@@ -405,6 +405,10 @@ body {
 
   #caption {
     margin: 32px 0px;
+    .description {
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
   }
 
   #caption .text12 {
