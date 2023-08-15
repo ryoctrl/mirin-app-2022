@@ -24,16 +24,17 @@ type UploadImageOptions = loadImage.LoadImageOptions & {
 
 export const uploadImage = async (file: File, options: UploadImageOptions) => {
   const { directory, ...loadImageOptions } = options;
-  const img = await loadImage(file, loadImageOptions);
+  // NOTE: webp を利用するとリサイズ時にジャギるので一旦コメントアウト
+  // const img = await loadImage(file, { canvas: true });
 
-  const blob = await new Promise<Blob | null>((r) => {
-    (img.image as HTMLCanvasElement).toBlob((b) => {
-      r(b);
-    });
-  });
+  // const blob = await new Promise<Blob | null>((r) => {
+  //   (img.image as HTMLCanvasElement).toBlob((b) => {
+  //     r(b);
+  //   });
+  // });
 
-  if (!blob) {
-    throw new Error("画像の圧縮に失敗しました。");
-  }
-  return await uploadToStorage(blob, directory);
+  // if (!blob) {
+  //   throw new Error("画像の圧縮に失敗しました。");
+  // }
+  return await uploadToStorage(file, directory);
 };
