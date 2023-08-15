@@ -51,7 +51,7 @@ export const HomeLayout2023: React.FC<Props> = ({ worksState, inPeriod }) => {
           </div>
         </header>
         <main>
-          <section id="top">
+          <section id="top" ref={ HeaderScrollRefs.TOP } >
             <img src="./2023/img/bg-top.webp" width="390px" height="614px" />
             <div className="scroll-text-wrapper">
               <div className="scroll-text flex">
@@ -69,11 +69,9 @@ export const HomeLayout2023: React.FC<Props> = ({ worksState, inPeriod }) => {
             </div>
           </section>
           <div id="arrow-connect">
-            <a href="#about">
-              <img src="./2023/img/icon-arrow9.webp" width="35.7px" />
-            </a>
+            <img src="./2023/img/icon-arrow9.webp" width="35.7px" onClick={() => scroll(HeaderScrollRefs.ABOUT)} />
           </div>
-          <section id="about" className="section">
+          <section id="about" className="section" ref={ HeaderScrollRefs.ABOUT } >
             <h2>
               <img
                 src="./2023/img/img-about-h.webp"
@@ -185,10 +183,10 @@ export const HomeLayout2023: React.FC<Props> = ({ worksState, inPeriod }) => {
           </section>
           <div id="arrow-connect">
             <a>
-              <img src="./2023/img/icon-arrow9.webp" width="35.7px" />
+              <img src="./2023/img/icon-arrow9.webp" width="35.7px" onClick={() => scroll(HeaderScrollRefs.SPECIAL)} />
             </a>
           </div>
-          <section id="special">
+          <section id="special" ref={ HeaderScrollRefs.SPECIAL }>
             <h2 className="h-bottom">
               <img src="./2023/img/img-special-h.webp" width="265px" />
             </h2>
@@ -254,7 +252,7 @@ export const HomeLayout2023: React.FC<Props> = ({ worksState, inPeriod }) => {
               イラストを順次公開してきました。超超感謝
             </p>
           </section>
-          <section id="works">
+          <section id="works" ref={ HeaderScrollRefs.GALLERY }>
             <h2 className="h-bottom">
               <img src="./2023/img/img-works-h.webp" width="250px" />
             </h2>
