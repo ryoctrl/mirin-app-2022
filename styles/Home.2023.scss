@@ -64,7 +64,7 @@ body {
   }
 
   main {
-    padding-top: 70px;
+    padding-top: 20px;
   }
 
   /* all ↑↑↑↑↑↑ */
@@ -76,7 +76,7 @@ body {
     justify-content: space-between;
     padding: 0 12px;
     position: sticky;
-    top: 70px;
+    top: 40px;
     z-index: 100;
   }
 
@@ -275,7 +275,7 @@ body {
     margin-top: 60px;
   }
 
-  #D > a {
+  #D > .go-button {
     display: flex;
     justify-content: right;
     margin-right: 20px;
@@ -340,6 +340,10 @@ body {
     justify-content: right;
   }
 
+  .special-author {
+    margin-bottom: 10px;
+  }
+
   #special > p {
     padding-left: 20px;
   }
@@ -350,7 +354,7 @@ body {
 
   #works {
     article {
-      margin-bottom: 20px;
+      margin-bottom: 26px;
 
       .work-index {
         line-height: 56px;
@@ -466,6 +470,7 @@ body {
   .work-img {
     width: 100%;
     height: auto;
+    padding-top: 20px;
   }
 
   .year {

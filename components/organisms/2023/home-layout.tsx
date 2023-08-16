@@ -112,7 +112,7 @@ export const HomeLayout2023: React.FC<Props> = ({ worksState, inPeriod }) => {
           <section id="D" className="section">
             <h2>
               <img
-                src="./2023/img/img-about-h.webp"
+                src="./2023/img/img-d-h.webp"
                 width="371px"
                 height="165px"
               />
@@ -146,13 +146,15 @@ export const HomeLayout2023: React.FC<Props> = ({ worksState, inPeriod }) => {
                 />
               </div>
             </div>
-            <a>
-              <img
-                src="./2023/img/img-butoon.webp"
-                width="145px"
-                height="41px"
-              />
-            </a>
+            <div className="go-button" >
+              <a href="https://cluster.mu/w/ec1c8bd7-e772-4672-943d-b01536f53f2a" target="_blank" >
+                <img
+                  src="./2023/img/img-butoon.webp"
+                  width="145px"
+                  height="41px"
+                />
+              </a>
+            </div>
           </section>
           <section id="staff">
             <h2>
@@ -246,10 +248,11 @@ export const HomeLayout2023: React.FC<Props> = ({ worksState, inPeriod }) => {
                 </a>
               </article>
             </div>
+            <p className="special-author" >art by  時雨 , ほったん , cacao , 天 , ましゅ , ゆづき</p>
             <p>
-              開催まで約6週間に渡り、6名の方に寄稿していただいた
+              開催まで約6週間に渡り、寄稿していただいたイラストを
               <br />
-              イラストを順次公開してきました。超超感謝
+              順次公開してきました。超超感謝
             </p>
           </section>
           <section id="works" ref={ HeaderScrollRefs.GALLERY }>
@@ -301,7 +304,7 @@ export const HomeLayout2023: React.FC<Props> = ({ worksState, inPeriod }) => {
             <br />
             可能であれば下記QRからアクセスしてご覧ください。
           </p>
-          <img />
+          <img src="./2023/img/qr.png" />
         </div>
       </div>
       <div id="right" className="pc right-scroll">
