@@ -30,7 +30,7 @@ export const PopUpMenu2023: React.FC<PopUpMenu2023Props> = (props) => {
           <img src="/2023/img/text-about.webp" width="79px" onClick={() => scrollAndMenuClose(HeaderScrollRefs.ABOUT)} />
           <img src="/2023/img/text-special.webp" width="98px" onClick={() => scrollAndMenuClose(HeaderScrollRefs.SPECIAL)} />
           <img src="/2023/img/text-gallery.webp" width="104px" onClick={() => scrollAndMenuClose(HeaderScrollRefs.GALLERY)} />
-          <a href="https://cluster.mu/w/ec1c8bd7-e772-4672-943d-b01536f53f2a" target="_blank" >
+          <a href="https://cluster.mu/w/ec1c8bd7-e772-4672-943d-b01536f53f2a" target="_blank" rel="noreferrer" >
             <img src="/2023/img/text-3d.webp" width="119px" onClick={close} />
           </a>
         </div>

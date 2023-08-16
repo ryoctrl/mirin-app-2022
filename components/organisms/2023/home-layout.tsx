@@ -147,7 +147,7 @@ export const HomeLayout2023: React.FC<Props> = ({ worksState, inPeriod }) => {
               </div>
             </div>
             <div className="go-button" >
-              <a href="https://cluster.mu/w/ec1c8bd7-e772-4672-943d-b01536f53f2a" target="_blank" >
+              <a href="https://cluster.mu/w/ec1c8bd7-e772-4672-943d-b01536f53f2a" target="_blank" rel="noreferrer" >
                 <img
                   src="./2023/img/img-butoon.webp"
                   width="145px"
