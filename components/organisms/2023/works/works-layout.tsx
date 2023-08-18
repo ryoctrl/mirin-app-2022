@@ -168,7 +168,7 @@ export const WorksLayout2023: React.FC<Props> = (props) => {
             <br />
             可能であれば下記QRからアクセスしてご覧ください。
           </p>
-          <img />
+          <img src="./../2023/img/qr.png" />
         </div>
       </div>
       <div id="right" className="pc right-scroll">
