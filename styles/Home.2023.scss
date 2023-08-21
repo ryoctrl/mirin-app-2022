@@ -450,7 +450,7 @@ body {
   }
 
   #comment-send {
-    padding: 8px 15px;
+    padding: 8px 2%;
     border-top: solid 1px black;
   }
 
@@ -461,6 +461,10 @@ body {
   #comment-send a {
     display: flex;
     align-items: center;
+  }
+
+  #comment-send img {
+    max-width: none;
   }
 
   .text20 {
